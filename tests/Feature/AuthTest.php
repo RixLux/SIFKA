@@ -72,4 +72,28 @@ class AuthTest extends TestCase
         $response->assertStatus(200);
         $this->assertCount(0, $user->tokens);
     }
+
+    /**
+     * Test user cannot register with elevated role.
+     */
+    public function test_user_cannot_register_with_elevated_role(): void
+    {
+        $response = $this->postJson('/api/register', [
+            'name' => 'Hacker User',
+            'email' => 'hacker@example.com',
+            'password' => 'password',
+            'password_confirmation' => 'password',
+            'role' => 'admin',
+        ]);
+
+        $response->assertStatus(201);
+        $this->assertDatabaseHas('users', [
+            'email' => 'hacker@example.com',
+            'role' => 'student', // Should be student despite sending admin
+        ]);
+        $this->assertDatabaseMissing('users', [
+            'email' => 'hacker@example.com',
+            'role' => 'admin',
+        ]);
+    }
 }

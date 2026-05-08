@@ -26,11 +26,11 @@ Sebagian besar endpoint memerlukan autentikasi menggunakan **Laravel Sanctum** (
     "name": "John Doe",
     "email": "john@example.com",
     "password": "password",
-    "password_confirmation": "password",
-    "role": "student" 
+    "password_confirmation": "password"
 }
 ```
-*Role options: `student`, `staff`, `admin`. Default: `student`.*
+
+> *Note: All new registrations are assigned the `student` role by default.*
 
 ### Login
 `POST /login`
@@ -40,6 +40,24 @@ Sebagian besar endpoint memerlukan autentikasi menggunakan **Laravel Sanctum** (
 {
     "email": "john@example.com",
     "password": "password"
+}
+```
+
+> Hanya untuk tujuan tes.  
+
+Admin Credential from `.env.example`:  
+```
+# Super Admin Credentials
+SUPER_ADMIN_NAME="Admin SIFKA"
+SUPER_ADMIN_EMAIL="admin@sifka.test"
+SUPER_ADMIN_PASSWORD="AdminSIFKA"
+```
+
+**Payload:**
+```json
+{
+    "email": "admin@sifka.test",
+    "password": "AdminSIFKA"
 }
 ```
 
@@ -86,8 +104,9 @@ Sebagian besar endpoint memerlukan autentikasi menggunakan **Laravel Sanctum** (
 }
 ```
 
-`DELETE /categories/{id}` (Auth (Admin) required) - Delete category.
-*Note: Deletion will fail if there are facilities linked to this category.*
+`DELETE /categories/{id}` (Auth (Admin) required) - Delete category.  
+
+> *Note: Deletion will fail if there are facilities linked to this category.*
 
 ---
 
@@ -112,12 +131,14 @@ Sebagian besar endpoint memerlukan autentikasi menggunakan **Laravel Sanctum** (
 ```
 
 ### Reports
-`GET /reports` (Auth required)
+`GET /reports` (Auth required)  
+
 - Mahasiswa: Hanya melihat laporan miliknya sendiri.
 - Staff/Admin: Melihat semua laporan.
 
-`POST /reports` (Auth required)
-**Payload (Multipart/Form-Data):**
+`POST /reports` (Auth required)  
+**Payload (Multipart/Form-Data):**  
+
 - `facility_id`: integer (required)
 - `title`: string (required)
 - `description`: string (required)
@@ -125,11 +146,13 @@ Sebagian besar endpoint memerlukan autentikasi menggunakan **Laravel Sanctum** (
 - `latitude`: numeric (required) - Posisi pelapor
 - `longitude`: numeric (required) - Posisi pelapor
 
-`PATCH /reports/{id}` (Auth (Staff/Admin) required)
-**Payload:**
+`PATCH /reports/{id}` (Auth (Staff/Admin) required)  
+**Payload:**  
+
 - `status`: string (`pending`, `in_progress`, `resolved`, `rejected`)
 
-`DELETE /reports/{id}` (Auth (Admin) required)
+`DELETE /reports/{id}` (Auth (Admin) required)  
+
 - Melakukan Soft Delete pada laporan.
 
 ---

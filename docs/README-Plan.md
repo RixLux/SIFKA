@@ -15,6 +15,8 @@ Dokumentasi rencana pembangunan sistem pelaporan kerusakan fasilitas kampus berb
     * `POST /api/login`: Return Bearer Token & User Profile.
     * `POST /api/logout`: Revoke token saat ini.
 * [x] **CORS & Security**: Konfigurasi `config/cors.php` untuk mengizinkan frontend React.
+* [x] **Super Admin Bootstrap**: 
+    * Gunakan `php artisan app:create-super-admin` untuk membuat akun admin pertama dari `.env`.
 
 ##  Phase 2: Geo-Spatial Database Schema
 *Menangani data relasional dengan presisi koordinat tinggi.*
@@ -54,11 +56,15 @@ Dokumentasi rencana pembangunan sistem pelaporan kerusakan fasilitas kampus berb
     * `DELETE /api/categories/{id}`: Hapus kategori dengan proteksi (cegah hapus jika ada fasilitas yang terhubung).
 * [x] **Feature Testing**: Pastikan proteksi role admin berjalan (Mahasiswa/Staff tidak bisa akses CRUD).
 
----
+## Phase 3.6: Secure Registration Role Assignment(New)
 
-Setelah Phase 3.5 ini selesai, update dokumentasi endpoint di:
-1. `docs/API.md`: Tambahkan detail payload untuk CRUD Categories.
-2. `docs/index.md`: Update gambaran sistem untuk menyertakan fitur manajemen kategori.
+## Objective
+Prevent "Role Elevation" vulnerability where a public user can register themselves as an `admin` or `staff`. We will enforce a strict default role of `student` for all new registrations and ignore any `role` fields sent in the request payload.
+
+## Key Files & Context
+- [x] `app/Http/Controllers/AuthController.php`: Handle registration logic.
+- [x] `tests/Feature/AuthTest.php`: Verify security measures.
+- [x] `docs/API.md`: Update documentation to reflect the removal of the `role` parameter.
 
 ---
 

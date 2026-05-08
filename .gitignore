@@ -29,3 +29,6 @@ Thumbs.db
 # Ignore uploaded files, but keep the folder structure
 /storage/app/public/*
 !/storage/app/public/.gitignore
+
+#Personal Script
+*.sh

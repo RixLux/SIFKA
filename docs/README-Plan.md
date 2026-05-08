@@ -38,27 +38,29 @@ Dokumentasi rencana pembangunan sistem pelaporan kerusakan fasilitas kampus berb
 
 * [x] **API Resources**: Implementasi `ReportResource` dan `FacilityResource` untuk transformasi data JSON yang konsisten.
 * [x] **Authorization (Policies)**:
-    * Gunakan `ReportPolicy` untuk membatasi aksi (contoh: Mahasiswa hanya bisa melihat laporannya sendiri, Staff bisa update status).
+    * Gunakan `ReportPolicy` untuk membatasi aksi.
 * [x] **Image Processing**:
     * Upload ke `Storage::disk('public')`.
     * Validasi file (Mimes: jpg, png; Max: 2MB).
 * [ ] **Service Layer (Optional)**: Jika logic pelaporan kompleks (misal: kirim email otomatis), pindahkan dari Controller ke Service.
 
 ## Phase 3.5: Category Management (New - Admin Only)
-
 *Fokus pada pengelolaan master data kategori oleh Admin.*
 
-* [ ] **Middleware/Policy**: Implementasi restriksi akses khusus role `admin`.
-* [ ] **Category CRUD API**:
-* `POST /api/categories`: Create new category.
-* `PUT/PATCH /api/categories/{id}`: Update info kategori.
-* `DELETE /api/categories/{id}`: Delete kategori (dengan validasi relasi fasilitas).
+* [x] **CategoryPolicy**: Implementasi restriksi akses khusus role `admin`.
+* [x] **Category CRUD API**:
+    * `POST /api/categories`: Tambah kategori baru dengan validasi unik.
+    * `PUT/PATCH /api/categories/{id}`: Update info kategori.
+    * `DELETE /api/categories/{id}`: Hapus kategori dengan proteksi (cegah hapus jika ada fasilitas yang terhubung).
+* [x] **Feature Testing**: Pastikan proteksi role admin berjalan (Mahasiswa/Staff tidak bisa akses CRUD).
 
-* [ ] **Icon Handling**: Logic untuk menyimpan/mengubah asset `icon_marker`.
+---
 
-Setelah Phase 3 ini selesai, update dokumentasi endpoint serta cara penggunaan-nya di docs/API.md  
+Setelah Phase 3.5 ini selesai, update dokumentasi endpoint di:
+1. `docs/API.md`: Tambahkan detail payload untuk CRUD Categories.
+2. `docs/index.md`: Update gambaran sistem untuk menyertakan fitur manajemen kategori.
 
-Untuk memudahkan development Frontend.
+---
 
 ##  Phase 4: Frontend React & Maps Integration
 *Visualisasi data dan pengalaman pengguna.*
@@ -81,24 +83,24 @@ Untuk memudahkan development Frontend.
 
 ---
 
-## Daftar Endpoint Utama (API v1)
+##  Daftar Endpoint Utama (API v1)
 
 | Method | Endpoint | Fungsi | Akses |
 | --- | --- | --- | --- |
-| **AUTH** |  |  |  |
+| **AUTH** | | | |
 | `POST` | `/api/login` | Login & Get Token | Public |
 | `GET` | `/api/user` | Get Profile | Auth |
-| **CATEGORIES** |  |  |  |
-| `GET` | `/api/categories` | List Kategori & Marker Info | Auth |
-| `POST` | `/api/categories` | Tambah Kategori Baru | **Admin** |
-| `PUT` | `/api/categories/{id}` | Update Kategori | **Admin** |
-| `DELETE` | `/api/categories/{id}` | Hapus Kategori | **Admin** |
-| **FACILITIES** |  |  |  |
-| `GET` | `/api/facilities` | List Fasilitas & Koordinat | Auth |
-| **REPORTS** |  |  |  |
+| **CATEGORIES** | | | |
+| `GET` | `/api/categories` | List Kategori | Auth |
+| `POST` | `/api/categories` | Create Category | **Admin** |
+| `PUT` | `/api/categories/{id}` | Update Category | **Admin** |
+| `DELETE` | `/api/categories/{id}` | Delete Category | **Admin** |
+| **FACILITIES** | | | |
+| `GET` | `/api/facilities` | List Fasilitas & Markers | Auth |
+| **REPORTS** | | | |
 | `GET` | `/api/reports` | List Laporan (Scoped) | Auth |
-| `POST` | `/api/reports` | Kirim Laporan Baru | User |
-| `PATCH` | `/api/reports/{id}` | Update Status Laporan | Staff/Admin |
+| `POST` | `/api/reports` | Buat Laporan Baru | User |
+| `PATCH` | `/api/reports/{id}` | Update Status | Staff/Admin |
 | `DELETE` | `/api/reports/{id}` | Soft Delete Laporan | Admin |
 
 ---

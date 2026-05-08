@@ -9,11 +9,12 @@ Pemeliharaan fasilitas kampus seringkali terhambat oleh lambatnya proses pelapor
 - Mempermudah pemantauan status perbaikan bagi pelapor maupun pihak pengelola (Staff/Admin).
 
 ## 3. Gambaran Sistem
-SIFKA terdiri dari Backend API berbasis Laravel dan Frontend Dashboard berbasis React. Pengguna dapat memilih fasilitas yang tersedia di peta, mengirimkan laporan berupa deskripsi dan foto, serta menyertakan lokasi GPS mereka saat itu. Staff akan menerima notifikasi dan dapat memperbarui status perbaikan secara real-time.
+SIFKA terdiri dari Backend API berbasis Laravel dan Frontend Dashboard berbasis React. Pengguna dapat memilih fasilitas yang tersedia di peta, mengirimkan laporan berupa deskripsi dan foto, serta menyertakan lokasi GPS mereka saat itu. Staff akan menerima notifikasi dan dapat memperbarui status perbaikan secara real-time. Admin memiliki kendali penuh untuk mengelola master data kategori fasilitas.
 
 ## 4. Fitur Utama
 - **Geo-Tagged Reporting**: Pelaporan dengan koordinat GPS otomatis.
 - **Role-based Access Control**: Pemisahan hak akses antara Mahasiswa (Pelapor), Staff (Teknisi), dan Admin.
+- **Category Management**: Admin dapat menambah, mengubah, atau menghapus kategori fasilitas.
 - **Map Visualization**: Visualisasi sebaran fasilitas dan titik kerusakan di Google Maps.
 - **Image Upload**: Lampiran foto bukti kerusakan.
 - **Status Tracking**: Pemantauan tahapan perbaikan dari *Pending* hingga *Resolved*.

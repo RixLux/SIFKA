@@ -64,21 +64,32 @@ Sebagian besar endpoint memerlukan autentikasi menggunakan **Laravel Sanctum** (
 ## Resource Endpoints
 
 ### Categories
-`GET /categories` (Auth required)
+`GET /categories` (Auth required) - List all categories.
 
-**Response:**
+`POST /categories` (Auth (Admin) required) - Create new category.
+**Payload:**
 ```json
 {
-    "data": [
-        {
-            "id": 1,
-            "name": "Kelistrikan",
-            "icon_marker": "bolt",
-            "color_code": "#FFD700"
-        }
-    ]
+    "name": "Kelistrikan",
+    "icon_marker": "bolt",
+    "color_code": "#FFD700"
 }
 ```
+
+`PUT/PATCH /categories/{id}` (Auth (Admin) required) - Update category.
+**Payload:**
+```json
+{
+    "name": "Kelistrikan & Air",
+    "icon_marker": "droplet",
+    "color_code": "#0000FF"
+}
+```
+
+`DELETE /categories/{id}` (Auth (Admin) required) - Delete category.
+*Note: Deletion will fail if there are facilities linked to this category.*
+
+---
 
 ### Facilities
 `GET /facilities` (Auth required)
@@ -128,4 +139,4 @@ Sebagian besar endpoint memerlukan autentikasi menggunakan **Laravel Sanctum** (
 - `201 Created`: Resource berhasil dibuat.
 - `401 Unauthorized`: Token tidak valid atau tidak ada.
 - `403 Forbidden`: Tidak memiliki izin akses (Role tidak sesuai).
-- `422 Unprocessable Entity`: Validasi gagal.
+- `422 Unprocessable Entity`: Validasi gagal (misal: kategori masih digunakan fasilitas).

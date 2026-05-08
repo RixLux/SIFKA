@@ -30,8 +30,9 @@ Thumbs.db
 /storage/app/public/*
 !/storage/app/public/.gitignore
 
-#Personal Script
+#Personal Script and stuff
 *.sh
+*.docx
 
 #Agentic Development
 .agents/

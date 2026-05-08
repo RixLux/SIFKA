@@ -32,3 +32,19 @@ Thumbs.db
 
 #Personal Script
 *.sh
+
+#Agentic Development
+.agents/
+.gemini/
+GEMINI.md
+boost.json
+
+github.url
+github.desktop
+github.txt
+
+
+# --- MkDocs ---
+site/
+*/__pycache__/
+*.pyc

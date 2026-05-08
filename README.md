@@ -1,3 +1,12 @@
+## Documentation
+
+<a href="https://rixlux.github.io/SIFKA/">
+    <img
+      src="https://img.shields.io/badge/Docs-4051B5?style=for-the-badge&logo=MaterialForMkDocs&logoColor=white"
+      alt="Docs"
+    />
+</a>
+
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
 <p align="center">

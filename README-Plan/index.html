@@ -482,50 +482,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#phase-35-category-management-new-admin-only" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Phase 3.5: Category Management (New - Admin Only)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#phase-36-secure-registration-role-assignmentnew" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Phase 3.6: Secure Registration Role Assignment(New)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#objective" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Objective
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#key-files-context" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Key Files &amp; Context
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#phase-4-frontend-react-maps-integration" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -626,50 +582,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#phase-35-category-management-new-admin-only" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Phase 3.5: Category Management (New - Admin Only)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#phase-36-secure-registration-role-assignmentnew" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Phase 3.6: Secure Registration Role Assignment(New)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#objective" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Objective
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#key-files-context" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Key Files &amp; Context
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#phase-4-frontend-react-maps-integration" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -747,87 +659,40 @@
 </li>
 </ul>
 <h2 id="phase-2-geo-spatial-database-schema">Phase 2: Geo-Spatial Database Schema</h2>
-<p><em>Menangani data relasional dengan presisi koordinat tinggi.</em></p>
 <ul>
-<li>[x] <strong>Migration <code>categories</code></strong>: <code>id</code>, <code>name</code>, <code>icon_marker</code> (URL/SVG Path), <code>color_code</code>.</li>
-<li>[x] <strong>Migration <code>facilities</code></strong>:<ul>
-<li><code>id</code>, <code>category_id</code>, <code>name</code>, <code>description</code>.</li>
-<li><code>latitude</code> (decimal 10, 8), <code>longitude</code> (decimal 11, 8).</li>
-</ul>
-</li>
-<li>[x] <strong>Migration <code>reports</code></strong>:<ul>
-<li><code>id</code>, <code>user_id</code>, <code>facility_id</code>.</li>
-<li><code>title</code>, <code>description</code>, <code>image_path</code> (nullable).</li>
-<li><code>status</code> (Enum: <code>pending</code>, <code>in_progress</code>, <code>resolved</code>, <code>rejected</code>).</li>
-<li><code>lat_report</code>, <code>long_report</code> (Posisi spesifik pelapor saat mengirim).</li>
-<li><code>softDeletes()</code>: Untuk keamanan data (audit trail).</li>
-</ul>
-</li>
-<li>[x] <strong>Eloquent Relationships</strong>:<ul>
-<li><code>User</code> hasMany <code>Report</code>.</li>
-<li><code>Facility</code> belongsTo <code>Category</code> &amp; hasMany <code>Report</code>.</li>
-</ul>
-</li>
+<li>[x] Migration <code>categories</code></li>
+<li>[x] Migration <code>facilities</code></li>
+<li>[x] Migration <code>reports</code> (Updated: <code>facility_id</code> nullable for pinpoint accuracy)</li>
+<li>[x] Eloquent Relationships</li>
 </ul>
 <h2 id="phase-3-core-logic-security-the-engine">Phase 3: Core Logic &amp; Security (The Engine)</h2>
-<p><em>Membangun API yang aman dan efisien.</em></p>
 <ul>
-<li>[x] <strong>API Resources</strong>: Implementasi <code>ReportResource</code> dan <code>FacilityResource</code> untuk transformasi data JSON yang konsisten.</li>
-<li>[x] <strong>Authorization (Policies)</strong>:<ul>
-<li>Gunakan <code>ReportPolicy</code> untuk membatasi aksi.</li>
+<li>[x] API Resources (Report, Facility, Category, Building)</li>
+<li>[x] Authorization (Policies for all entities)</li>
+<li>[x] Image Processing</li>
+<li>[x] <strong>Phase 3.5: Category Management</strong> (Admin CRUD)</li>
+<li>[x] <strong>Phase 3.6: Secure Registration</strong> (Strict student default)</li>
+<li>[x] <strong>Phase 3.7: Facility Management &amp; Pinpoint Accuracy</strong></li>
+<li>[x] <strong>Phase 3.8: Database Normalization &amp; API Optimization</strong><ul>
+<li>Introduced <code>buildings</code> table for location grouping.</li>
+<li>Implemented nested JSON structure (Building -&gt; Amenities).</li>
+<li>Enforced consistent pagination across all GET endpoints.</li>
 </ul>
 </li>
-<li>[x] <strong>Image Processing</strong>:<ul>
-<li>Upload ke <code>Storage::disk('public')</code>.</li>
-<li>Validasi file (Mimes: jpg, png; Max: 2MB).</li>
-</ul>
-</li>
-<li>[ ] <strong>Service Layer (Optional)</strong>: Jika logic pelaporan kompleks (misal: kirim email otomatis), pindahkan dari Controller ke Service.</li>
-</ul>
-<h2 id="phase-35-category-management-new-admin-only">Phase 3.5: Category Management (New - Admin Only)</h2>
-<p><em>Fokus pada pengelolaan master data kategori oleh Admin.</em></p>
-<ul>
-<li>[x] <strong>CategoryPolicy</strong>: Implementasi restriksi akses khusus role <code>admin</code>.</li>
-<li>[x] <strong>Category CRUD API</strong>:<ul>
-<li><code>POST /api/categories</code>: Tambah kategori baru dengan validasi unik.</li>
-<li><code>PUT/PATCH /api/categories/{id}</code>: Update info kategori.</li>
-<li><code>DELETE /api/categories/{id}</code>: Hapus kategori dengan proteksi (cegah hapus jika ada fasilitas yang terhubung).</li>
-</ul>
-</li>
-<li>[x] <strong>Feature Testing</strong>: Pastikan proteksi role admin berjalan (Mahasiswa/Staff tidak bisa akses CRUD).</li>
-</ul>
-<h2 id="phase-36-secure-registration-role-assignmentnew">Phase 3.6: Secure Registration Role Assignment(New)</h2>
-<h2 id="objective">Objective</h2>
-<p>Prevent "Role Elevation" vulnerability where a public user can register themselves as an <code>admin</code> or <code>staff</code>. We will enforce a strict default role of <code>student</code> for all new registrations and ignore any <code>role</code> fields sent in the request payload.</p>
-<h2 id="key-files-context">Key Files &amp; Context</h2>
-<ul>
-<li>[x] <code>app/Http/Controllers/AuthController.php</code>: Handle registration logic.</li>
-<li>[x] <code>tests/Feature/AuthTest.php</code>: Verify security measures.</li>
-<li>[x] <code>docs/API.md</code>: Update documentation to reflect the removal of the <code>role</code> parameter.</li>
 </ul>
 <hr />
 <h2 id="phase-4-frontend-react-maps-integration">Phase 4: Frontend React &amp; Maps Integration</h2>
-<p><em>Visualisasi data dan pengalaman pengguna.</em></p>
 <ul>
+<li>Visualisasi data dan pengalaman pengguna.</li>
 <li>[ ] <strong>State Management</strong>: Zustand untuk global store (Auth &amp; Filters).</li>
-<li>[ ] <strong>Google Maps SDK</strong>:<ul>
-<li>Implementasi Custom Markers berdasarkan kategori fasilitas.</li>
-<li><strong>Map Picker</strong>: Fitur klik peta untuk mendapatkan koordinat otomatis saat melapor.</li>
-</ul>
-</li>
-<li>[ ] <strong>Form Handling</strong>: React Hook Form + Zod untuk validasi client-side.</li>
-<li>[ ] <strong>PWA Support (Optional)</strong>: Agar pelaporan bisa dilakukan langsung dari mobile browser dengan akses kamera/GPS yang lebih baik.</li>
+<li>[ ] <strong>Google Maps SDK</strong>: Custom Markers &amp; Pinpoint Picker.</li>
+<li>[ ] <strong>Form Handling</strong>: React Hook Form + Zod.</li>
 </ul>
 <h2 id="phase-5-monitoring-notifications-analytics">Phase 5: Monitoring, Notifications &amp; Analytics</h2>
-<p><em>Fitur lanjutan untuk administrasi.</em></p>
 <ul>
-<li>[ ] <strong>Real-time Notifications</strong>: Gunakan Laravel Database/Mail Notifications untuk memberitahu user jika status laporan berubah.</li>
-<li>[ ] <strong>Advanced Filtering</strong>: Filter laporan berdasarkan <code>status</code>, <code>date_range</code>, dan <code>category</code>.</li>
-<li>[ ] <strong>Admin Dashboard</strong>:<ul>
-<li>Statistik: "Jumlah laporan pending bulan ini", "Fasilitas paling sering rusak".</li>
-<li>Export data laporan ke CSV/Excel.</li>
-</ul>
-</li>
+<li>[ ] <strong>Real-time Notifications</strong></li>
+<li>[ ] <strong>Advanced Filtering</strong></li>
+<li>[ ] <strong>Admin Dashboard Statistics</strong></li>
 </ul>
 <hr />
 <h2 id="daftar-endpoint-utama-api-v1">Daftar Endpoint Utama (API v1)</h2>
@@ -850,14 +715,26 @@
 <tr>
 <td><code>POST</code></td>
 <td><code>/api/login</code></td>
-<td>Login &amp; Get Token</td>
+<td>Login</td>
 <td>Public</td>
 </tr>
 <tr>
+<td><strong>BUILDINGS</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
 <td><code>GET</code></td>
-<td><code>/api/user</code></td>
-<td>Get Profile</td>
+<td><code>/api/buildings</code></td>
+<td>List Gedung &amp; Fasilitas</td>
 <td>Auth</td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><code>/api/buildings</code></td>
+<td>Create Gedung</td>
+<td>Admin</td>
 </tr>
 <tr>
 <td><strong>CATEGORIES</strong></td>
@@ -872,24 +749,6 @@
 <td>Auth</td>
 </tr>
 <tr>
-<td><code>POST</code></td>
-<td><code>/api/categories</code></td>
-<td>Create Category</td>
-<td><strong>Admin</strong></td>
-</tr>
-<tr>
-<td><code>PUT</code></td>
-<td><code>/api/categories/{id}</code></td>
-<td>Update Category</td>
-<td><strong>Admin</strong></td>
-</tr>
-<tr>
-<td><code>DELETE</code></td>
-<td><code>/api/categories/{id}</code></td>
-<td>Delete Category</td>
-<td><strong>Admin</strong></td>
-</tr>
-<tr>
 <td><strong>FACILITIES</strong></td>
 <td></td>
 <td></td>
@@ -898,8 +757,14 @@
 <tr>
 <td><code>GET</code></td>
 <td><code>/api/facilities</code></td>
-<td>List Fasilitas &amp; Markers</td>
+<td>List Semua Aset</td>
 <td>Auth</td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><code>/api/facilities</code></td>
+<td>Create Fasilitas</td>
+<td>Admin</td>
 </tr>
 <tr>
 <td><strong>REPORTS</strong></td>
@@ -908,15 +773,9 @@
 <td></td>
 </tr>
 <tr>
-<td><code>GET</code></td>
-<td><code>/api/reports</code></td>
-<td>List Laporan (Scoped)</td>
-<td>Auth</td>
-</tr>
-<tr>
 <td><code>POST</code></td>
 <td><code>/api/reports</code></td>
-<td>Buat Laporan Baru</td>
+<td>Create (Pinpoint GPS)</td>
 <td>User</td>
 </tr>
 <tr>
@@ -925,19 +784,8 @@
 <td>Update Status</td>
 <td>Staff/Admin</td>
 </tr>
-<tr>
-<td><code>DELETE</code></td>
-<td><code>/api/reports/{id}</code></td>
-<td>Soft Delete Laporan</td>
-<td>Admin</td>
-</tr>
 </tbody>
 </table>
-<hr />
-<p><strong>Tech Stack Summary:</strong>
-- <strong>Backend</strong>: Laravel 13, MySQL/SQLite, Sanctum.
-- <strong>Frontend</strong>: React (Vite), Tailwind CSS, Zustand.
-- <strong>Maps</strong>: Google Maps Platform API.</p>
 
 
 

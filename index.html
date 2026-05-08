@@ -644,22 +644,20 @@
 <li>Mempermudah pemantauan status perbaikan bagi pelapor maupun pihak pengelola (Staff/Admin).</li>
 </ul>
 <h2 id="3-gambaran-sistem">3. Gambaran Sistem</h2>
-<p>SIFKA terdiri dari Backend API berbasis Laravel dan Frontend Dashboard berbasis React. Pengguna dapat memilih fasilitas yang tersedia di peta, mengirimkan laporan berupa deskripsi dan foto, serta menyertakan lokasi GPS mereka saat itu. Staff akan menerima notifikasi dan dapat memperbarui status perbaikan secara real-time. Admin memiliki kendali penuh untuk mengelola master data kategori fasilitas.</p>
+<p>SIFKA menggunakan arsitektur berbasis lokasi (<strong>Building-Centric</strong>). Setiap aset/fasilitas dikelompokkan berdasarkan gedung atau lokasi fisiknya. Pengguna dapat memberikan laporan kerusakan dengan akurasi pinpoint GPS, baik yang terhubung langsung ke fasilitas tertentu maupun laporan area terbuka. Admin memiliki kontrol penuh untuk mengelola master data Gedung, Kategori, dan Fasilitas.</p>
 <h2 id="4-fitur-utama">4. Fitur Utama</h2>
 <ul>
-<li><strong>Geo-Tagged Reporting</strong>: Pelaporan dengan koordinat GPS otomatis.</li>
+<li><strong>Geo-Tagged Reporting</strong>: Pelaporan dengan koordinat GPS otomatis (Pinpoint Accuracy).</li>
+<li><strong>Building Management</strong>: Pengelompokan aset berdasarkan lokasi fisik (Gedung/Area).</li>
 <li><strong>Role-based Access Control</strong>: Pemisahan hak akses antara Mahasiswa (Pelapor), Staff (Teknisi), dan Admin.</li>
-<li><strong>Category Management</strong>: Admin dapat menambah, mengubah, atau menghapus kategori fasilitas.</li>
-<li><strong>Map Visualization</strong>: Visualisasi sebaran fasilitas dan titik kerusakan di Google Maps.</li>
-<li><strong>Image Upload</strong>: Lampiran foto bukti kerusakan.</li>
+<li><strong>Map Visualization</strong>: Integrasi Google Maps untuk visualisasi sebaran laporan dan fasilitas.</li>
 <li><strong>Status Tracking</strong>: Pemantauan tahapan perbaikan dari <em>Pending</em> hingga <em>Resolved</em>.</li>
 </ul>
 <h2 id="5-teknologi-yang-digunakan">5. Teknologi yang Digunakan</h2>
 <ul>
-<li><strong>Backend</strong>: Laravel 13, Sanctum (Auth), SQLite/MySQL.</li>
-<li><strong>Frontend</strong>: React, Vite, Tailwind CSS, Zustand (State Management).</li>
-<li><strong>Maps</strong>: Google Maps JavaScript SDK.</li>
-<li><strong>Documentation</strong>: MkDocs.</li>
+<li><strong>Backend</strong>: Laravel 13 (PHP 8.5), Sanctum, SQLite/MySQL.</li>
+<li><strong>Frontend</strong>: React (Vite), Tailwind CSS, Zustand.</li>
+<li><strong>Maps</strong>: Google Maps Platform API.</li>
 </ul>
 <hr />
 <h2 id="navigasi">Navigasi</h2>

@@ -480,6 +480,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#super-admin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Super Admin
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#logout" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -530,6 +541,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#buildings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Buildings
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#facilities" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -557,10 +579,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#status-codes" class="md-nav__link">
+  <a href="#pagination" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Status Codes
+        Pagination
       
     </span>
   </a>
@@ -685,6 +707,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#super-admin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Super Admin
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#logout" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -735,6 +768,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#buildings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Buildings
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#facilities" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -762,10 +806,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#status-codes" class="md-nav__link">
+  <a href="#pagination" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Status Codes
+        Pagination
       
     </span>
   </a>
@@ -839,9 +883,11 @@
 <span class="w">    </span><span class="nt">&quot;password&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;password&quot;</span>
 <span class="p">}</span>
 </code></pre></div></p>
-<blockquote>
-<p>Hanya untuk tujuan tes.  </p>
-</blockquote>
+<h3 id="super-admin">Super Admin</h3>
+<p>Gunakan<br />
+<div class="highlight"><pre><span></span><code>php artisan app:create-super-admin
+</code></pre></div>
+untuk membuat akun admin pertama dari <code>.env</code>.  </p>
 <p>Admin Credential from <code>.env.example</code>:<br />
 <div class="highlight"><pre><span></span><code># Super Admin Credentials
 SUPER_ADMIN_NAME=&quot;Admin SIFKA&quot;
@@ -869,7 +915,7 @@ SUPER_ADMIN_PASSWORD=&quot;AdminSIFKA&quot;
 <hr />
 <h2 id="resource-endpoints">Resource Endpoints</h2>
 <h3 id="categories">Categories</h3>
-<p><code>GET /categories</code> (Auth required) - List all categories.</p>
+<p><code>GET /categories</code> (Auth required) - Paginated list of categories.</p>
 <p><code>POST /categories</code> (Auth (Admin) required) - Create new category.
 <strong>Payload:</strong>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
@@ -878,70 +924,78 @@ SUPER_ADMIN_PASSWORD=&quot;AdminSIFKA&quot;
 <span class="w">    </span><span class="nt">&quot;color_code&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;#FFD700&quot;</span>
 <span class="p">}</span>
 </code></pre></div></p>
-<p><code>PUT/PATCH /categories/{id}</code> (Auth (Admin) required) - Update category.
+<hr />
+<h3 id="buildings">Buildings</h3>
+<p><code>GET /buildings</code> (Auth required) - Paginated list of physical locations with nested amenities.</p>
+<p><code>POST /buildings</code> (Auth (Admin) required) - Create new building.
 <strong>Payload:</strong>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Kelistrikan &amp; Air&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;icon_marker&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;droplet&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;color_code&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;#0000FF&quot;</span>
+<span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Gedung Rektorat&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Kantor Pusat&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;latitude&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">-6.1234</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;longitude&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">106.1234</span>
 <span class="p">}</span>
 </code></pre></div></p>
-<p><code>DELETE /categories/{id}</code> (Auth (Admin) required) - Delete category.  </p>
-<blockquote>
-<p><em>Note: Deletion will fail if there are facilities linked to this category.</em></p>
-</blockquote>
-<hr />
-<h3 id="facilities">Facilities</h3>
-<p><code>GET /facilities</code> (Auth required)
-<code>GET /facilities/{id}</code> (Auth required)</p>
-<p><strong>Response (List):</strong>
+<p><strong>Response Example:</strong>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">    </span><span class="nt">&quot;data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">        </span><span class="p">{</span>
 <span class="w">            </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
-<span class="w">            </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Gedung A - Lt 1&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Area lobby utama&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="nt">&quot;latitude&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">-6.12345678</span><span class="p">,</span>
-<span class="w">            </span><span class="nt">&quot;longitude&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">106.12345678</span><span class="p">,</span>
-<span class="w">            </span><span class="nt">&quot;category&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Kelistrikan&quot;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Gedung Rektorat&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Kantor pusat&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;coordinate&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="nt">&quot;lat&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">-6.1234</span><span class="p">,</span>
+<span class="w">                </span><span class="nt">&quot;lng&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">106.1234</span>
+<span class="w">            </span><span class="p">},</span>
+<span class="w">            </span><span class="nt">&quot;amenities&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span>
+<span class="w">                    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Lampu LED Lobby&quot;</span><span class="p">,</span>
+<span class="w">                    </span><span class="nt">&quot;category&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Kelistrikan&quot;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">]</span>
 <span class="w">        </span><span class="p">}</span>
 <span class="w">    </span><span class="p">]</span>
 <span class="p">}</span>
 </code></pre></div></p>
+<hr />
+<h3 id="facilities">Facilities</h3>
+<p><code>GET /facilities</code> (Auth required) - Paginated list of all assets.</p>
+<p><code>POST /facilities</code> (Auth (Admin) required) - Create new facility.
+<strong>Payload:</strong>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;building_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;category_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Lampu LED Lobby&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Lampu utama area lobby&quot;</span>
+<span class="p">}</span>
+</code></pre></div></p>
+<hr />
 <h3 id="reports">Reports</h3>
 <p><code>GET /reports</code> (Auth required)  </p>
-<ul>
-<li>Mahasiswa: Hanya melihat laporan miliknya sendiri.</li>
-<li>Staff/Admin: Melihat semua laporan.</li>
-</ul>
-<p><code>POST /reports</code> (Auth required)<br />
+<p><code>POST /reports</code> (Auth required)
 <strong>Payload (Multipart/Form-Data):</strong>  </p>
 <ul>
-<li><code>facility_id</code>: integer (required)</li>
+<li><code>facility_id</code>: integer (optional) - Link to a specific asset.</li>
 <li><code>title</code>: string (required)</li>
 <li><code>description</code>: string (required)</li>
 <li><code>image</code>: file (optional, max 2MB)</li>
-<li><code>latitude</code>: numeric (required) - Posisi pelapor</li>
-<li><code>longitude</code>: numeric (required) - Posisi pelapor</li>
-</ul>
-<p><code>PATCH /reports/{id}</code> (Auth (Staff/Admin) required)<br />
-<strong>Payload:</strong>  </p>
-<ul>
-<li><code>status</code>: string (<code>pending</code>, <code>in_progress</code>, <code>resolved</code>, <code>rejected</code>)</li>
-</ul>
-<p><code>DELETE /reports/{id}</code> (Auth (Admin) required)  </p>
-<ul>
-<li>Melakukan Soft Delete pada laporan.</li>
+<li><code>latitude</code>: numeric (required) - Pinpoint GPS location.</li>
+<li><code>longitude</code>: numeric (required) - Pinpoint GPS location.</li>
 </ul>
 <hr />
-<h2 id="status-codes">Status Codes</h2>
-<ul>
-<li><code>200 OK</code>: Request berhasil.</li>
-<li><code>201 Created</code>: Resource berhasil dibuat.</li>
-<li><code>401 Unauthorized</code>: Token tidak valid atau tidak ada.</li>
-<li><code>403 Forbidden</code>: Tidak memiliki izin akses (Role tidak sesuai).</li>
-<li><code>422 Unprocessable Entity</code>: Validasi gagal (misal: kategori masih digunakan fasilitas).</li>
-</ul>
+<h2 id="pagination">Pagination</h2>
+<p>All <code>GET</code> resource endpoints return paginated data with the following meta structure:
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="err">...</span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;links&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="err">...</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;meta&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;current_page&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;last_page&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;total&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">75</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></p>
 
 
 

@@ -43,7 +43,6 @@ github.url
 github.desktop
 github.txt
 
-
 # --- MkDocs ---
 site/
 */__pycache__/

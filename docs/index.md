@@ -1,17 +1,31 @@
-# Welcome to MkDocs
+# SIFKA - Sistem Informasi Fasilitas Kampus
 
-For full documentation visit [mkdocs.org](https://www.mkdocs.org).
+## 1. Latar Belakang
+Pemeliharaan fasilitas kampus seringkali terhambat oleh lambatnya proses pelaporan dan sulitnya menentukan lokasi kerusakan yang akurat. Mahasiswa dan staf seringkali bingung harus melapor ke mana, dan pihak pemeliharaan sulit menemukan titik koordinat kerusakan yang dilaporkan secara deskriptif saja.
 
-## Commands
+## 2. Tujuan Project
+- Menyediakan platform pelaporan kerusakan fasilitas yang cepat dan terintegrasi.
+- Menggunakan teknologi Geo-Spatial (GPS) untuk akurasi lokasi kerusakan.
+- Mempermudah pemantauan status perbaikan bagi pelapor maupun pihak pengelola (Staff/Admin).
 
-* `mkdocs new [dir-name]` - Create a new project.
-* `mkdocs serve` - Start the live-reloading docs server.
-* `mkdocs build` - Build the documentation site.
-* `mkdocs -h` - Print help message and exit.
+## 3. Gambaran Sistem
+SIFKA terdiri dari Backend API berbasis Laravel dan Frontend Dashboard berbasis React. Pengguna dapat memilih fasilitas yang tersedia di peta, mengirimkan laporan berupa deskripsi dan foto, serta menyertakan lokasi GPS mereka saat itu. Staff akan menerima notifikasi dan dapat memperbarui status perbaikan secara real-time.
 
-## Project layout
+## 4. Fitur Utama
+- **Geo-Tagged Reporting**: Pelaporan dengan koordinat GPS otomatis.
+- **Role-based Access Control**: Pemisahan hak akses antara Mahasiswa (Pelapor), Staff (Teknisi), dan Admin.
+- **Map Visualization**: Visualisasi sebaran fasilitas dan titik kerusakan di Google Maps.
+- **Image Upload**: Lampiran foto bukti kerusakan.
+- **Status Tracking**: Pemantauan tahapan perbaikan dari *Pending* hingga *Resolved*.
 
-    mkdocs.yml    # The configuration file.
-    docs/
-        index.md  # The documentation homepage.
-        ...       # Other markdown pages, images and other files.
+## 5. Teknologi yang Digunakan
+- **Backend**: Laravel 13, Sanctum (Auth), SQLite/MySQL.
+- **Frontend**: React, Vite, Tailwind CSS, Zustand (State Management).
+- **Maps**: Google Maps JavaScript SDK.
+- **Documentation**: MkDocs.
+
+---
+
+## Navigasi
+- [Dokumentasi API](API.md)
+- [Rencana Pengembangan](README-Plan.md)

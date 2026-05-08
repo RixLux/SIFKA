@@ -51,4 +51,5 @@ extra_css:
 
 nav:
   - Home: index.md
+  - API: API.md
   - README Plan: README-Plan.md

@@ -1,8 +1,8 @@
-:root { --md-typeset-color: #7E56C2; }
+:root { --md-typeset-color: #1a1a1a; }
 [data-md-color-scheme="default"] {
-    --md-typeset-color: #7E56C2;
-    --md-code-fg-color: #4D21CB;
-    --md-typeset-a-color: #4D21CB;
-    --md-default-fg-color--light: #4D21CB;
+    --md-typeset-color: #1a1a1a;
+    --md-code-fg-color: #d32f2f;
+    --md-typeset-a-color: #d32f2f;
+    --md-default-fg-color--light: #d32f2f;
 }
-[data-md-color-scheme="slate"] { --md-typeset-color: #e5e9f0; }
+[data-md-color-scheme="slate"] { --md-typeset-color: #ffffff; }

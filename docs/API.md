@@ -1,0 +1,131 @@
+# SIFKA API Documentation (v1)
+
+Sistem Informasi Fasilitas Kampus (SIFKA) menyediakan API untuk pelaporan kerusakan fasilitas kampus berbasis koordinat GPS.
+
+## Base URL
+`http://localhost:8000/api`
+
+## Authentication
+Sebagian besar endpoint memerlukan autentikasi menggunakan **Laravel Sanctum** (Bearer Token).
+
+| Header | Value |
+| --- | --- |
+| `Accept` | `application/json` |
+| `Authorization` | `Bearer {token}` |
+
+---
+
+## Auth Endpoints
+
+### Register
+`POST /register`
+
+**Payload:**
+```json
+{
+    "name": "John Doe",
+    "email": "john@example.com",
+    "password": "password",
+    "password_confirmation": "password",
+    "role": "student" 
+}
+```
+*Role options: `student`, `staff`, `admin`. Default: `student`.*
+
+### Login
+`POST /login`
+
+**Payload:**
+```json
+{
+    "email": "john@example.com",
+    "password": "password"
+}
+```
+
+**Response:**
+```json
+{
+    "message": "Login successful",
+    "access_token": "1|xxxxxxxxxxxx",
+    "token_type": "Bearer",
+    "user": { ... }
+}
+```
+
+### Logout
+`POST /logout` (Auth required)
+
+### Get Profile
+`GET /user` (Auth required)
+
+---
+
+## Resource Endpoints
+
+### Categories
+`GET /categories` (Auth required)
+
+**Response:**
+```json
+{
+    "data": [
+        {
+            "id": 1,
+            "name": "Kelistrikan",
+            "icon_marker": "bolt",
+            "color_code": "#FFD700"
+        }
+    ]
+}
+```
+
+### Facilities
+`GET /facilities` (Auth required)
+`GET /facilities/{id}` (Auth required)
+
+**Response (List):**
+```json
+{
+    "data": [
+        {
+            "id": 1,
+            "name": "Gedung A - Lt 1",
+            "description": "Area lobby utama",
+            "latitude": -6.12345678,
+            "longitude": 106.12345678,
+            "category": { "id": 1, "name": "Kelistrikan" }
+        }
+    ]
+}
+```
+
+### Reports
+`GET /reports` (Auth required)
+- Mahasiswa: Hanya melihat laporan miliknya sendiri.
+- Staff/Admin: Melihat semua laporan.
+
+`POST /reports` (Auth required)
+**Payload (Multipart/Form-Data):**
+- `facility_id`: integer (required)
+- `title`: string (required)
+- `description`: string (required)
+- `image`: file (optional, max 2MB)
+- `latitude`: numeric (required) - Posisi pelapor
+- `longitude`: numeric (required) - Posisi pelapor
+
+`PATCH /reports/{id}` (Auth (Staff/Admin) required)
+**Payload:**
+- `status`: string (`pending`, `in_progress`, `resolved`, `rejected`)
+
+`DELETE /reports/{id}` (Auth (Admin) required)
+- Melakukan Soft Delete pada laporan.
+
+---
+
+## Status Codes
+- `200 OK`: Request berhasil.
+- `201 Created`: Resource berhasil dibuat.
+- `401 Unauthorized`: Token tidak valid atau tidak ada.
+- `403 Forbidden`: Tidak memiliki izin akses (Role tidak sesuai).
+- `422 Unprocessable Entity`: Validasi gagal.

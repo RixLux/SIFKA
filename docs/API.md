@@ -43,7 +43,13 @@ Sebagian besar endpoint memerlukan autentikasi menggunakan **Laravel Sanctum** (
 }
 ```
 
-> Hanya untuk tujuan tes.  
+### Super Admin
+
+Gunakan  
+```
+php artisan app:create-super-admin
+```
+untuk membuat akun admin pertama dari `.env`.  
 
 Admin Credential from `.env.example`:  
 ```
@@ -82,7 +88,7 @@ SUPER_ADMIN_PASSWORD="AdminSIFKA"
 ## Resource Endpoints
 
 ### Categories
-`GET /categories` (Auth required) - List all categories.
+`GET /categories` (Auth required) - Paginated list of categories.
 
 `POST /categories` (Auth (Admin) required) - Create new category.
 **Payload:**
@@ -94,72 +100,89 @@ SUPER_ADMIN_PASSWORD="AdminSIFKA"
 }
 ```
 
-`PUT/PATCH /categories/{id}` (Auth (Admin) required) - Update category.
+---
+
+### Buildings
+`GET /buildings` (Auth required) - Paginated list of physical locations with nested amenities.
+
+`POST /buildings` (Auth (Admin) required) - Create new building.
 **Payload:**
 ```json
 {
-    "name": "Kelistrikan & Air",
-    "icon_marker": "droplet",
-    "color_code": "#0000FF"
+    "name": "Gedung Rektorat",
+    "description": "Kantor Pusat",
+    "latitude": -6.1234,
+    "longitude": 106.1234
 }
 ```
 
-`DELETE /categories/{id}` (Auth (Admin) required) - Delete category.  
-
-> *Note: Deletion will fail if there are facilities linked to this category.*
-
----
-
-### Facilities
-`GET /facilities` (Auth required)
-`GET /facilities/{id}` (Auth required)
-
-**Response (List):**
+**Response Example:**
 ```json
 {
     "data": [
         {
             "id": 1,
-            "name": "Gedung A - Lt 1",
-            "description": "Area lobby utama",
-            "latitude": -6.12345678,
-            "longitude": 106.12345678,
-            "category": { "id": 1, "name": "Kelistrikan" }
+            "name": "Gedung Rektorat",
+            "description": "Kantor pusat",
+            "coordinate": {
+                "lat": -6.1234,
+                "lng": 106.1234
+            },
+            "amenities": [
+                {
+                    "id": 10,
+                    "name": "Lampu LED Lobby",
+                    "category": { "name": "Kelistrikan" }
+                }
+            ]
         }
     ]
 }
 ```
 
-### Reports
-`GET /reports` (Auth required)  
+---
 
-- Mahasiswa: Hanya melihat laporan miliknya sendiri.
-- Staff/Admin: Melihat semua laporan.
+### Facilities
+`GET /facilities` (Auth required) - Paginated list of all assets.
 
-`POST /reports` (Auth required)  
-**Payload (Multipart/Form-Data):**  
-
-- `facility_id`: integer (required)
-- `title`: string (required)
-- `description`: string (required)
-- `image`: file (optional, max 2MB)
-- `latitude`: numeric (required) - Posisi pelapor
-- `longitude`: numeric (required) - Posisi pelapor
-
-`PATCH /reports/{id}` (Auth (Staff/Admin) required)  
-**Payload:**  
-
-- `status`: string (`pending`, `in_progress`, `resolved`, `rejected`)
-
-`DELETE /reports/{id}` (Auth (Admin) required)  
-
-- Melakukan Soft Delete pada laporan.
+`POST /facilities` (Auth (Admin) required) - Create new facility.
+**Payload:**
+```json
+{
+    "building_id": 1,
+    "category_id": 1,
+    "name": "Lampu LED Lobby",
+    "description": "Lampu utama area lobby"
+}
+```
 
 ---
 
-## Status Codes
-- `200 OK`: Request berhasil.
-- `201 Created`: Resource berhasil dibuat.
-- `401 Unauthorized`: Token tidak valid atau tidak ada.
-- `403 Forbidden`: Tidak memiliki izin akses (Role tidak sesuai).
-- `422 Unprocessable Entity`: Validasi gagal (misal: kategori masih digunakan fasilitas).
+### Reports
+`GET /reports` (Auth required)  
+
+`POST /reports` (Auth required)
+**Payload (Multipart/Form-Data):**  
+
+- `facility_id`: integer (optional) - Link to a specific asset.
+- `title`: string (required)
+- `description`: string (required)
+- `image`: file (optional, max 2MB)
+- `latitude`: numeric (required) - Pinpoint GPS location.
+- `longitude`: numeric (required) - Pinpoint GPS location.
+
+---
+
+## Pagination
+All `GET` resource endpoints return paginated data with the following meta structure:
+```json
+{
+    "data": [...],
+    "links": { ... },
+    "meta": {
+        "current_page": 1,
+        "last_page": 5,
+        "total": 75
+    }
+}
+```

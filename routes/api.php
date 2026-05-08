@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BuildingController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\FacilityController;
 use App\Http\Controllers\ReportController;
@@ -17,8 +18,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', [AuthController::class, 'me']);
 
     Route::apiResource('categories', CategoryController::class);
-    Route::get('/facilities', [FacilityController::class, 'index']);
-    Route::get('/facilities/{facility}', [FacilityController::class, 'show']);
+    Route::apiResource('buildings', BuildingController::class);
+    Route::apiResource('facilities', FacilityController::class);
 
     Route::apiResource('reports', ReportController::class);
 });

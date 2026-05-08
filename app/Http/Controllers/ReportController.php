@@ -48,7 +48,7 @@ class ReportController extends Controller
         $this->authorize('create', Report::class);
 
         $validated = $request->validate([
-            'facility_id' => 'required|exists:facilities,id',
+            'facility_id' => 'nullable|exists:facilities,id',
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
@@ -63,7 +63,7 @@ class ReportController extends Controller
 
         $report = Report::create([
             'user_id' => $request->user()->id,
-            'facility_id' => $validated['facility_id'],
+            'facility_id' => $validated['facility_id'] ?? null,
             'title' => $validated['title'],
             'description' => $validated['description'],
             'image_path' => $imagePath,

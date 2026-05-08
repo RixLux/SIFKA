@@ -9,21 +9,19 @@ Pemeliharaan fasilitas kampus seringkali terhambat oleh lambatnya proses pelapor
 - Mempermudah pemantauan status perbaikan bagi pelapor maupun pihak pengelola (Staff/Admin).
 
 ## 3. Gambaran Sistem
-SIFKA terdiri dari Backend API berbasis Laravel dan Frontend Dashboard berbasis React. Pengguna dapat memilih fasilitas yang tersedia di peta, mengirimkan laporan berupa deskripsi dan foto, serta menyertakan lokasi GPS mereka saat itu. Staff akan menerima notifikasi dan dapat memperbarui status perbaikan secara real-time. Admin memiliki kendali penuh untuk mengelola master data kategori fasilitas.
+SIFKA menggunakan arsitektur berbasis lokasi (**Building-Centric**). Setiap aset/fasilitas dikelompokkan berdasarkan gedung atau lokasi fisiknya. Pengguna dapat memberikan laporan kerusakan dengan akurasi pinpoint GPS, baik yang terhubung langsung ke fasilitas tertentu maupun laporan area terbuka. Admin memiliki kontrol penuh untuk mengelola master data Gedung, Kategori, dan Fasilitas.
 
 ## 4. Fitur Utama
-- **Geo-Tagged Reporting**: Pelaporan dengan koordinat GPS otomatis.
+- **Geo-Tagged Reporting**: Pelaporan dengan koordinat GPS otomatis (Pinpoint Accuracy).
+- **Building Management**: Pengelompokan aset berdasarkan lokasi fisik (Gedung/Area).
 - **Role-based Access Control**: Pemisahan hak akses antara Mahasiswa (Pelapor), Staff (Teknisi), dan Admin.
-- **Category Management**: Admin dapat menambah, mengubah, atau menghapus kategori fasilitas.
-- **Map Visualization**: Visualisasi sebaran fasilitas dan titik kerusakan di Google Maps.
-- **Image Upload**: Lampiran foto bukti kerusakan.
+- **Map Visualization**: Integrasi Google Maps untuk visualisasi sebaran laporan dan fasilitas.
 - **Status Tracking**: Pemantauan tahapan perbaikan dari *Pending* hingga *Resolved*.
 
 ## 5. Teknologi yang Digunakan
-- **Backend**: Laravel 13, Sanctum (Auth), SQLite/MySQL.
-- **Frontend**: React, Vite, Tailwind CSS, Zustand (State Management).
-- **Maps**: Google Maps JavaScript SDK.
-- **Documentation**: MkDocs.
+- **Backend**: Laravel 13 (PHP 8.5), Sanctum, SQLite/MySQL.
+- **Frontend**: React (Vite), Tailwind CSS, Zustand.
+- **Maps**: Google Maps Platform API.
 
 ---
 

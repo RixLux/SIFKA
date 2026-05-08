@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\FacilityResource;
-use App\Models\Facility;
+use App\Http\Resources\BuildingResource;
+use App\Models\Building;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 
-class FacilityController extends Controller
+class BuildingController extends Controller
 {
     use AuthorizesRequests;
 
@@ -16,8 +16,8 @@ class FacilityController extends Controller
      */
     public function index()
     {
-        $facilities = Facility::with(['category', 'building'])->paginate(15);
-        return FacilityResource::collection($facilities);
+        $buildings = Building::with('facilities.category')->paginate(15);
+        return BuildingResource::collection($buildings);
     }
 
     /**
@@ -25,66 +25,64 @@ class FacilityController extends Controller
      */
     public function store(Request $request)
     {
-        $this->authorize('create', Facility::class);
+        $this->authorize('create', Building::class);
 
         $validated = $request->validate([
-            'category_id' => 'required|exists:categories,id',
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'latitude' => 'required|numeric',
             'longitude' => 'required|numeric',
         ]);
 
-        $facility = Facility::create($validated);
+        $building = Building::create($validated);
 
-        return new FacilityResource($facility->load('category'));
+        return new BuildingResource($building);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Facility $facility)
+    public function show(Building $building)
     {
-        return new FacilityResource($facility->load('category'));
+        return new BuildingResource($building->load('facilities.category'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Facility $facility)
+    public function update(Request $request, Building $building)
     {
-        $this->authorize('update', $facility);
+        $this->authorize('update', $building);
 
         $validated = $request->validate([
-            'category_id' => 'required|exists:categories,id',
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'latitude' => 'required|numeric',
             'longitude' => 'required|numeric',
         ]);
 
-        $facility->update($validated);
+        $building->update($validated);
 
-        return new FacilityResource($facility->load('category'));
+        return new BuildingResource($building);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Facility $facility)
+    public function destroy(Building $building)
     {
-        $this->authorize('delete', $facility);
+        $this->authorize('delete', $building);
 
-        if ($facility->reports()->exists()) {
+        if ($building->facilities()->exists()) {
             return response()->json([
-                'message' => 'Cannot delete facility because it has associated reports.'
+                'message' => 'Cannot delete building because it has associated facilities.'
             ], 422);
         }
 
-        $facility->delete();
+        $building->delete();
 
         return response()->json([
-            'message' => 'Facility deleted successfully.'
+            'message' => 'Building deleted successfully.'
         ]);
     }
 }

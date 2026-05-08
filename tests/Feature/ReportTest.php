@@ -50,6 +50,30 @@ class ReportTest extends TestCase
     }
 
     /**
+     * Test user can create pinpoint report without a facility.
+     */
+    public function test_user_can_create_pinpoint_report_without_facility(): void
+    {
+        $user = User::factory()->create(['role' => 'student']);
+
+        $response = $this->actingAs($user)
+            ->postJson('/api/reports', [
+                'facility_id' => null,
+                'title' => 'Pohon Tumbang',
+                'description' => 'Ada pohon tumbang di jalan lingkar',
+                'latitude' => -6.5555,
+                'longitude' => 106.5555,
+            ]);
+
+        $response->assertStatus(201);
+        $this->assertDatabaseHas('reports', [
+            'title' => 'Pohon Tumbang',
+            'facility_id' => null,
+            'lat_report' => -6.5555,
+        ]);
+    }
+
+    /**
      * Test staff can update report status.
      */
     public function test_staff_can_update_report_status(): void

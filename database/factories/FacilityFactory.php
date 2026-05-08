@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Building;
 use App\Models\Category;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -18,11 +19,12 @@ class FacilityFactory extends Factory
     public function definition(): array
     {
         return [
+            'building_id' => Building::factory(),
             'category_id' => Category::factory(),
-            'name' => $this->faker->company(),
+            'name' => $this->faker->word(),
             'description' => $this->faker->sentence(),
-            'latitude' => $this->faker->latitude(),
-            'longitude' => $this->faker->longitude(),
+            'latitude' => null,
+            'longitude' => null,
         ];
     }
 }

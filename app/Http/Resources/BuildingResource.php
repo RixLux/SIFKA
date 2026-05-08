@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class FacilityResource extends JsonResource
+class BuildingResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -19,11 +19,10 @@ class FacilityResource extends JsonResource
             'name' => $this->name,
             'description' => $this->description,
             'coordinate' => [
-                'lat' => $this->latitude ? (float) $this->latitude : null,
-                'lng' => $this->longitude ? (float) $this->longitude : null,
+                'lat' => (float) $this->latitude,
+                'lng' => (float) $this->longitude,
             ],
-            'category' => new CategoryResource($this->whenLoaded('category')),
-            'building_id' => $this->building_id,
+            'amenities' => FacilityResource::collection($this->whenLoaded('facilities')),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

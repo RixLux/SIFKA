@@ -1,89 +1,86 @@
-#  Campus Facility API & Dashboard Plan
+#  Campus Facility API & Dashboard Plan (Refined)
 
 Dokumentasi rencana pembangunan sistem pelaporan kerusakan fasilitas kampus berbasis koordinat GPS.
 
 ##  Phase 1: Inisialisasi & Authentication (The Foundation)
+*Fokus pada keamanan dan identitas pengguna.*
 
-Fase ini membangun gerbang keamanan bagi pengguna.
+* [x] **Environment Check**: Pastikan menggunakan Laravel 13 & PHP 8.5.
+* [x] **Sanctum Integration**: Jalankan `php artisan install:api` untuk autentikasi token.
+* [x] **User Role System**: 
+    * Migrasi tabel `users` dengan kolom `role` (Enum: `student`, `staff`, `admin`).
+    * Default role adalah `student`.
+* [x] **Auth Controller**:
+    * `POST /api/register`: Validasi email kampus & role.
+    * `POST /api/login`: Return Bearer Token & User Profile.
+    * `POST /api/logout`: Revoke token saat ini.
+* [x] **CORS & Security**: Konfigurasi `config/cors.php` untuk mengizinkan frontend React.
 
-* [ ] **Setup Laravel 11**: `laravel new campus-facility-api`.
-* [ ] **Install & Config Sanctum**: `php artisan install:api`.
-* [ ] **User Role System**: Tambahkan kolom `role` (`student`, `staff`, `admin`) pada migrasi tabel `users`.
-* [ ] **Auth Logic**:
-* Implementasi `Register` dan `Login` di `AuthController`.
-* Return `token` dan `user_data` (termasuk role) untuk disimpan di **LocalStorage/Cookies** React.
+##  Phase 2: Geo-Spatial Database Schema
+*Menangani data relasional dengan presisi koordinat tinggi.*
 
+* [x] **Migration `categories`**: `id`, `name`, `icon_marker` (URL/SVG Path), `color_code`.
+* [x] **Migration `facilities`**:
+    * `id`, `category_id`, `name`, `description`.
+    * `latitude` (decimal 10, 8), `longitude` (decimal 11, 8).
+* [x] **Migration `reports`**:
+    * `id`, `user_id`, `facility_id`.
+    * `title`, `description`, `image_path` (nullable).
+    * `status` (Enum: `pending`, `in_progress`, `resolved`, `rejected`).
+    * `lat_report`, `long_report` (Posisi spesifik pelapor saat mengirim).
+    * `softDeletes()`: Untuk keamanan data (audit trail).
+* [x] **Eloquent Relationships**:
+    * `User` hasMany `Report`.
+    * `Facility` belongsTo `Category` & hasMany `Report`.
+    * `Category` hasMany `Facility`.
 
-* [ ] **CORS Configuration**: Pastikan `config/cors.php` mengizinkan domain frontend React (biasanya `localhost:5173`).
+##  Phase 3: Core Logic & Security (The Engine)
+*Membangun API yang aman dan efisien.*
 
-##  Phase 2: Database & Geo-Spatial Schema
+* [ ] **API Resources**: Implementasi `ReportResource` dan `FacilityResource` untuk transformasi data JSON yang konsisten.
+* [ ] **Authorization (Policies)**:
+    * Gunakan `ReportPolicy` untuk membatasi aksi (contoh: Mahasiswa hanya bisa melihat laporannya sendiri, Staff bisa update status).
+* [ ] **Image Processing**:
+    * Upload ke `Storage::disk('public')`.
+    * Validasi file (Mimes: jpg, png; Max: 2MB).
+* [ ] **Service Layer (Optional)**: Jika logic pelaporan kompleks (misal: kirim email otomatis), pindahkan dari Controller ke Service.
 
-Menangani data relasional dan koordinat lokasi Google Maps.
+##  Phase 4: Frontend React & Maps Integration
+*Visualisasi data dan pengalaman pengguna.*
 
-* [ ] **Migration `categories**`: `id`, `name`, `icon_marker`.
-* [ ] **Migration `facilities**`:
-* `id`, `category_id`, `name`, `latitude`, `longitude`.
+* [ ] **State Management**: Zustand untuk global store (Auth & Filters).
+* [ ] **Google Maps SDK**:
+    * Implementasi Custom Markers berdasarkan kategori fasilitas.
+    * **Map Picker**: Fitur klik peta untuk mendapatkan koordinat otomatis saat melapor.
+* [ ] **Form Handling**: React Hook Form + Zod untuk validasi client-side.
+* [ ] **PWA Support (Optional)**: Agar pelaporan bisa dilakukan langsung dari mobile browser dengan akses kamera/GPS yang lebih baik.
 
+##  Phase 5: Monitoring, Notifications & Analytics
+*Fitur lanjutan untuk administrasi.*
 
-* [ ] **Migration `reports**`:
-* `id`, `user_id`, `facility_id`.
-* `title`, `description`, `image_path`.
-* `status` (enum: `pending`, `in_progress`, `resolved`, `rejected`).
-* `lat_report`, `long_report` (untuk posisi spesifik saat melapor).
-
-
-* [ ] **Model Relationship**:
-* `Facility` belongsTo `Category`.
-* `Report` belongsTo `User` & `Facility`.
-
-
-
-##  Phase 3: Backend Logic & API Resources
-
-Membangun engine untuk memproses data dan file gambar.
-
-* [ ] **API Resources**: Gunakan `php artisan make:resource ReportResource` untuk standarisasi JSON response.
-* [ ] **Image Handling**: Implementasi upload gambar menggunakan `Storage::disk('public')`.
-* [ ] **Validation Logic**:
-* `StoreReportRequest`: Validasi `image` (max 2MB) dan koordinat `numeric`.
-
-
-* [ ] **RBAC Middleware**: Buat middleware `CheckRole` untuk membatasi akses (Contoh: Hanya Staff yang bisa `PUT /reports/{id}` untuk update status).
-
-##  Phase 4: Frontend React Integration
-
-Optimisasi UX dengan Google Maps API.
-
-* [ ] **Setup React**: Menggunakan Vite + Tailwind CSS.
-* [ ] **State Management**: Gunakan `Zustand` atau `Context API` untuk menyimpan token auth.
-* [ ] **Google Maps Integration**:
-* Install `@react-google-maps/api`.
-* **Feature**: Tampilkan marker `facilities` dari API.
-* **Feature**: Map Picker (User klik peta untuk mengisi koordinat laporan secara otomatis).
-
-
-* [ ] **Dynamic Dropdown**: Fetching data `/api/categories` dan `/api/facilities` untuk form pelaporan.
-
-##  Phase 5: Filtering, Search & Monitoring
-
-Fitur untuk memudahkan Staff memantau laporan.
-
-* [ ] **Eager Loading**: Gunakan `with(['user', 'facility'])` untuk menghindari N+1 problem.
-* [ ] **Filter System**: Filter berdasarkan `status` dan `category_id`.
-* [ ] **Search**: Implementasi pencarian berdasarkan judul laporan atau nama fasilitas.
-* [ ] **Admin Dashboard**: Tabel ringkasan status laporan (Total Pending, Total Resolved).
+* [ ] **Real-time Notifications**: Gunakan Laravel Database/Mail Notifications untuk memberitahu user jika status laporan berubah.
+* [ ] **Advanced Filtering**: Filter laporan berdasarkan `status`, `date_range`, dan `category`.
+* [ ] **Admin Dashboard**:
+    * Statistik: "Jumlah laporan pending bulan ini", "Fasilitas paling sering rusak".
+    * Export data laporan ke CSV/Excel (Optional).
 
 ---
 
-##  Daftar Endpoint Utama
+##  Daftar Endpoint Utama (API v1)
 
 | Method | Endpoint | Fungsi | Akses |
 | --- | --- | --- | --- |
-| `POST` | `/api/login` | Mendapatkan Bearer Token | Public |
-| `GET` | `/api/categories` | Data untuk dropdown kategori | Auth |
-| `GET` | `/api/facilities` | List fasilitas & koordinat map | Auth |
-| `GET` | `/api/reports` | List laporan (Filter & Search) | Auth |
-| `POST` | `/api/reports` | Kirim laporan (Multiform/Data) | Auth (User) |
-| `PATCH` | `/api/reports/{id}` | Update status laporan | Auth (Staff) |
-| `DELETE` | `/api/reports/{id}` | Menghapus data laporan | Auth (Admin) |
+| `POST` | `/api/login` | Login & Get Token | Public |
+| `GET` | `/api/user` | Get Profile | Auth |
+| `GET` | `/api/categories` | List Kategori | Auth |
+| `GET` | `/api/facilities` | List Fasilitas & Map Markers | Auth |
+| `GET` | `/api/reports` | List Laporan (Scoped by Role) | Auth |
+| `POST` | `/api/reports` | Buat Laporan Baru | Auth (User) |
+| `PATCH` | `/api/reports/{id}` | Update Status (Staff Only) | Auth (Staff) |
+| `DELETE` | `/api/reports/{id}` | Soft Delete Laporan | Auth (Admin) |
 
+---
+**Tech Stack Summary:**
+- **Backend**: Laravel 13, MySQL/SQLite, Sanctum.
+- **Frontend**: React (Vite), Tailwind CSS, Zustand.
+- **Maps**: Google Maps Platform API.

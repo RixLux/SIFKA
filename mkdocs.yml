@@ -45,6 +45,8 @@ markdown_extensions:
 
 plugins:
   - search
+  - swagger-ui-tag
+  # - render_swagger
 
 extra_css:
   - stylesheets/extra.css

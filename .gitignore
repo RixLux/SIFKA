@@ -33,6 +33,7 @@ Thumbs.db
 #Personal Script and stuff
 *.sh
 *.docx
+*.pdf
 
 #Agentic Development
 .agents/

@@ -2,6 +2,10 @@
 
 Sistem Informasi Fasilitas Kampus (SIFKA) menyediakan API untuk pelaporan kerusakan fasilitas kampus berbasis koordinat GPS.
 
+## API Reference
+
+<swagger-ui src="./assets/api.json"/>
+
 ## Base URL
 `http://localhost:8000/api`
 

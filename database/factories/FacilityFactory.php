@@ -4,10 +4,12 @@ namespace Database\Factories;
 
 use App\Models\Building;
 use App\Models\Category;
+use App\Models\Facility;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\DB;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Facility>
+ * @extends Factory<Facility>
  */
 class FacilityFactory extends Factory
 {
@@ -23,8 +25,7 @@ class FacilityFactory extends Factory
             'category_id' => Category::factory(),
             'name' => $this->faker->word(),
             'description' => $this->faker->sentence(),
-            'latitude' => null,
-            'longitude' => null,
+            'location' => DB::raw("ST_GeomFromText('POINT(".$this->faker->longitude().' '.$this->faker->latitude().")', 4326)"),
         ];
     }
 }

@@ -2,19 +2,19 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Building;
+use App\Models\Category;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 
-class StoreBuildingRequest extends FormRequest
+class StoreCategoryRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return Gate::allows('create', Building::class);
+        return Gate::allows('create', Category::class);
     }
 
     /**
@@ -25,10 +25,9 @@ class StoreBuildingRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255',
-            'description' => 'sometimes|nullable|string',
-            'latitude' => 'required|numeric',
-            'longitude' => 'required|numeric',
+            'name' => 'required|string|max:255|unique:categories',
+            'icon_marker' => 'required|string|max:255',
+            'color_code' => 'required|string|max:7',
         ];
     }
 }

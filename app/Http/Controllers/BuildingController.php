@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreBuildingRequest;
+use App\Http\Requests\UpdateBuildingRequest;
 use App\Http\Resources\BuildingResource;
+use App\Http\Resources\GeoJsonCollection;
 use App\Models\Building;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class BuildingController extends Controller
 {
@@ -14,29 +18,37 @@ class BuildingController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $buildings = Building::with('facilities.category')->paginate(15);
+        $query = Building::with('facilities');
+
+        if ($request->query('format') === 'geojson') {
+            $buildings = $query->get();
+
+            return new GeoJsonCollection(BuildingResource::collection($buildings));
+        }
+
+        $buildings = $query->paginate(15);
+
         return BuildingResource::collection($buildings);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreBuildingRequest $request)
     {
-        $this->authorize('create', Building::class);
+        $validated = $request->validated();
 
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'latitude' => 'required|numeric',
-            'longitude' => 'required|numeric',
+        $building = Building::create([
+            'name' => $validated['name'],
+            'description' => $validated['description'] ?? null,
+            'location' => DB::raw("ST_GeomFromText('POINT(".$validated['longitude'].' '.$validated['latitude'].")', 4326)"),
         ]);
 
-        $building = Building::create($validated);
-
-        return new BuildingResource($building);
+        return (new BuildingResource($building->refresh()))
+            ->response()
+            ->setStatusCode(201);
     }
 
     /**
@@ -44,26 +56,43 @@ class BuildingController extends Controller
      */
     public function show(Building $building)
     {
-        return new BuildingResource($building->load('facilities.category'));
+        return new BuildingResource($building->load('facilities'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Building $building)
+    public function update(UpdateBuildingRequest $request, Building $building)
     {
-        $this->authorize('update', $building);
+        $validated = $request->validated();
 
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'latitude' => 'required|numeric',
-            'longitude' => 'required|numeric',
-        ]);
+        $data = [
+            'name' => $validated['name'],
+            'description' => $validated['description'] ?? null,
+        ];
 
-        $building->update($validated);
+        if (isset($validated['latitude']) && isset($validated['longitude'])) {
+            $data['location'] = DB::raw("ST_GeomFromText('POINT(".$validated['longitude'].' '.$validated['latitude'].")', 4326)");
+        }
+
+        $building->update($data);
 
         return new BuildingResource($building);
+    }
+
+    /**
+     * Search for buildings.
+     */
+    public function search(Request $request)
+    {
+        $query = $request->query('q');
+        $buildings = Building::search($query)->get();
+
+        if ($request->query('format') === 'geojson') {
+            return new GeoJsonCollection(BuildingResource::collection($buildings));
+        }
+
+        return BuildingResource::collection($buildings);
     }
 
     /**
@@ -75,14 +104,14 @@ class BuildingController extends Controller
 
         if ($building->facilities()->exists()) {
             return response()->json([
-                'message' => 'Cannot delete building because it has associated facilities.'
+                'message' => 'Cannot delete building because it has associated facilities.',
             ], 422);
         }
 
         $building->delete();
 
         return response()->json([
-            'message' => 'Building deleted successfully.'
+            'message' => 'Building deleted successfully.',
         ]);
     }
 }

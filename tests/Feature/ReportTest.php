@@ -46,7 +46,7 @@ class ReportTest extends TestCase
         $imageUrl = $response->json('data.image_url');
         $this->assertNotNull($imageUrl);
         $filename = basename($imageUrl);
-        Storage::disk('public')->assertExists('reports/' . $filename);
+        Storage::disk('public')->assertExists('reports/'.$filename);
     }
 
     /**
@@ -69,8 +69,10 @@ class ReportTest extends TestCase
         $this->assertDatabaseHas('reports', [
             'title' => 'Pohon Tumbang',
             'facility_id' => null,
-            'lat_report' => -6.5555,
         ]);
+
+        $report = Report::where('title', 'Pohon Tumbang')->first();
+        $this->assertEquals(-6.5555, $report->location->latitude);
     }
 
     /**
@@ -82,14 +84,12 @@ class ReportTest extends TestCase
         $user = User::factory()->create(['role' => 'student']);
         $category = Category::factory()->create();
         $facility = Facility::factory()->create(['category_id' => $category->id]);
-        $report = Report::create([
+        $report = Report::factory()->create([
             'user_id' => $user->id,
             'facility_id' => $facility->id,
             'title' => 'Bocor',
             'description' => 'Atap bocor',
             'status' => 'pending',
-            'lat_report' => 0,
-            'long_report' => 0,
         ]);
 
         $response = $this->actingAs($staff)
@@ -109,14 +109,12 @@ class ReportTest extends TestCase
         $user = User::factory()->create(['role' => 'student']);
         $category = Category::factory()->create();
         $facility = Facility::factory()->create(['category_id' => $category->id]);
-        $report = Report::create([
+        $report = Report::factory()->create([
             'user_id' => $user->id,
             'facility_id' => $facility->id,
             'title' => 'Bocor',
             'description' => 'Atap bocor',
             'status' => 'pending',
-            'lat_report' => 0,
-            'long_report' => 0,
         ]);
 
         $response = $this->actingAs($user)

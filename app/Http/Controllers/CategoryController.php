@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreCategoryRequest;
+use App\Http\Requests\UpdateCategoryRequest;
 use App\Http\Resources\CategoryResource;
 use App\Models\Category;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -17,23 +19,16 @@ class CategoryController extends Controller
     public function index()
     {
         $categories = Category::paginate(15);
+
         return CategoryResource::collection($categories);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreCategoryRequest $request)
     {
-        $this->authorize('create', Category::class);
-
-        $validated = $request->validate([
-            'name' => 'required|string|max:255|unique:categories',
-            'icon_marker' => 'required|string|max:255',
-            'color_code' => 'required|string|max:7',
-        ]);
-
-        $category = Category::create($validated);
+        $category = Category::create($request->validated());
 
         return new CategoryResource($category);
     }
@@ -49,19 +44,22 @@ class CategoryController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Category $category)
+    public function update(UpdateCategoryRequest $request, Category $category)
     {
-        $this->authorize('update', $category);
-
-        $validated = $request->validate([
-            'name' => 'required|string|max:255|unique:categories,name,' . $category->id,
-            'icon_marker' => 'required|string|max:255',
-            'color_code' => 'required|string|max:7',
-        ]);
-
-        $category->update($validated);
+        $category->update($request->validated());
 
         return new CategoryResource($category);
+    }
+
+    /**
+     * Search for categories.
+     */
+    public function search(Request $request)
+    {
+        $query = $request->query('q');
+        $categories = Category::search($query)->get();
+
+        return CategoryResource::collection($categories);
     }
 
     /**
@@ -73,14 +71,14 @@ class CategoryController extends Controller
 
         if ($category->facilities()->exists()) {
             return response()->json([
-                'message' => 'Cannot delete category because it has associated facilities.'
+                'message' => 'Cannot delete category because it has associated facilities.',
             ], 422);
         }
 
         $category->delete();
 
         return response()->json([
-            'message' => 'Category deleted successfully.'
+            'message' => 'Category deleted successfully.',
         ]);
     }
 }

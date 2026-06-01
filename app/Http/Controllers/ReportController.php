@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreReportRequest;
+use App\Http\Requests\UpdateReportRequest;
+use App\Http\Resources\GeoJsonCollection;
 use App\Http\Resources\ReportResource;
 use App\Models\Report;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 
 class ReportController extends Controller
 {
@@ -35,30 +38,34 @@ class ReportController extends Controller
             $query->where('facility_id', $request->facility_id);
         }
 
+        if ($request->query('format') === 'geojson') {
+            $reports = $query->latest()->get();
+
+            return new GeoJsonCollection(ReportResource::collection($reports));
+        }
+
         $reports = $query->latest()->paginate(15);
 
-        return ReportResource::collection($reports);
+        return ReportResource::collection($reports)->additional([
+            'status_counts' => [
+                'pending' => (clone $query)->where('status', 'pending')->count(),
+                'in_progress' => (clone $query)->where('status', 'in_progress')->count(),
+                'resolved' => (clone $query)->where('status', 'resolved')->count(),
+                'rejected' => (clone $query)->where('status', 'rejected')->count(),
+            ],
+        ]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreReportRequest $request)
     {
-        $this->authorize('create', Report::class);
-
-        $validated = $request->validate([
-            'facility_id' => 'nullable|exists:facilities,id',
-            'title' => 'required|string|max:255',
-            'description' => 'required|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-            'latitude' => 'required|numeric',
-            'longitude' => 'required|numeric',
-        ]);
+        $validated = $request->validated();
 
         $imagePath = null;
         if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('reports', 'public');
+            $imagePath = $request->file('image')->store('reports', config('filesystems.report_disk'));
         }
 
         $report = Report::create([
@@ -68,11 +75,12 @@ class ReportController extends Controller
             'description' => $validated['description'],
             'image_path' => $imagePath,
             'status' => 'pending',
-            'lat_report' => $validated['latitude'],
-            'long_report' => $validated['longitude'],
+            'location' => DB::raw("ST_GeomFromText('POINT(".$validated['longitude'].' '.$validated['latitude'].")', 4326)"),
         ]);
 
-        return new ReportResource($report->load(['user', 'facility.category']));
+        return (new ReportResource($report->refresh()->load(['user', 'facility.category'])))
+            ->response()
+            ->setStatusCode(201);
     }
 
     /**
@@ -81,25 +89,46 @@ class ReportController extends Controller
     public function show(Report $report)
     {
         $this->authorize('view', $report);
+
         return new ReportResource($report->load(['user', 'facility.category']));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Report $report)
+    public function update(UpdateReportRequest $request, Report $report)
     {
-        $this->authorize('update', $report);
-
-        $validated = $request->validate([
-            'status' => 'required|in:pending,in_progress,resolved,rejected',
-        ]);
+        $validated = $request->validated();
 
         $report->update([
             'status' => $validated['status'],
         ]);
 
         return new ReportResource($report->load(['user', 'facility.category']));
+    }
+
+    /**
+     * Search for reports.
+     */
+    public function search(Request $request)
+    {
+        $this->authorize('viewAny', Report::class);
+
+        $query = $request->query('q');
+
+        $search = Report::search($query);
+
+        if ($request->user()->role === 'student') {
+            $search->where('user_id', $request->user()->id);
+        }
+
+        $reports = $search->get();
+
+        if ($request->query('format') === 'geojson') {
+            return new GeoJsonCollection(ReportResource::collection($reports));
+        }
+
+        return ReportResource::collection($reports);
     }
 
     /**

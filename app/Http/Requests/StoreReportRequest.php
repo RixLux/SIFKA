@@ -2,19 +2,19 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Building;
+use App\Models\Report;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 
-class StoreBuildingRequest extends FormRequest
+class StoreReportRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return Gate::allows('create', Building::class);
+        return Gate::allows('create', Report::class);
     }
 
     /**
@@ -25,8 +25,10 @@ class StoreBuildingRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255',
-            'description' => 'sometimes|nullable|string',
+            'facility_id' => 'nullable|exists:facilities,id',
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'latitude' => 'required|numeric',
             'longitude' => 'required|numeric',
         ];

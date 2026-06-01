@@ -10,10 +10,15 @@
         "dedoc/scramble": "^0.13.22",
         "laravel/framework": "^13.7",
         "laravel/sanctum": "^4.0",
-        "laravel/tinker": "^3.0"
+        "laravel/scout": "^11.2",
+        "laravel/tinker": "^3.0",
+        "meilisearch/meilisearch-php": "^1.16",
+        "mrmarchone/laravel-auto-crud": "^1.7"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
+        "laramint/laravel-brain": "^2.3",
+        "laramint/queryguard": "^0.1.0",
         "laravel/boost": "^2.4",
         "laravel/pail": "^1.2.5",
         "laravel/pao": "^1.0.6",

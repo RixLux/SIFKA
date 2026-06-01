@@ -3,7 +3,6 @@
 namespace Tests\Feature;
 
 use App\Models\Building;
-use App\Models\Facility;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -45,24 +44,63 @@ class BuildingTest extends TestCase
     }
 
     /**
-     * Test nested facilities in building index.
+     * Test building index returns GeoJSON when requested.
      */
-    public function test_building_index_returns_nested_facilities(): void
+    public function test_building_index_returns_geojson_format(): void
     {
         $user = User::factory()->create(['role' => 'student']);
-        $building = Building::factory()->create();
-        Facility::factory()->count(2)->create(['building_id' => $building->id]);
+        Building::factory()->count(2)->create();
+
+        $response = $this->actingAs($user)
+            ->getJson('/api/buildings?format=geojson');
+
+        $response->assertStatus(200)
+            ->assertJson([
+                'type' => 'FeatureCollection',
+            ])
+            ->assertJsonStructure([
+                'features' => [
+                    '*' => [
+                        'type',
+                        'geometry' => ['type', 'coordinates'],
+                        'properties' => ['id', 'name', 'type'],
+                    ],
+                ],
+            ]);
+
+        $this->assertEquals('Feature', $response->json('features.0.type'));
+        $this->assertEquals('Point', $response->json('features.0.geometry.type'));
+        $this->assertIsArray($response->json('features.0.geometry.coordinates'));
+        $this->assertCount(2, $response->json('features.0.geometry.coordinates'));
+    }
+
+    /**
+     * Test building index returns paginated data.
+     */
+    public function test_building_index_is_paginated(): void
+    {
+        $user = User::factory()->create(['role' => 'student']);
+        Building::factory()->count(20)->create();
 
         $response = $this->actingAs($user)
             ->getJson('/api/buildings');
 
         $response->assertStatus(200)
             ->assertJsonStructure([
-                'data' => [
-                    '*' => [
-                        'id', 'name', 'coordinate', 'amenities'
-                    ]
-                ]
+                'data',
+                'links',
+                'meta' => [
+                    'current_page',
+                    'from',
+                    'last_page',
+                    'path',
+                    'per_page',
+                    'to',
+                    'total',
+                ],
             ]);
+
+        $this->assertEquals(20, $response->json('meta.total'));
+        $this->assertCount(15, $response->json('data'));
     }
 }

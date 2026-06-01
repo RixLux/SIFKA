@@ -55,11 +55,11 @@ class FacilityTest extends TestCase
     {
         $admin = User::factory()->create(['role' => 'admin']);
         $facility = Facility::factory()->create();
+
+        // Using the factory which now handles spatial location correctly
         Report::factory()->create([
             'facility_id' => $facility->id,
             'user_id' => $admin->id,
-            'lat_report' => 0,
-            'long_report' => 0
         ]);
 
         $response = $this->actingAs($admin)

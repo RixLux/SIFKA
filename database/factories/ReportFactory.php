@@ -3,11 +3,13 @@
 namespace Database\Factories;
 
 use App\Models\Facility;
+use App\Models\Report;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\DB;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Report>
+ * @extends Factory<Report>
  */
 class ReportFactory extends Factory
 {
@@ -25,8 +27,7 @@ class ReportFactory extends Factory
             'description' => $this->faker->paragraph(),
             'image_path' => null,
             'status' => $this->faker->randomElement(['pending', 'in_progress', 'resolved', 'rejected']),
-            'lat_report' => $this->faker->latitude(),
-            'long_report' => $this->faker->longitude(),
+            'location' => DB::raw("ST_GeomFromText('POINT(".$this->faker->longitude().' '.$this->faker->latitude().")', 4326)"),
         ];
     }
 }

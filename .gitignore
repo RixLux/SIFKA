@@ -34,12 +34,16 @@ Thumbs.db
 *.sh
 *.docx
 *.pdf
+FE_SIFKA/
+/data.ms
+/meilisearch
 
 #Agentic Development
 .agents/
 .gemini/
 GEMINI.md
 boost.json
+AGENTS.md
 
 github.url
 github.desktop

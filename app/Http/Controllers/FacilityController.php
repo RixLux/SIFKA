@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreFacilityRequest;
+use App\Http\Requests\UpdateFacilityRequest;
 use App\Http\Resources\FacilityResource;
+use App\Http\Resources\GeoJsonCollection;
 use App\Models\Facility;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class FacilityController extends Controller
 {
@@ -14,30 +18,41 @@ class FacilityController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $facilities = Facility::with(['category', 'building'])->paginate(15);
+        $query = Facility::with(['category', 'building']);
+
+        if ($request->query('format') === 'geojson') {
+            $facilities = $query->get();
+
+            return new GeoJsonCollection(FacilityResource::collection($facilities));
+        }
+
+        $facilities = $query->paginate(15);
+
         return FacilityResource::collection($facilities);
     }
 
     /**
      * Store a newly created resource in storage.
+     *
+     * @bodyParam coordinate object required The geo-coordinates of the facility.
      */
-    public function store(Request $request)
+    public function store(StoreFacilityRequest $request)
     {
-        $this->authorize('create', Facility::class);
+        $validated = $request->validated();
 
-        $validated = $request->validate([
-            'category_id' => 'required|exists:categories,id',
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'latitude' => 'required|numeric',
-            'longitude' => 'required|numeric',
+        $facility = Facility::create([
+            'category_id' => $validated['category_id'],
+            'building_id' => $validated['building_id'] ?? null,
+            'name' => $validated['name'],
+            'description' => $validated['description'] ?? null,
+            'location' => DB::raw("ST_GeomFromText('POINT(".$validated['coordinate']['lng'].' '.$validated['coordinate']['lat'].")', 4326)"),
         ]);
 
-        $facility = Facility::create($validated);
-
-        return new FacilityResource($facility->load('category'));
+        return (new FacilityResource($facility->refresh()->load('category')))
+            ->response()
+            ->setStatusCode(201);
     }
 
     /**
@@ -50,22 +65,42 @@ class FacilityController extends Controller
 
     /**
      * Update the specified resource in storage.
+     *
+     * @bodyParam coordinate object required The geo-coordinates of the facility.
      */
-    public function update(Request $request, Facility $facility)
+    public function update(UpdateFacilityRequest $request, Facility $facility)
     {
-        $this->authorize('update', $facility);
+        $validated = $request->validated();
 
-        $validated = $request->validate([
-            'category_id' => 'required|exists:categories,id',
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'latitude' => 'required|numeric',
-            'longitude' => 'required|numeric',
-        ]);
+        $data = [
+            'category_id' => $validated['category_id'],
+            'building_id' => $validated['building_id'] ?? $facility->building_id,
+            'name' => $validated['name'],
+            'description' => $validated['description'] ?? null,
+        ];
 
-        $facility->update($validated);
+        if (isset($validated['coordinate']['lat']) && isset($validated['coordinate']['lng'])) {
+            $data['location'] = DB::raw("ST_GeomFromText('POINT(".$validated['coordinate']['lng'].' '.$validated['coordinate']['lat'].")', 4326)");
+        }
+
+        $facility->update($data);
 
         return new FacilityResource($facility->load('category'));
+    }
+
+    /**
+     * Search for facilities.
+     */
+    public function search(Request $request)
+    {
+        $query = $request->query('q');
+        $facilities = Facility::search($query)->get();
+
+        if ($request->query('format') === 'geojson') {
+            return new GeoJsonCollection(FacilityResource::collection($facilities));
+        }
+
+        return FacilityResource::collection($facilities);
     }
 
     /**
@@ -77,14 +112,14 @@ class FacilityController extends Controller
 
         if ($facility->reports()->exists()) {
             return response()->json([
-                'message' => 'Cannot delete facility because it has associated reports.'
+                'message' => 'Cannot delete facility because it has associated reports.',
             ], 422);
         }
 
         $facility->delete();
 
         return response()->json([
-            'message' => 'Facility deleted successfully.'
+            'message' => 'Facility deleted successfully.',
         ]);
     }
 }

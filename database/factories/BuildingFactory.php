@@ -2,10 +2,12 @@
 
 namespace Database\Factories;
 
+use App\Models\Building;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\DB;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Building>
+ * @extends Factory<Building>
  */
 class BuildingFactory extends Factory
 {
@@ -17,10 +19,9 @@ class BuildingFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->company() . ' Building',
+            'name' => $this->faker->company().' Building',
             'description' => $this->faker->sentence(),
-            'latitude' => $this->faker->latitude(),
-            'longitude' => $this->faker->longitude(),
+            'location' => DB::raw("ST_GeomFromText('POINT(".$this->faker->longitude().' '.$this->faker->latitude().")', 4326)"),
         ];
     }
 }

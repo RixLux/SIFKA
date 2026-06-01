@@ -4,7 +4,6 @@ namespace Tests\Feature;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class AuthTest extends TestCase
@@ -66,7 +65,7 @@ class AuthTest extends TestCase
         $user = User::factory()->create();
         $token = $user->createToken('auth_token')->plainTextToken;
 
-        $response = $this->withHeader('Authorization', 'Bearer ' . $token)
+        $response = $this->withHeader('Authorization', 'Bearer '.$token)
             ->postJson('/api/logout');
 
         $response->assertStatus(200);
@@ -94,6 +93,35 @@ class AuthTest extends TestCase
         $this->assertDatabaseMissing('users', [
             'email' => 'hacker@example.com',
             'role' => 'admin',
+        ]);
+    }
+
+    /**
+     * Test admin can register a user with a specific role.
+     */
+    public function test_admin_can_register_staff(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+        $token = $admin->createToken('auth_token')->plainTextToken;
+
+        $response = $this->withHeader('Authorization', 'Bearer '.$token)
+            ->postJson('/api/register', [
+                'name' => 'Staff User',
+                'email' => 'staff@example.com',
+                'password' => 'password',
+                'password_confirmation' => 'password',
+                'role' => 'staff',
+            ]);
+
+        $response->assertStatus(201)
+            ->assertJson([
+                'message' => 'User created successfully',
+                'user' => ['role' => 'staff'],
+            ]);
+
+        $this->assertDatabaseHas('users', [
+            'email' => 'staff@example.com',
+            'role' => 'staff',
         ]);
     }
 }

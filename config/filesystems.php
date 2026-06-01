@@ -15,6 +15,8 @@ return [
 
     'default' => env('FILESYSTEM_DISK', 'local'),
 
+    'report_disk' => env('REPORT_DISK', 'public'),
+
     /*
     |--------------------------------------------------------------------------
     | Filesystem Disks

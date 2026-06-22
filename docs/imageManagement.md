@@ -122,12 +122,10 @@ ensuring that:
 - Report.php generates the correct URLs and handles deletions on the active disk.
 
 Summary of Commands
-┌─────────────────┬─────────────────────────────────────────────┐
-│ Task            │ Command                                     │
-├─────────────────┼─────────────────────────────────────────────┤
-│ Install         │ composer require league/flysystem-aws-s3-v3 │
-│ Migrate Files   │ php artisan storage:migrate public s3       │
-│ Switch to R2    │ php artisan storage:switch s3               │
-│ Switch to Local │ php artisan storage:switch public           │
-└─────────────────┴─────────────────────────────────────────────┘
 
+| Task | Command |
+| :--- | :--- |
+| Install | `composer require league/flysystem-aws-s3-v3` |
+| Migrate Files | `php artisan storage:migrate public s3` |
+| Switch to R2 | `php artisan storage:switch s3` |
+| Switch to Local | `php artisan storage:switch public` |

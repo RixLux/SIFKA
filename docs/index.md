@@ -3,7 +3,7 @@
 SIFKA is a robust, high-performance API built with Laravel 13, designed to manage and report on campus facilities. It features deep architectural alignment, advanced security hardening, and global search capabilities.
 
 ## Technical Stack
-- **Framework:** Laravel 13 (PHP 8.5)
+- **Framework:** Laravel 13 (PHP 8.3)
 - **Security:** Laravel Sanctum (Auth), Rate Limiting (Throttling), Policy-based Authorization.
 - **Search Engine:** Laravel Scout with Meilisearch.
 - **Documentation:** Scramble (OpenAPI) and MKDocs.
@@ -29,7 +29,7 @@ For deep dives into the project's design and roadmap, refer to the `docs/` direc
 ## Getting Started
 
 ### Prerequisites
-- PHP 8.5+
+- PHP 8.3+
 - Composer
 - Meilisearch Server (Local or Cloud)
 

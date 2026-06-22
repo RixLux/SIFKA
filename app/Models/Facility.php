@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Casts\AsGeometry;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -50,6 +51,20 @@ class Facility extends Model
                 'lng' => $lng,
             ],
         ];
+    }
+
+    /**
+     * Scope a query to filter facilities.
+     *
+     * @param  Builder  $query
+     * @param  array<string, mixed>  $filters
+     * @return Builder
+     */
+    public function scopeFilter($query, array $filters)
+    {
+        return $query->when($filters['q'] ?? null, function ($query, $search) {
+            $query->whereIn('id', Facility::search($search)->keys());
+        });
     }
 
     /**

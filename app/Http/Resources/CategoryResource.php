@@ -19,6 +19,7 @@ class CategoryResource extends JsonResource
             'name' => $this->name,
             'icon_marker' => $this->icon_marker,
             'color_code' => $this->color_code,
+            'facilities_count' => $this->whenCounted('facilities'),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

@@ -12,6 +12,10 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (DB::connection()->getDriverName() === 'sqlite') {
+            return;
+        }
+
         // 1. Add 'location' column to all tables
         Schema::table('buildings', function (Blueprint $table) {
             $table->geometry('location', 'point', 4326)->after('description')->nullable();
@@ -55,6 +59,10 @@ return new class extends Migration
      */
     public function down(): void
     {
+        if (DB::connection()->getDriverName() === 'sqlite') {
+            return;
+        }
+
         Schema::table('buildings', function (Blueprint $table) {
             $table->decimal('latitude', 10, 8)->after('description')->nullable();
             $table->decimal('longitude', 11, 8)->after('latitude')->nullable();

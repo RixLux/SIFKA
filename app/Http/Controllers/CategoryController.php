@@ -18,7 +18,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::paginate(15);
+        $categories = Category::withCount('facilities')->paginate(10);
 
         return CategoryResource::collection($categories);
     }

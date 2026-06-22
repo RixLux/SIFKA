@@ -26,7 +26,7 @@ class StoreCategoryRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255|unique:categories',
-            'icon_marker' => 'required|string|max:255',
+            'icon_marker' => 'required|string|max:50',
             'color_code' => 'required|string|max:7',
         ];
     }

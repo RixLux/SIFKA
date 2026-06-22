@@ -6,7 +6,7 @@
     },
     "servers": [
         {
-            "url": "http://127.0.0.1:8000/api"
+            "url": "http://localhost:8000/api"
         }
     ],
     "security": [
@@ -67,7 +67,10 @@
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "const": "Registration successful"
+                                            "enum": [
+                                                "User created successfully",
+                                                "Registration successful"
+                                            ]
                                         },
                                         "access_token": {
                                             "type": "string"
@@ -116,6 +119,9 @@
                                     },
                                     "password": {
                                         "type": "string"
+                                    },
+                                    "remember": {
+                                        "type": "boolean"
                                     }
                                 },
                                 "required": [
@@ -229,6 +235,30 @@
                 }
             }
         },
+        "/broadcasting/auth": {
+            "get": {
+                "operationId": "broadcast.authenticate",
+                "summary": "Authenticate the request for channel access",
+                "tags": [
+                    "Broadcast"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/AuthenticationException"
+                    }
+                }
+            }
+        },
         "/buildings": {
             "get": {
                 "operationId": "buildings.index",
@@ -236,141 +266,174 @@
                 "tags": [
                     "Building"
                 ],
+                "parameters": [
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "description": "The search query to filter buildings by name or description",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "format",
+                        "in": "query",
+                        "description": "The response format (use 'geojson' for GeoJSON)",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "Paginated set of `BuildingResource`",
+                        "description": "Paginated set of `BuildingSummaryResource`\n\n`GeoJsonCollection`",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "array",
-                                            "items": {
-                                                "$ref": "#/components/schemas/BuildingResource"
-                                            }
-                                        },
-                                        "links": {
+                                    "anyOf": [
+                                        {
                                             "type": "object",
                                             "properties": {
-                                                "first": {
-                                                    "type": [
-                                                        "string",
-                                                        "null"
-                                                    ]
-                                                },
-                                                "last": {
-                                                    "type": [
-                                                        "string",
-                                                        "null"
-                                                    ]
-                                                },
-                                                "prev": {
-                                                    "type": [
-                                                        "string",
-                                                        "null"
-                                                    ]
-                                                },
-                                                "next": {
-                                                    "type": [
-                                                        "string",
-                                                        "null"
-                                                    ]
-                                                }
-                                            },
-                                            "required": [
-                                                "first",
-                                                "last",
-                                                "prev",
-                                                "next"
-                                            ]
-                                        },
-                                        "meta": {
-                                            "type": "object",
-                                            "properties": {
-                                                "current_page": {
-                                                    "type": "integer",
-                                                    "minimum": 1
-                                                },
-                                                "from": {
-                                                    "type": [
-                                                        "integer",
-                                                        "null"
-                                                    ],
-                                                    "minimum": 1
-                                                },
-                                                "last_page": {
-                                                    "type": "integer",
-                                                    "minimum": 1
-                                                },
-                                                "links": {
+                                                "data": {
                                                     "type": "array",
-                                                    "description": "Generated paginator links.",
                                                     "items": {
-                                                        "type": "object",
-                                                        "properties": {
-                                                            "url": {
-                                                                "type": [
-                                                                    "string",
-                                                                    "null"
-                                                                ]
-                                                            },
-                                                            "label": {
-                                                                "type": "string"
-                                                            },
-                                                            "active": {
-                                                                "type": "boolean"
-                                                            }
-                                                        },
-                                                        "required": [
-                                                            "url",
-                                                            "label",
-                                                            "active"
-                                                        ]
+                                                        "$ref": "#/components/schemas/BuildingSummaryResource"
                                                     }
                                                 },
-                                                "path": {
-                                                    "type": [
-                                                        "string",
-                                                        "null"
-                                                    ],
-                                                    "description": "Base path for paginator generated URLs."
+                                                "links": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "first": {
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ]
+                                                        },
+                                                        "last": {
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ]
+                                                        },
+                                                        "prev": {
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ]
+                                                        },
+                                                        "next": {
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ]
+                                                        }
+                                                    },
+                                                    "required": [
+                                                        "first",
+                                                        "last",
+                                                        "prev",
+                                                        "next"
+                                                    ]
                                                 },
-                                                "per_page": {
-                                                    "type": "integer",
-                                                    "description": "Number of items shown per page.",
-                                                    "minimum": 0
-                                                },
-                                                "to": {
-                                                    "type": [
-                                                        "integer",
-                                                        "null"
-                                                    ],
-                                                    "description": "Number of the last item in the slice.",
-                                                    "minimum": 1
-                                                },
-                                                "total": {
-                                                    "type": "integer",
-                                                    "description": "Total number of items being paginated.",
-                                                    "minimum": 0
+                                                "meta": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "current_page": {
+                                                            "type": "integer",
+                                                            "minimum": 1
+                                                        },
+                                                        "from": {
+                                                            "type": [
+                                                                "integer",
+                                                                "null"
+                                                            ],
+                                                            "minimum": 1
+                                                        },
+                                                        "last_page": {
+                                                            "type": "integer",
+                                                            "minimum": 1
+                                                        },
+                                                        "links": {
+                                                            "type": "array",
+                                                            "description": "Generated paginator links.",
+                                                            "items": {
+                                                                "type": "object",
+                                                                "properties": {
+                                                                    "url": {
+                                                                        "type": [
+                                                                            "string",
+                                                                            "null"
+                                                                        ]
+                                                                    },
+                                                                    "label": {
+                                                                        "type": "string"
+                                                                    },
+                                                                    "active": {
+                                                                        "type": "boolean"
+                                                                    }
+                                                                },
+                                                                "required": [
+                                                                    "url",
+                                                                    "label",
+                                                                    "active"
+                                                                ]
+                                                            }
+                                                        },
+                                                        "path": {
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ],
+                                                            "description": "Base path for paginator generated URLs."
+                                                        },
+                                                        "per_page": {
+                                                            "type": "integer",
+                                                            "description": "Number of items shown per page.",
+                                                            "minimum": 0
+                                                        },
+                                                        "to": {
+                                                            "type": [
+                                                                "integer",
+                                                                "null"
+                                                            ],
+                                                            "description": "Number of the last item in the slice.",
+                                                            "minimum": 1
+                                                        },
+                                                        "total": {
+                                                            "type": "integer",
+                                                            "description": "Total number of items being paginated.",
+                                                            "minimum": 0
+                                                        }
+                                                    },
+                                                    "required": [
+                                                        "current_page",
+                                                        "from",
+                                                        "last_page",
+                                                        "links",
+                                                        "path",
+                                                        "per_page",
+                                                        "to",
+                                                        "total"
+                                                    ]
                                                 }
                                             },
                                             "required": [
-                                                "current_page",
-                                                "from",
-                                                "last_page",
+                                                "data",
                                                 "links",
-                                                "path",
-                                                "per_page",
-                                                "to",
-                                                "total"
+                                                "meta"
+                                            ]
+                                        },
+                                        {
+                                            "type": "object",
+                                            "properties": {
+                                                "data": {
+                                                    "$ref": "#/components/schemas/GeoJsonCollection"
+                                                }
+                                            },
+                                            "required": [
+                                                "data"
                                             ]
                                         }
-                                    },
-                                    "required": [
-                                        "data",
-                                        "links",
-                                        "meta"
                                     ]
                                 }
                             }
@@ -392,36 +455,13 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "name": {
-                                        "type": "string",
-                                        "maxLength": 255
-                                    },
-                                    "description": {
-                                        "type": [
-                                            "string",
-                                            "null"
-                                        ]
-                                    },
-                                    "latitude": {
-                                        "type": "number"
-                                    },
-                                    "longitude": {
-                                        "type": "number"
-                                    }
-                                },
-                                "required": [
-                                    "name",
-                                    "latitude",
-                                    "longitude"
-                                ]
+                                "$ref": "#/components/schemas/StoreBuildingRequest"
                             }
                         }
                     }
                 },
                 "responses": {
-                    "200": {
+                    "201": {
                         "description": "`BuildingResource`",
                         "content": {
                             "application/json": {
@@ -439,14 +479,14 @@
                             }
                         }
                     },
-                    "403": {
-                        "$ref": "#/components/responses/AuthorizationException"
+                    "401": {
+                        "$ref": "#/components/responses/AuthenticationException"
                     },
                     "422": {
                         "$ref": "#/components/responses/ValidationException"
                     },
-                    "401": {
-                        "$ref": "#/components/responses/AuthenticationException"
+                    "403": {
+                        "$ref": "#/components/responses/AuthorizationException"
                     }
                 }
             }
@@ -518,30 +558,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "name": {
-                                        "type": "string",
-                                        "maxLength": 255
-                                    },
-                                    "description": {
-                                        "type": [
-                                            "string",
-                                            "null"
-                                        ]
-                                    },
-                                    "latitude": {
-                                        "type": "number"
-                                    },
-                                    "longitude": {
-                                        "type": "number"
-                                    }
-                                },
-                                "required": [
-                                    "name",
-                                    "latitude",
-                                    "longitude"
-                                ]
+                                "$ref": "#/components/schemas/UpdateBuildingRequest"
                             }
                         }
                     }
@@ -565,17 +582,17 @@
                             }
                         }
                     },
-                    "403": {
-                        "$ref": "#/components/responses/AuthorizationException"
-                    },
-                    "422": {
-                        "$ref": "#/components/responses/ValidationException"
-                    },
                     "404": {
                         "$ref": "#/components/responses/ModelNotFoundException"
                     },
                     "401": {
                         "$ref": "#/components/responses/AuthenticationException"
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationException"
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/AuthorizationException"
                     }
                 }
             },
@@ -810,26 +827,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "name": {
-                                        "type": "string",
-                                        "maxLength": 255
-                                    },
-                                    "icon_marker": {
-                                        "type": "string",
-                                        "maxLength": 255
-                                    },
-                                    "color_code": {
-                                        "type": "string",
-                                        "maxLength": 7
-                                    }
-                                },
-                                "required": [
-                                    "name",
-                                    "icon_marker",
-                                    "color_code"
-                                ]
+                                "$ref": "#/components/schemas/StoreCategoryRequest"
                             }
                         }
                     }
@@ -853,14 +851,14 @@
                             }
                         }
                     },
-                    "403": {
-                        "$ref": "#/components/responses/AuthorizationException"
+                    "401": {
+                        "$ref": "#/components/responses/AuthenticationException"
                     },
                     "422": {
                         "$ref": "#/components/responses/ValidationException"
                     },
-                    "401": {
-                        "$ref": "#/components/responses/AuthenticationException"
+                    "403": {
+                        "$ref": "#/components/responses/AuthorizationException"
                     }
                 }
             }
@@ -932,26 +930,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "name": {
-                                        "type": "string",
-                                        "maxLength": 255
-                                    },
-                                    "icon_marker": {
-                                        "type": "string",
-                                        "maxLength": 255
-                                    },
-                                    "color_code": {
-                                        "type": "string",
-                                        "maxLength": 7
-                                    }
-                                },
-                                "required": [
-                                    "name",
-                                    "icon_marker",
-                                    "color_code"
-                                ]
+                                "$ref": "#/components/schemas/UpdateCategoryRequest"
                             }
                         }
                     }
@@ -975,17 +954,17 @@
                             }
                         }
                     },
-                    "403": {
-                        "$ref": "#/components/responses/AuthorizationException"
-                    },
-                    "422": {
-                        "$ref": "#/components/responses/ValidationException"
-                    },
                     "404": {
                         "$ref": "#/components/responses/ModelNotFoundException"
                     },
                     "401": {
                         "$ref": "#/components/responses/AuthenticationException"
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationException"
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/AuthorizationException"
                     }
                 }
             },
@@ -1064,141 +1043,174 @@
                 "tags": [
                     "Facility"
                 ],
+                "parameters": [
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "description": "The search query to filter facilities by name or description",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "format",
+                        "in": "query",
+                        "description": "The response format (use 'geojson' for GeoJSON)",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "Paginated set of `FacilityResource`",
+                        "description": "Paginated set of `FacilitySummaryResource`\n\n`GeoJsonCollection`",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "array",
-                                            "items": {
-                                                "$ref": "#/components/schemas/FacilityResource"
-                                            }
-                                        },
-                                        "links": {
+                                    "anyOf": [
+                                        {
                                             "type": "object",
                                             "properties": {
-                                                "first": {
-                                                    "type": [
-                                                        "string",
-                                                        "null"
-                                                    ]
-                                                },
-                                                "last": {
-                                                    "type": [
-                                                        "string",
-                                                        "null"
-                                                    ]
-                                                },
-                                                "prev": {
-                                                    "type": [
-                                                        "string",
-                                                        "null"
-                                                    ]
-                                                },
-                                                "next": {
-                                                    "type": [
-                                                        "string",
-                                                        "null"
-                                                    ]
-                                                }
-                                            },
-                                            "required": [
-                                                "first",
-                                                "last",
-                                                "prev",
-                                                "next"
-                                            ]
-                                        },
-                                        "meta": {
-                                            "type": "object",
-                                            "properties": {
-                                                "current_page": {
-                                                    "type": "integer",
-                                                    "minimum": 1
-                                                },
-                                                "from": {
-                                                    "type": [
-                                                        "integer",
-                                                        "null"
-                                                    ],
-                                                    "minimum": 1
-                                                },
-                                                "last_page": {
-                                                    "type": "integer",
-                                                    "minimum": 1
-                                                },
-                                                "links": {
+                                                "data": {
                                                     "type": "array",
-                                                    "description": "Generated paginator links.",
                                                     "items": {
-                                                        "type": "object",
-                                                        "properties": {
-                                                            "url": {
-                                                                "type": [
-                                                                    "string",
-                                                                    "null"
-                                                                ]
-                                                            },
-                                                            "label": {
-                                                                "type": "string"
-                                                            },
-                                                            "active": {
-                                                                "type": "boolean"
-                                                            }
-                                                        },
-                                                        "required": [
-                                                            "url",
-                                                            "label",
-                                                            "active"
-                                                        ]
+                                                        "$ref": "#/components/schemas/FacilitySummaryResource"
                                                     }
                                                 },
-                                                "path": {
-                                                    "type": [
-                                                        "string",
-                                                        "null"
-                                                    ],
-                                                    "description": "Base path for paginator generated URLs."
+                                                "links": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "first": {
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ]
+                                                        },
+                                                        "last": {
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ]
+                                                        },
+                                                        "prev": {
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ]
+                                                        },
+                                                        "next": {
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ]
+                                                        }
+                                                    },
+                                                    "required": [
+                                                        "first",
+                                                        "last",
+                                                        "prev",
+                                                        "next"
+                                                    ]
                                                 },
-                                                "per_page": {
-                                                    "type": "integer",
-                                                    "description": "Number of items shown per page.",
-                                                    "minimum": 0
-                                                },
-                                                "to": {
-                                                    "type": [
-                                                        "integer",
-                                                        "null"
-                                                    ],
-                                                    "description": "Number of the last item in the slice.",
-                                                    "minimum": 1
-                                                },
-                                                "total": {
-                                                    "type": "integer",
-                                                    "description": "Total number of items being paginated.",
-                                                    "minimum": 0
+                                                "meta": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "current_page": {
+                                                            "type": "integer",
+                                                            "minimum": 1
+                                                        },
+                                                        "from": {
+                                                            "type": [
+                                                                "integer",
+                                                                "null"
+                                                            ],
+                                                            "minimum": 1
+                                                        },
+                                                        "last_page": {
+                                                            "type": "integer",
+                                                            "minimum": 1
+                                                        },
+                                                        "links": {
+                                                            "type": "array",
+                                                            "description": "Generated paginator links.",
+                                                            "items": {
+                                                                "type": "object",
+                                                                "properties": {
+                                                                    "url": {
+                                                                        "type": [
+                                                                            "string",
+                                                                            "null"
+                                                                        ]
+                                                                    },
+                                                                    "label": {
+                                                                        "type": "string"
+                                                                    },
+                                                                    "active": {
+                                                                        "type": "boolean"
+                                                                    }
+                                                                },
+                                                                "required": [
+                                                                    "url",
+                                                                    "label",
+                                                                    "active"
+                                                                ]
+                                                            }
+                                                        },
+                                                        "path": {
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ],
+                                                            "description": "Base path for paginator generated URLs."
+                                                        },
+                                                        "per_page": {
+                                                            "type": "integer",
+                                                            "description": "Number of items shown per page.",
+                                                            "minimum": 0
+                                                        },
+                                                        "to": {
+                                                            "type": [
+                                                                "integer",
+                                                                "null"
+                                                            ],
+                                                            "description": "Number of the last item in the slice.",
+                                                            "minimum": 1
+                                                        },
+                                                        "total": {
+                                                            "type": "integer",
+                                                            "description": "Total number of items being paginated.",
+                                                            "minimum": 0
+                                                        }
+                                                    },
+                                                    "required": [
+                                                        "current_page",
+                                                        "from",
+                                                        "last_page",
+                                                        "links",
+                                                        "path",
+                                                        "per_page",
+                                                        "to",
+                                                        "total"
+                                                    ]
                                                 }
                                             },
                                             "required": [
-                                                "current_page",
-                                                "from",
-                                                "last_page",
+                                                "data",
                                                 "links",
-                                                "path",
-                                                "per_page",
-                                                "to",
-                                                "total"
+                                                "meta"
+                                            ]
+                                        },
+                                        {
+                                            "type": "object",
+                                            "properties": {
+                                                "data": {
+                                                    "$ref": "#/components/schemas/GeoJsonCollection"
+                                                }
+                                            },
+                                            "required": [
+                                                "data"
                                             ]
                                         }
-                                    },
-                                    "required": [
-                                        "data",
-                                        "links",
-                                        "meta"
                                     ]
                                 }
                             }
@@ -1220,40 +1232,13 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "category_id": {
-                                        "type": "integer"
-                                    },
-                                    "name": {
-                                        "type": "string",
-                                        "maxLength": 255
-                                    },
-                                    "description": {
-                                        "type": [
-                                            "string",
-                                            "null"
-                                        ]
-                                    },
-                                    "latitude": {
-                                        "type": "number"
-                                    },
-                                    "longitude": {
-                                        "type": "number"
-                                    }
-                                },
-                                "required": [
-                                    "category_id",
-                                    "name",
-                                    "latitude",
-                                    "longitude"
-                                ]
+                                "$ref": "#/components/schemas/StoreFacilityRequest"
                             }
                         }
                     }
                 },
                 "responses": {
-                    "200": {
+                    "201": {
                         "description": "`FacilityResource`",
                         "content": {
                             "application/json": {
@@ -1271,14 +1256,14 @@
                             }
                         }
                     },
-                    "403": {
-                        "$ref": "#/components/responses/AuthorizationException"
+                    "401": {
+                        "$ref": "#/components/responses/AuthenticationException"
                     },
                     "422": {
                         "$ref": "#/components/responses/ValidationException"
                     },
-                    "401": {
-                        "$ref": "#/components/responses/AuthenticationException"
+                    "403": {
+                        "$ref": "#/components/responses/AuthorizationException"
                     }
                 }
             }
@@ -1350,34 +1335,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "category_id": {
-                                        "type": "integer"
-                                    },
-                                    "name": {
-                                        "type": "string",
-                                        "maxLength": 255
-                                    },
-                                    "description": {
-                                        "type": [
-                                            "string",
-                                            "null"
-                                        ]
-                                    },
-                                    "latitude": {
-                                        "type": "number"
-                                    },
-                                    "longitude": {
-                                        "type": "number"
-                                    }
-                                },
-                                "required": [
-                                    "category_id",
-                                    "name",
-                                    "latitude",
-                                    "longitude"
-                                ]
+                                "$ref": "#/components/schemas/UpdateFacilityRequest"
                             }
                         }
                     }
@@ -1401,17 +1359,17 @@
                             }
                         }
                     },
-                    "403": {
-                        "$ref": "#/components/responses/AuthorizationException"
-                    },
-                    "422": {
-                        "$ref": "#/components/responses/ValidationException"
-                    },
                     "404": {
                         "$ref": "#/components/responses/ModelNotFoundException"
                     },
                     "401": {
                         "$ref": "#/components/responses/AuthenticationException"
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationException"
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/AuthorizationException"
                     }
                 }
             },
@@ -1490,9 +1448,530 @@
                 "tags": [
                     "Report"
                 ],
+                "parameters": [
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "description": "The search query to filter reports by title or description",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "The status filter (pending, in_progress, resolved, rejected)",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "facility_id",
+                        "in": "query",
+                        "description": "Filter by facility ID",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "format",
+                        "in": "query",
+                        "description": "The response format (use 'geojson' for GeoJSON)",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "Paginated set of `ReportResource`",
+                        "description": "Paginated set of `ReportResource`\n\n`GeoJsonCollection`",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "anyOf": [
+                                        {
+                                            "type": "object",
+                                            "properties": {
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/ReportResource"
+                                                    }
+                                                },
+                                                "links": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "first": {
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ]
+                                                        },
+                                                        "last": {
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ]
+                                                        },
+                                                        "prev": {
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ]
+                                                        },
+                                                        "next": {
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ]
+                                                        }
+                                                    },
+                                                    "required": [
+                                                        "first",
+                                                        "last",
+                                                        "prev",
+                                                        "next"
+                                                    ]
+                                                },
+                                                "meta": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "current_page": {
+                                                            "type": "integer",
+                                                            "minimum": 1
+                                                        },
+                                                        "from": {
+                                                            "type": [
+                                                                "integer",
+                                                                "null"
+                                                            ],
+                                                            "minimum": 1
+                                                        },
+                                                        "last_page": {
+                                                            "type": "integer",
+                                                            "minimum": 1
+                                                        },
+                                                        "links": {
+                                                            "type": "array",
+                                                            "description": "Generated paginator links.",
+                                                            "items": {
+                                                                "type": "object",
+                                                                "properties": {
+                                                                    "url": {
+                                                                        "type": [
+                                                                            "string",
+                                                                            "null"
+                                                                        ]
+                                                                    },
+                                                                    "label": {
+                                                                        "type": "string"
+                                                                    },
+                                                                    "active": {
+                                                                        "type": "boolean"
+                                                                    }
+                                                                },
+                                                                "required": [
+                                                                    "url",
+                                                                    "label",
+                                                                    "active"
+                                                                ]
+                                                            }
+                                                        },
+                                                        "path": {
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ],
+                                                            "description": "Base path for paginator generated URLs."
+                                                        },
+                                                        "per_page": {
+                                                            "type": "integer",
+                                                            "description": "Number of items shown per page.",
+                                                            "minimum": 0
+                                                        },
+                                                        "to": {
+                                                            "type": [
+                                                                "integer",
+                                                                "null"
+                                                            ],
+                                                            "description": "Number of the last item in the slice.",
+                                                            "minimum": 1
+                                                        },
+                                                        "total": {
+                                                            "type": "integer",
+                                                            "description": "Total number of items being paginated.",
+                                                            "minimum": 0
+                                                        }
+                                                    },
+                                                    "required": [
+                                                        "current_page",
+                                                        "from",
+                                                        "last_page",
+                                                        "links",
+                                                        "path",
+                                                        "per_page",
+                                                        "to",
+                                                        "total"
+                                                    ]
+                                                },
+                                                "status_counts": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "pending": {
+                                                            "type": "string"
+                                                        },
+                                                        "in_progress": {
+                                                            "type": "string"
+                                                        },
+                                                        "resolved": {
+                                                            "type": "string"
+                                                        },
+                                                        "rejected": {
+                                                            "type": "string"
+                                                        }
+                                                    },
+                                                    "required": [
+                                                        "pending",
+                                                        "in_progress",
+                                                        "resolved",
+                                                        "rejected"
+                                                    ]
+                                                }
+                                            },
+                                            "required": [
+                                                "data",
+                                                "links",
+                                                "meta",
+                                                "status_counts"
+                                            ]
+                                        },
+                                        {
+                                            "type": "object",
+                                            "properties": {
+                                                "data": {
+                                                    "$ref": "#/components/schemas/GeoJsonCollection"
+                                                }
+                                            },
+                                            "required": [
+                                                "data"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/AuthorizationException"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/AuthenticationException"
+                    }
+                }
+            },
+            "post": {
+                "operationId": "reports.store",
+                "summary": "Store a newly created resource in storage",
+                "tags": [
+                    "Report"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreReportRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "`ReportResource`",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/ReportResource"
+                                        }
+                                    },
+                                    "required": [
+                                        "data"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/AuthenticationException"
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationException"
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/AuthorizationException"
+                    }
+                }
+            }
+        },
+        "/reports/{report}": {
+            "get": {
+                "operationId": "reports.show",
+                "summary": "Display the specified resource",
+                "tags": [
+                    "Report"
+                ],
+                "parameters": [
+                    {
+                        "name": "report",
+                        "in": "path",
+                        "required": true,
+                        "description": "The report ID",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "`ReportResource`",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/ReportResource"
+                                        }
+                                    },
+                                    "required": [
+                                        "data"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/AuthorizationException"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/ModelNotFoundException"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/AuthenticationException"
+                    }
+                }
+            },
+            "put": {
+                "operationId": "reports.update",
+                "summary": "Update the specified resource in storage",
+                "tags": [
+                    "Report"
+                ],
+                "parameters": [
+                    {
+                        "name": "report",
+                        "in": "path",
+                        "required": true,
+                        "description": "The report ID",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateReportRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "`ReportResource`",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/ReportResource"
+                                        }
+                                    },
+                                    "required": [
+                                        "data"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/ModelNotFoundException"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/AuthenticationException"
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationException"
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/AuthorizationException"
+                    }
+                }
+            },
+            "delete": {
+                "operationId": "reports.destroy",
+                "summary": "Remove the specified resource from storage",
+                "tags": [
+                    "Report"
+                ],
+                "parameters": [
+                    {
+                        "name": "report",
+                        "in": "path",
+                        "required": true,
+                        "description": "The report ID",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "const": "Report deleted successfully"
+                                        }
+                                    },
+                                    "required": [
+                                        "message"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/AuthorizationException"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/ModelNotFoundException"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/AuthenticationException"
+                    }
+                }
+            }
+        },
+        "/reports/{report}/seen": {
+            "post": {
+                "operationId": "report.markAsSeen",
+                "summary": "Mark a report as seen by the current user",
+                "tags": [
+                    "Report"
+                ],
+                "parameters": [
+                    {
+                        "name": "report",
+                        "in": "path",
+                        "required": true,
+                        "description": "The report ID",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "const": "Report marked as seen"
+                                        }
+                                    },
+                                    "required": [
+                                        "message"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/ModelNotFoundException"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/AuthenticationException"
+                    }
+                }
+            }
+        },
+        "/users": {
+            "get": {
+                "operationId": "users.index",
+                "summary": "Display a listing of the resource",
+                "tags": [
+                    "User"
+                ],
+                "parameters": [
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "description": "The search query to filter users by name or email",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "role",
+                        "in": "query",
+                        "description": "Filter by user role (admin, staff, student)",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "sort_by",
+                        "in": "query",
+                        "description": "Sort by a specific field (default: created_at)",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "sort_order",
+                        "in": "query",
+                        "description": "Sort order (asc or desc)",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Number of results per page",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Paginated set of `UserResource`",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1501,7 +1980,7 @@
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/components/schemas/ReportResource"
+                                                "$ref": "#/components/schemas/UserResource"
                                             }
                                         },
                                         "links": {
@@ -1639,67 +2118,31 @@
                 }
             },
             "post": {
-                "operationId": "reports.store",
+                "operationId": "users.store",
                 "summary": "Store a newly created resource in storage",
                 "tags": [
-                    "Report"
+                    "User"
                 ],
                 "requestBody": {
                     "required": true,
                     "content": {
-                        "multipart/form-data": {
+                        "application/json": {
                             "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "facility_id": {
-                                        "type": [
-                                            "integer",
-                                            "null"
-                                        ]
-                                    },
-                                    "title": {
-                                        "type": "string",
-                                        "maxLength": 255
-                                    },
-                                    "description": {
-                                        "type": "string"
-                                    },
-                                    "image": {
-                                        "type": [
-                                            "string",
-                                            "null"
-                                        ],
-                                        "format": "binary",
-                                        "contentMediaType": "application/octet-stream",
-                                        "maxLength": 2048
-                                    },
-                                    "latitude": {
-                                        "type": "number"
-                                    },
-                                    "longitude": {
-                                        "type": "number"
-                                    }
-                                },
-                                "required": [
-                                    "title",
-                                    "description",
-                                    "latitude",
-                                    "longitude"
-                                ]
+                                "$ref": "#/components/schemas/StoreUserRequest"
                             }
                         }
                     }
                 },
                 "responses": {
                     "200": {
-                        "description": "`ReportResource`",
+                        "description": "`UserResource`",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/components/schemas/ReportResource"
+                                            "$ref": "#/components/schemas/UserResource"
                                         }
                                     },
                                     "required": [
@@ -1712,28 +2155,28 @@
                     "403": {
                         "$ref": "#/components/responses/AuthorizationException"
                     },
-                    "422": {
-                        "$ref": "#/components/responses/ValidationException"
-                    },
                     "401": {
                         "$ref": "#/components/responses/AuthenticationException"
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationException"
                     }
                 }
             }
         },
-        "/reports/{report}": {
+        "/users/{user}": {
             "get": {
-                "operationId": "reports.show",
+                "operationId": "users.show",
                 "summary": "Display the specified resource",
                 "tags": [
-                    "Report"
+                    "User"
                 ],
                 "parameters": [
                     {
-                        "name": "report",
+                        "name": "user",
                         "in": "path",
                         "required": true,
-                        "description": "The report ID",
+                        "description": "The user ID",
                         "schema": {
                             "type": "integer"
                         }
@@ -1741,14 +2184,14 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "`ReportResource`",
+                        "description": "`UserResource`",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/components/schemas/ReportResource"
+                                            "$ref": "#/components/schemas/UserResource"
                                         }
                                     },
                                     "required": [
@@ -1770,56 +2213,41 @@
                 }
             },
             "put": {
-                "operationId": "reports.update",
+                "operationId": "users.update",
                 "summary": "Update the specified resource in storage",
                 "tags": [
-                    "Report"
+                    "User"
                 ],
                 "parameters": [
                     {
-                        "name": "report",
+                        "name": "user",
                         "in": "path",
                         "required": true,
-                        "description": "The report ID",
+                        "description": "The user ID",
                         "schema": {
                             "type": "integer"
                         }
                     }
                 ],
                 "requestBody": {
-                    "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "status": {
-                                        "type": "string",
-                                        "enum": [
-                                            "pending",
-                                            "in_progress",
-                                            "resolved",
-                                            "rejected"
-                                        ]
-                                    }
-                                },
-                                "required": [
-                                    "status"
-                                ]
+                                "$ref": "#/components/schemas/UpdateUserRequest"
                             }
                         }
                     }
                 },
                 "responses": {
                     "200": {
-                        "description": "`ReportResource`",
+                        "description": "`UserResource`",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/components/schemas/ReportResource"
+                                            "$ref": "#/components/schemas/UserResource"
                                         }
                                     },
                                     "required": [
@@ -1832,53 +2260,37 @@
                     "403": {
                         "$ref": "#/components/responses/AuthorizationException"
                     },
-                    "422": {
-                        "$ref": "#/components/responses/ValidationException"
-                    },
                     "404": {
                         "$ref": "#/components/responses/ModelNotFoundException"
                     },
                     "401": {
                         "$ref": "#/components/responses/AuthenticationException"
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationException"
                     }
                 }
             },
             "delete": {
-                "operationId": "reports.destroy",
+                "operationId": "users.destroy",
                 "summary": "Remove the specified resource from storage",
                 "tags": [
-                    "Report"
+                    "User"
                 ],
                 "parameters": [
                     {
-                        "name": "report",
+                        "name": "user",
                         "in": "path",
                         "required": true,
-                        "description": "The report ID",
+                        "description": "The user ID",
                         "schema": {
                             "type": "integer"
                         }
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "const": "Report deleted successfully"
-                                        }
-                                    },
-                                    "required": [
-                                        "message"
-                                    ]
-                                }
-                            }
-                        }
+                    "204": {
+                        "description": "No content"
                     },
                     "403": {
                         "$ref": "#/components/responses/AuthorizationException"
@@ -1902,65 +2314,289 @@
         },
         "schemas": {
             "BuildingResource": {
-                "type": "object",
-                "properties": {
-                    "id": {
-                        "type": "integer"
-                    },
-                    "name": {
-                        "type": "string"
-                    },
-                    "description": {
-                        "type": [
-                            "string",
-                            "null"
-                        ]
-                    },
-                    "coordinate": {
+                "anyOf": [
+                    {
                         "type": "object",
                         "properties": {
-                            "lat": {
-                                "type": "number"
+                            "id": {
+                                "type": "integer"
                             },
-                            "lng": {
-                                "type": "number"
+                            "name": {
+                                "type": "string"
+                            },
+                            "description": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ]
+                            },
+                            "coordinate": {
+                                "type": "object",
+                                "properties": {
+                                    "lat": {
+                                        "type": "string"
+                                    },
+                                    "lng": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "lat",
+                                    "lng"
+                                ]
+                            },
+                            "amenities": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/FacilitySummaryResource"
+                                }
+                            },
+                            "created_at": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ],
+                                "format": "date-time"
+                            },
+                            "updated_at": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ],
+                                "format": "date-time"
                             }
                         },
                         "required": [
-                            "lat",
-                            "lng"
+                            "id",
+                            "name",
+                            "description",
+                            "coordinate",
+                            "amenities",
+                            "created_at",
+                            "updated_at"
                         ]
                     },
-                    "amenities": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/FacilityResource"
-                        }
-                    },
-                    "created_at": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "format": "date-time"
-                    },
-                    "updated_at": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "format": "date-time"
+                    {
+                        "type": "object",
+                        "properties": {
+                            "type": {
+                                "type": "string",
+                                "const": "Feature"
+                            },
+                            "geometry": {
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "type": "string",
+                                        "const": "Point"
+                                    },
+                                    "coordinates": {
+                                        "type": "array",
+                                        "prefixItems": [
+                                            {
+                                                "type": "string"
+                                            },
+                                            {
+                                                "type": "string"
+                                            }
+                                        ],
+                                        "minItems": 2,
+                                        "maxItems": 2,
+                                        "additionalItems": false
+                                    }
+                                },
+                                "required": [
+                                    "type",
+                                    "coordinates"
+                                ]
+                            },
+                            "properties": {
+                                "type": "object",
+                                "properties": {
+                                    "id": {
+                                        "type": "integer"
+                                    },
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "description": {
+                                        "type": [
+                                            "string",
+                                            "null"
+                                        ]
+                                    },
+                                    "type": {
+                                        "type": "string",
+                                        "const": "building"
+                                    },
+                                    "created_at": {
+                                        "type": [
+                                            "string",
+                                            "null"
+                                        ],
+                                        "format": "date-time"
+                                    },
+                                    "updated_at": {
+                                        "type": [
+                                            "string",
+                                            "null"
+                                        ],
+                                        "format": "date-time"
+                                    }
+                                },
+                                "required": [
+                                    "id",
+                                    "name",
+                                    "description",
+                                    "type",
+                                    "created_at",
+                                    "updated_at"
+                                ]
+                            }
+                        },
+                        "required": [
+                            "type",
+                            "geometry",
+                            "properties"
+                        ]
                     }
-                },
-                "required": [
-                    "id",
-                    "name",
-                    "description",
-                    "coordinate",
-                    "created_at",
-                    "updated_at"
                 ],
                 "title": "BuildingResource"
+            },
+            "BuildingSummaryResource": {
+                "anyOf": [
+                    {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": "string"
+                            },
+                            "name": {
+                                "type": "string"
+                            },
+                            "description": {
+                                "type": "string"
+                            },
+                            "coordinate": {
+                                "type": "object",
+                                "properties": {
+                                    "lat": {
+                                        "type": "string"
+                                    },
+                                    "lng": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "lat",
+                                    "lng"
+                                ]
+                            },
+                            "facilities_count": {
+                                "anyOf": [
+                                    {
+                                        "type": "integer"
+                                    },
+                                    {
+                                        "type": "object"
+                                    }
+                                ]
+                            }
+                        },
+                        "required": [
+                            "id",
+                            "name",
+                            "description",
+                            "coordinate",
+                            "facilities_count"
+                        ]
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "type": {
+                                "type": "string",
+                                "const": "Feature"
+                            },
+                            "geometry": {
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "type": "string",
+                                        "const": "Point"
+                                    },
+                                    "coordinates": {
+                                        "type": "array",
+                                        "prefixItems": [
+                                            {
+                                                "type": "string"
+                                            },
+                                            {
+                                                "type": "string"
+                                            }
+                                        ],
+                                        "minItems": 2,
+                                        "maxItems": 2,
+                                        "additionalItems": false
+                                    }
+                                },
+                                "required": [
+                                    "type",
+                                    "coordinates"
+                                ]
+                            },
+                            "properties": {
+                                "type": "object",
+                                "properties": {
+                                    "id": {
+                                        "type": "string"
+                                    },
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "description": {
+                                        "type": "string"
+                                    },
+                                    "type": {
+                                        "type": "string",
+                                        "const": "building"
+                                    },
+                                    "facilities_count": {
+                                        "anyOf": [
+                                            {
+                                                "type": "integer"
+                                            },
+                                            {
+                                                "type": "object"
+                                            }
+                                        ]
+                                    },
+                                    "created_at": {
+                                        "type": "string"
+                                    },
+                                    "updated_at": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "id",
+                                    "name",
+                                    "description",
+                                    "type",
+                                    "facilities_count",
+                                    "created_at",
+                                    "updated_at"
+                                ]
+                            }
+                        },
+                        "required": [
+                            "type",
+                            "geometry",
+                            "properties"
+                        ]
+                    }
+                ],
+                "title": "BuildingSummaryResource"
             },
             "CategoryResource": {
                 "type": "object",
@@ -1982,6 +2618,9 @@
                             "string",
                             "null"
                         ]
+                    },
+                    "facilities_count": {
+                        "type": "integer"
                     },
                     "created_at": {
                         "type": [
@@ -2009,13 +2648,694 @@
                 "title": "CategoryResource"
             },
             "FacilityResource": {
+                "anyOf": [
+                    {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": "integer"
+                            },
+                            "name": {
+                                "type": "string"
+                            },
+                            "description": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ]
+                            },
+                            "coordinate": {
+                                "type": "object",
+                                "properties": {
+                                    "lat": {
+                                        "type": "string"
+                                    },
+                                    "lng": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "lat",
+                                    "lng"
+                                ]
+                            },
+                            "category": {
+                                "$ref": "#/components/schemas/CategoryResource"
+                            },
+                            "building": {
+                                "$ref": "#/components/schemas/BuildingSummaryResource"
+                            },
+                            "building_id": {
+                                "type": [
+                                    "integer",
+                                    "null"
+                                ]
+                            },
+                            "created_at": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ],
+                                "format": "date-time"
+                            },
+                            "updated_at": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ],
+                                "format": "date-time"
+                            }
+                        },
+                        "required": [
+                            "id",
+                            "name",
+                            "description",
+                            "coordinate",
+                            "category",
+                            "building",
+                            "building_id",
+                            "created_at",
+                            "updated_at"
+                        ]
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "type": {
+                                "type": "string",
+                                "const": "Feature"
+                            },
+                            "geometry": {
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "type": "string",
+                                        "const": "Point"
+                                    },
+                                    "coordinates": {
+                                        "type": "array",
+                                        "prefixItems": [
+                                            {
+                                                "type": "string"
+                                            },
+                                            {
+                                                "type": "string"
+                                            }
+                                        ],
+                                        "minItems": 2,
+                                        "maxItems": 2,
+                                        "additionalItems": false
+                                    }
+                                },
+                                "required": [
+                                    "type",
+                                    "coordinates"
+                                ]
+                            },
+                            "properties": {
+                                "type": "object",
+                                "properties": {
+                                    "id": {
+                                        "type": "integer"
+                                    },
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "description": {
+                                        "type": [
+                                            "string",
+                                            "null"
+                                        ]
+                                    },
+                                    "type": {
+                                        "type": "string",
+                                        "const": "facility"
+                                    },
+                                    "building_id": {
+                                        "type": [
+                                            "integer",
+                                            "null"
+                                        ]
+                                    },
+                                    "category_id": {
+                                        "type": "integer"
+                                    },
+                                    "category_name": {
+                                        "type": "string"
+                                    },
+                                    "category_icon": {
+                                        "type": "string"
+                                    },
+                                    "category_color": {
+                                        "type": "string"
+                                    },
+                                    "created_at": {
+                                        "type": [
+                                            "string",
+                                            "null"
+                                        ],
+                                        "format": "date-time"
+                                    },
+                                    "updated_at": {
+                                        "type": [
+                                            "string",
+                                            "null"
+                                        ],
+                                        "format": "date-time"
+                                    }
+                                },
+                                "required": [
+                                    "id",
+                                    "name",
+                                    "description",
+                                    "type",
+                                    "building_id",
+                                    "category_id",
+                                    "category_name",
+                                    "category_icon",
+                                    "category_color",
+                                    "created_at",
+                                    "updated_at"
+                                ]
+                            }
+                        },
+                        "required": [
+                            "type",
+                            "geometry",
+                            "properties"
+                        ]
+                    }
+                ],
+                "title": "FacilityResource"
+            },
+            "FacilitySummaryResource": {
+                "anyOf": [
+                    {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": "string"
+                            },
+                            "name": {
+                                "type": "string"
+                            },
+                            "description": {
+                                "type": "string"
+                            },
+                            "coordinate": {
+                                "type": "object",
+                                "properties": {
+                                    "lat": {
+                                        "type": "string"
+                                    },
+                                    "lng": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "lat",
+                                    "lng"
+                                ]
+                            },
+                            "category_id": {
+                                "type": "string"
+                            },
+                            "building_id": {
+                                "type": "string"
+                            },
+                            "category": {
+                                "type": [
+                                    "object",
+                                    "null"
+                                ],
+                                "properties": {
+                                    "id": {
+                                        "type": "string"
+                                    },
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "icon_marker": {
+                                        "type": "string"
+                                    },
+                                    "color_code": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "id",
+                                    "name",
+                                    "icon_marker",
+                                    "color_code"
+                                ]
+                            },
+                            "building": {
+                                "type": [
+                                    "object",
+                                    "null"
+                                ],
+                                "properties": {
+                                    "id": {
+                                        "type": "string"
+                                    },
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "description": {
+                                        "type": "string"
+                                    },
+                                    "coordinate": {
+                                        "type": "object",
+                                        "properties": {
+                                            "lat": {
+                                                "anyOf": [
+                                                    {
+                                                        "type": "number"
+                                                    },
+                                                    {
+                                                        "type": "integer",
+                                                        "enum": [
+                                                            0
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            "lng": {
+                                                "anyOf": [
+                                                    {
+                                                        "type": "number"
+                                                    },
+                                                    {
+                                                        "type": "integer",
+                                                        "enum": [
+                                                            0
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        },
+                                        "required": [
+                                            "lat",
+                                            "lng"
+                                        ]
+                                    }
+                                },
+                                "required": [
+                                    "id",
+                                    "name",
+                                    "description",
+                                    "coordinate"
+                                ]
+                            }
+                        },
+                        "required": [
+                            "id",
+                            "name",
+                            "description",
+                            "coordinate",
+                            "category_id",
+                            "building_id",
+                            "category",
+                            "building"
+                        ]
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "type": {
+                                "type": "string",
+                                "const": "Feature"
+                            },
+                            "geometry": {
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "type": "string",
+                                        "const": "Point"
+                                    },
+                                    "coordinates": {
+                                        "type": "array",
+                                        "prefixItems": [
+                                            {
+                                                "type": "string"
+                                            },
+                                            {
+                                                "type": "string"
+                                            }
+                                        ],
+                                        "minItems": 2,
+                                        "maxItems": 2,
+                                        "additionalItems": false
+                                    }
+                                },
+                                "required": [
+                                    "type",
+                                    "coordinates"
+                                ]
+                            },
+                            "properties": {
+                                "type": "object",
+                                "properties": {
+                                    "id": {
+                                        "type": "string"
+                                    },
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "description": {
+                                        "type": "string"
+                                    },
+                                    "type": {
+                                        "type": "string",
+                                        "const": "facility"
+                                    },
+                                    "building_id": {
+                                        "type": "string"
+                                    },
+                                    "category_id": {
+                                        "type": "string"
+                                    },
+                                    "category_name": {
+                                        "type": "string"
+                                    },
+                                    "category_icon": {
+                                        "type": "string"
+                                    },
+                                    "category_color": {
+                                        "type": "string"
+                                    },
+                                    "created_at": {
+                                        "type": "string"
+                                    },
+                                    "updated_at": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "id",
+                                    "name",
+                                    "description",
+                                    "type",
+                                    "building_id",
+                                    "category_id",
+                                    "category_name",
+                                    "category_icon",
+                                    "category_color",
+                                    "created_at",
+                                    "updated_at"
+                                ]
+                            }
+                        },
+                        "required": [
+                            "type",
+                            "geometry",
+                            "properties"
+                        ]
+                    }
+                ],
+                "title": "FacilitySummaryResource"
+            },
+            "GeoJsonCollection": {
                 "type": "object",
                 "properties": {
-                    "id": {
+                    "type": {
+                        "type": "string",
+                        "const": "FeatureCollection"
+                    },
+                    "features": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "required": [
+                    "type",
+                    "features"
+                ],
+                "title": "GeoJsonCollection"
+            },
+            "ReportResource": {
+                "anyOf": [
+                    {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": "integer"
+                            },
+                            "title": {
+                                "type": "string"
+                            },
+                            "description": {
+                                "type": "string"
+                            },
+                            "image_url": {
+                                "type": "string"
+                            },
+                            "status": {
+                                "type": "string"
+                            },
+                            "coordinate": {
+                                "type": "object",
+                                "properties": {
+                                    "lat": {
+                                        "type": "string"
+                                    },
+                                    "lng": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "lat",
+                                    "lng"
+                                ]
+                            },
+                            "is_seen": {
+                                "type": "boolean"
+                            },
+                            "user": {
+                                "type": "object",
+                                "properties": {
+                                    "id": {
+                                        "type": "integer"
+                                    },
+                                    "name": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "id",
+                                    "name"
+                                ]
+                            },
+                            "facility": {
+                                "$ref": "#/components/schemas/FacilityResource"
+                            },
+                            "created_at": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ],
+                                "format": "date-time"
+                            },
+                            "updated_at": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ],
+                                "format": "date-time"
+                            }
+                        },
+                        "required": [
+                            "id",
+                            "title",
+                            "description",
+                            "image_url",
+                            "status",
+                            "coordinate",
+                            "is_seen",
+                            "user",
+                            "facility",
+                            "created_at",
+                            "updated_at"
+                        ]
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "type": {
+                                "type": "string",
+                                "const": "Feature"
+                            },
+                            "geometry": {
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "type": "string",
+                                        "const": "Point"
+                                    },
+                                    "coordinates": {
+                                        "type": "array",
+                                        "prefixItems": [
+                                            {
+                                                "type": "string"
+                                            },
+                                            {
+                                                "type": "string"
+                                            }
+                                        ],
+                                        "minItems": 2,
+                                        "maxItems": 2,
+                                        "additionalItems": false
+                                    }
+                                },
+                                "required": [
+                                    "type",
+                                    "coordinates"
+                                ]
+                            },
+                            "properties": {
+                                "type": "object",
+                                "properties": {
+                                    "id": {
+                                        "type": "integer"
+                                    },
+                                    "title": {
+                                        "type": "string"
+                                    },
+                                    "description": {
+                                        "type": "string"
+                                    },
+                                    "image_url": {
+                                        "type": "string"
+                                    },
+                                    "status": {
+                                        "type": "string"
+                                    },
+                                    "type": {
+                                        "type": "string",
+                                        "const": "report"
+                                    },
+                                    "user_id": {
+                                        "type": "integer"
+                                    },
+                                    "facility_id": {
+                                        "type": [
+                                            "integer",
+                                            "null"
+                                        ]
+                                    },
+                                    "facility_name": {
+                                        "type": "string"
+                                    },
+                                    "is_seen": {
+                                        "type": "boolean"
+                                    },
+                                    "created_at": {
+                                        "type": [
+                                            "string",
+                                            "null"
+                                        ],
+                                        "format": "date-time"
+                                    },
+                                    "updated_at": {
+                                        "type": [
+                                            "string",
+                                            "null"
+                                        ],
+                                        "format": "date-time"
+                                    }
+                                },
+                                "required": [
+                                    "id",
+                                    "title",
+                                    "description",
+                                    "image_url",
+                                    "status",
+                                    "type",
+                                    "user_id",
+                                    "facility_id",
+                                    "facility_name",
+                                    "is_seen",
+                                    "created_at",
+                                    "updated_at"
+                                ]
+                            }
+                        },
+                        "required": [
+                            "type",
+                            "geometry",
+                            "properties"
+                        ]
+                    }
+                ],
+                "title": "ReportResource"
+            },
+            "StoreBuildingRequest": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "maxLength": 255
+                    },
+                    "description": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "latitude": {
+                        "type": "number"
+                    },
+                    "longitude": {
+                        "type": "number"
+                    }
+                },
+                "required": [
+                    "name",
+                    "latitude",
+                    "longitude"
+                ],
+                "title": "StoreBuildingRequest"
+            },
+            "StoreCategoryRequest": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "maxLength": 255
+                    },
+                    "icon_marker": {
+                        "type": "string",
+                        "maxLength": 50
+                    },
+                    "color_code": {
+                        "type": "string",
+                        "maxLength": 7
+                    }
+                },
+                "required": [
+                    "name",
+                    "icon_marker",
+                    "color_code"
+                ],
+                "title": "StoreCategoryRequest"
+            },
+            "StoreFacilityRequest": {
+                "type": "object",
+                "properties": {
+                    "category_id": {
                         "type": "integer"
                     },
+                    "building_id": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
                     "name": {
-                        "type": "string"
+                        "type": "string",
+                        "maxLength": 255
                     },
                     "description": {
                         "type": [
@@ -2027,25 +3347,153 @@
                         "type": "object",
                         "properties": {
                             "lat": {
-                                "type": [
-                                    "number",
-                                    "null"
-                                ]
+                                "type": "number"
                             },
                             "lng": {
-                                "type": [
-                                    "number",
-                                    "null"
-                                ]
+                                "type": "number"
                             }
                         },
                         "required": [
                             "lat",
                             "lng"
                         ]
+                    }
+                },
+                "required": [
+                    "category_id",
+                    "name",
+                    "coordinate"
+                ],
+                "title": "StoreFacilityRequest"
+            },
+            "StoreReportRequest": {
+                "type": "object",
+                "properties": {
+                    "facility_id": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
                     },
-                    "category": {
-                        "$ref": "#/components/schemas/CategoryResource"
+                    "title": {
+                        "type": "string",
+                        "maxLength": 255
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "image": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "binary",
+                        "contentMediaType": "application/octet-stream",
+                        "maxLength": 2048
+                    },
+                    "latitude": {
+                        "type": "number"
+                    },
+                    "longitude": {
+                        "type": "number"
+                    }
+                },
+                "required": [
+                    "title",
+                    "description",
+                    "latitude",
+                    "longitude"
+                ],
+                "title": "StoreReportRequest"
+            },
+            "StoreUserRequest": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "maxLength": 255
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "maxLength": 255
+                    },
+                    "password": {
+                        "type": "string",
+                        "minLength": 8
+                    },
+                    "role": {
+                        "type": "string",
+                        "enum": [
+                            "admin",
+                            "staff",
+                            "student"
+                        ]
+                    }
+                },
+                "required": [
+                    "name",
+                    "email",
+                    "password",
+                    "role"
+                ],
+                "title": "StoreUserRequest"
+            },
+            "UpdateBuildingRequest": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "maxLength": 255
+                    },
+                    "description": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "latitude": {
+                        "type": "number"
+                    },
+                    "longitude": {
+                        "type": "number"
+                    }
+                },
+                "required": [
+                    "name",
+                    "latitude",
+                    "longitude"
+                ],
+                "title": "UpdateBuildingRequest"
+            },
+            "UpdateCategoryRequest": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "maxLength": 255
+                    },
+                    "icon_marker": {
+                        "type": "string",
+                        "maxLength": 50
+                    },
+                    "color_code": {
+                        "type": "string",
+                        "maxLength": 7
+                    }
+                },
+                "required": [
+                    "name",
+                    "icon_marker",
+                    "color_code"
+                ],
+                "title": "UpdateCategoryRequest"
+            },
+            "UpdateFacilityRequest": {
+                "type": "object",
+                "properties": {
+                    "category_id": {
+                        "type": "integer"
                     },
                     "building_id": {
                         "type": [
@@ -2053,113 +3501,86 @@
                             "null"
                         ]
                     },
-                    "created_at": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "format": "date-time"
-                    },
-                    "updated_at": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "format": "date-time"
-                    }
-                },
-                "required": [
-                    "id",
-                    "name",
-                    "description",
-                    "coordinate",
-                    "building_id",
-                    "created_at",
-                    "updated_at"
-                ],
-                "title": "FacilityResource"
-            },
-            "ReportResource": {
-                "type": "object",
-                "properties": {
-                    "id": {
-                        "type": "integer"
-                    },
-                    "title": {
-                        "type": "string"
+                    "name": {
+                        "type": "string",
+                        "maxLength": 255
                     },
                     "description": {
-                        "type": "string"
-                    },
-                    "image_url": {
                         "type": [
                             "string",
                             "null"
                         ]
                     },
-                    "status": {
-                        "type": "string"
-                    },
-                    "coordinates": {
+                    "coordinate": {
                         "type": "object",
                         "properties": {
-                            "latitude": {
+                            "lat": {
                                 "type": "number"
                             },
-                            "longitude": {
+                            "lng": {
                                 "type": "number"
                             }
                         },
                         "required": [
-                            "latitude",
-                            "longitude"
+                            "lat",
+                            "lng"
                         ]
-                    },
-                    "user": {
-                        "type": "object",
-                        "properties": {
-                            "id": {
-                                "type": "integer"
-                            },
-                            "name": {
-                                "type": "string"
-                            }
-                        },
-                        "required": [
-                            "id",
-                            "name"
-                        ]
-                    },
-                    "facility": {
-                        "$ref": "#/components/schemas/FacilityResource"
-                    },
-                    "created_at": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "format": "date-time"
-                    },
-                    "updated_at": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "format": "date-time"
                     }
                 },
                 "required": [
-                    "id",
-                    "title",
-                    "description",
-                    "image_url",
-                    "status",
-                    "coordinates",
-                    "user",
-                    "created_at",
-                    "updated_at"
+                    "category_id",
+                    "name",
+                    "coordinate"
                 ],
-                "title": "ReportResource"
+                "title": "UpdateFacilityRequest"
+            },
+            "UpdateReportRequest": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "pending",
+                            "in_progress",
+                            "resolved",
+                            "rejected"
+                        ]
+                    }
+                },
+                "required": [
+                    "status"
+                ],
+                "title": "UpdateReportRequest"
+            },
+            "UpdateUserRequest": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "maxLength": 255
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "maxLength": 255
+                    },
+                    "password": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "minLength": 8
+                    },
+                    "role": {
+                        "type": "string",
+                        "enum": [
+                            "admin",
+                            "staff",
+                            "student"
+                        ]
+                    }
+                },
+                "title": "UpdateUserRequest"
             },
             "User": {
                 "type": "object",
@@ -2172,6 +3593,12 @@
                     },
                     "email": {
                         "type": "string"
+                    },
+                    "profile_picture_path": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
                     },
                     "role": {
                         "type": "string"
@@ -2196,6 +3623,52 @@
                             "null"
                         ],
                         "format": "date-time"
+                    },
+                    "profile_picture_url": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "id",
+                    "name",
+                    "email",
+                    "profile_picture_path",
+                    "role",
+                    "email_verified_at",
+                    "created_at",
+                    "updated_at",
+                    "profile_picture_url"
+                ],
+                "title": "User"
+            },
+            "UserResource": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "role": {
+                        "type": "string"
+                    },
+                    "created_at": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time"
                     }
                 },
                 "required": [
@@ -2203,11 +3676,10 @@
                     "name",
                     "email",
                     "role",
-                    "email_verified_at",
                     "created_at",
                     "updated_at"
                 ],
-                "title": "User"
+                "title": "UserResource"
             }
         },
         "responses": {

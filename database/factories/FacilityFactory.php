@@ -20,12 +20,20 @@ class FacilityFactory extends Factory
      */
     public function definition(): array
     {
-        return [
+        $attributes = [
             'building_id' => Building::factory(),
             'category_id' => Category::factory(),
             'name' => $this->faker->word(),
             'description' => $this->faker->sentence(),
-            'location' => DB::raw("ST_GeomFromText('POINT(".$this->faker->longitude().' '.$this->faker->latitude().")', 4326)"),
         ];
+
+        if (in_array(DB::connection()->getDriverName(), ['mysql', 'mariadb'], true)) {
+            $attributes['location'] = DB::raw("ST_GeomFromText('POINT(".$this->faker->longitude().' '.$this->faker->latitude().")', 4326)");
+        } else {
+            $attributes['latitude'] = $this->faker->latitude();
+            $attributes['longitude'] = $this->faker->longitude();
+        }
+
+        return $attributes;
     }
 }

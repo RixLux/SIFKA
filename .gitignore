@@ -34,7 +34,7 @@ Thumbs.db
 *.sh
 *.docx
 *.pdf
-FE_SIFKA/
+# FE_SIFKA/
 /data.ms
 /meilisearch
 
@@ -53,3 +53,7 @@ github.txt
 site/
 */__pycache__/
 *.pyc
+
+
+
+

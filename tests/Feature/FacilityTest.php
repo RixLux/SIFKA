@@ -67,4 +67,60 @@ class FacilityTest extends TestCase
 
         $response->assertStatus(422);
     }
+
+    /**
+     * Test facility index returns a lightweight summary payload.
+     */
+    public function test_facility_index_returns_lightweight_summary_payload(): void
+    {
+        $user = User::factory()->create(['role' => 'student']);
+        Facility::factory()->count(3)->create();
+
+        $response = $this->actingAs($user)
+            ->getJson('/api/facilities');
+
+        $response->assertStatus(200)
+            ->assertJsonStructure([
+                'data' => [
+                    '*' => [
+                        'id',
+                        'name',
+                        'description',
+                        'coordinate' => ['lat', 'lng'],
+                        'category_id',
+                        'building_id',
+                        'category',
+                        'building',
+                    ],
+                ],
+            ]);
+
+        $this->assertArrayNotHasKey('amenities', $response->json('data.0'));
+    }
+
+    /**
+     * Test facility show returns detail without recursive nested building payload.
+     */
+    public function test_facility_show_returns_detail_without_recursive_nesting(): void
+    {
+        $user = User::factory()->create(['role' => 'student']);
+        $facility = Facility::factory()->create();
+
+        $response = $this->actingAs($user)
+            ->getJson("/api/facilities/{$facility->id}");
+
+        $response->assertStatus(200)
+            ->assertJsonStructure([
+                'data' => [
+                    'id',
+                    'name',
+                    'description',
+                    'coordinate' => ['lat', 'lng'],
+                    'category',
+                    'building',
+                ],
+            ]);
+
+        $this->assertArrayNotHasKey('amenities', $response->json('data.building'));
+    }
 }

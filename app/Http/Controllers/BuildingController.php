@@ -5,11 +5,12 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreBuildingRequest;
 use App\Http\Requests\UpdateBuildingRequest;
 use App\Http\Resources\BuildingResource;
+use App\Http\Resources\BuildingSummaryResource;
 use App\Http\Resources\GeoJsonCollection;
 use App\Models\Building;
+use Dedoc\Scramble\Attributes\QueryParameter;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class BuildingController extends Controller
 {
@@ -18,19 +19,23 @@ class BuildingController extends Controller
     /**
      * Display a listing of the resource.
      */
+    #[QueryParameter('q', description: 'The search query to filter buildings by name or description', type: 'string')]
+    #[QueryParameter('format', description: 'The response format (use \'geojson\' for GeoJSON)', type: 'string')]
     public function index(Request $request)
     {
-        $query = Building::with('facilities');
+        $query = Building::select(['id', 'name', 'description', 'location'])
+            ->withCount('facilities')
+            ->filter($request->only(['q']));
 
         if ($request->query('format') === 'geojson') {
             $buildings = $query->get();
 
-            return new GeoJsonCollection(BuildingResource::collection($buildings));
+            return new GeoJsonCollection(BuildingSummaryResource::collection($buildings));
         }
 
-        $buildings = $query->paginate(15);
+        $buildings = $query->paginate(10);
 
-        return BuildingResource::collection($buildings);
+        return BuildingSummaryResource::collection($buildings);
     }
 
     /**
@@ -40,11 +45,13 @@ class BuildingController extends Controller
     {
         $validated = $request->validated();
 
-        $building = Building::create([
-            'name' => $validated['name'],
-            'description' => $validated['description'] ?? null,
-            'location' => DB::raw("ST_GeomFromText('POINT(".$validated['longitude'].' '.$validated['latitude'].")', 4326)"),
-        ]);
+        $building = Building::unguarded(function () use ($validated) {
+            return Building::create([
+                'name' => $validated['name'],
+                'description' => $validated['description'] ?? null,
+                ...$this->coordinateAttributes((float) $validated['longitude'], (float) $validated['latitude']),
+            ]);
+        });
 
         return (new BuildingResource($building->refresh()))
             ->response()
@@ -72,27 +79,12 @@ class BuildingController extends Controller
         ];
 
         if (isset($validated['latitude']) && isset($validated['longitude'])) {
-            $data['location'] = DB::raw("ST_GeomFromText('POINT(".$validated['longitude'].' '.$validated['latitude'].")', 4326)");
+            $data += $this->coordinateAttributes((float) $validated['longitude'], (float) $validated['latitude']);
         }
 
         $building->update($data);
 
-        return new BuildingResource($building);
-    }
-
-    /**
-     * Search for buildings.
-     */
-    public function search(Request $request)
-    {
-        $query = $request->query('q');
-        $buildings = Building::search($query)->get();
-
-        if ($request->query('format') === 'geojson') {
-            return new GeoJsonCollection(BuildingResource::collection($buildings));
-        }
-
-        return BuildingResource::collection($buildings);
+        return new BuildingResource($building->refresh()->load('facilities'));
     }
 
     /**

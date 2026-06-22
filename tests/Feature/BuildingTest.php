@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Building;
+use App\Models\Facility;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -101,6 +102,73 @@ class BuildingTest extends TestCase
             ]);
 
         $this->assertEquals(20, $response->json('meta.total'));
-        $this->assertCount(15, $response->json('data'));
+        $this->assertCount(10, $response->json('data'));
+    }
+
+    /**
+     * Test building index returns a lightweight summary payload.
+     */
+    public function test_building_index_returns_lightweight_summary_payload(): void
+    {
+        $user = User::factory()->create(['role' => 'student']);
+        $building = Building::factory()->create();
+        Facility::factory()->count(2)->create(['building_id' => $building->id]);
+
+        $response = $this->actingAs($user)
+            ->getJson('/api/buildings');
+
+        $response->assertStatus(200)
+            ->assertJsonStructure([
+                'data' => [
+                    '*' => [
+                        'id',
+                        'name',
+                        'description',
+                        'coordinate' => ['lat', 'lng'],
+                        'facilities_count',
+                    ],
+                ],
+            ])
+            ->assertJsonMissingPath('data.0.amenities');
+
+        $this->assertArrayNotHasKey('amenities', $response->json('data.0'));
+        $this->assertEquals(2, $response->json('data.0.facilities_count'));
+    }
+
+    /**
+     * Test building show returns detailed facilities without recursive nesting.
+     */
+    public function test_building_show_returns_detail_without_recursive_nesting(): void
+    {
+        $user = User::factory()->create(['role' => 'student']);
+        $building = Building::factory()->create();
+        Facility::factory()->count(1)->create(['building_id' => $building->id]);
+
+        $response = $this->actingAs($user)
+            ->getJson("/api/buildings/{$building->id}");
+
+        $response->assertStatus(200)
+            ->assertJsonStructure([
+                'data' => [
+                    'id',
+                    'name',
+                    'description',
+                    'coordinate' => ['lat', 'lng'],
+                    'amenities' => [
+                        '*' => [
+                            'id',
+                            'name',
+                            'description',
+                            'coordinate' => ['lat', 'lng'],
+                            'category_id',
+                            'building_id',
+                            'category',
+                            'building',
+                        ],
+                    ],
+                ],
+            ]);
+
+        $this->assertNull($response->json('data.amenities.0.building'));
     }
 }

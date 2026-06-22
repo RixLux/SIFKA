@@ -16,7 +16,7 @@ class UserSearchTest extends TestCase
         User::factory()->create(['name' => 'John Doe', 'email' => 'john@example.com']);
 
         $response = $this->actingAs($admin)
-            ->getJson('/api/users?q=John');
+            ->getJson('/api/users?query=John');
 
         $response->assertStatus(200);
         $response->assertJsonFragment(['name' => 'John Doe']);

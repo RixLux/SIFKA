@@ -4,7 +4,6 @@ namespace App\Policies;
 
 use App\Models\Report;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
 class ReportPolicy
 {
@@ -50,8 +49,7 @@ class ReportPolicy
      */
     public function delete(User $user, Report $report): bool
     {
-        // Only Admin can delete (Soft Delete)
-        return $user->role === 'admin';
+        return $user->role === 'admin' || $user->id === $report->user_id;
     }
 
     /**

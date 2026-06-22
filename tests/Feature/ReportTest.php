@@ -124,4 +124,34 @@ class ReportTest extends TestCase
 
         $response->assertStatus(403);
     }
+
+    /**
+     * Test student can delete their own report.
+     */
+    public function test_student_can_delete_their_own_report(): void
+    {
+        $user = User::factory()->create(['role' => 'student']);
+        $report = Report::factory()->create(['user_id' => $user->id]);
+
+        $response = $this->actingAs($user)
+            ->deleteJson("/api/reports/{$report->id}");
+
+        $response->assertStatus(200);
+        $this->assertSoftDeleted('reports', ['id' => $report->id]);
+    }
+
+    /**
+     * Test student cannot delete other's report.
+     */
+    public function test_student_cannot_delete_others_report(): void
+    {
+        $user = User::factory()->create(['role' => 'student']);
+        $otherUser = User::factory()->create(['role' => 'student']);
+        $report = Report::factory()->create(['user_id' => $otherUser->id]);
+
+        $response = $this->actingAs($user)
+            ->deleteJson("/api/reports/{$report->id}");
+
+        $response->assertStatus(403);
+    }
 }

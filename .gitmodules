@@ -1,0 +1,3 @@
+[submodule "FE_SIFKA"]
+	path = FE_SIFKA
+	url = git@github.com:ramjitampan/SIFKA---Sistem-Informasi-Fasilitas-Kampus.git

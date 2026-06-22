@@ -17,6 +17,16 @@ class AsGeometry implements CastsAttributes
     public function get(Model $model, string $key, mixed $value, array $attributes): mixed
     {
         if (! $value) {
+            $latitude = $attributes['latitude'] ?? $attributes['lat_report'] ?? null;
+            $longitude = $attributes['longitude'] ?? $attributes['long_report'] ?? null;
+
+            if ($latitude !== null && $longitude !== null) {
+                return (object) [
+                    'latitude' => (float) $latitude,
+                    'longitude' => (float) $longitude,
+                ];
+            }
+
             return null;
         }
 

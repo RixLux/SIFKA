@@ -31,13 +31,15 @@ class CreateSuperAdmin extends Command
         $email = config('app.super_admin.email');
         $password = config('app.super_admin.password');
 
-        if (!$email || !$password) {
+        if (! $email || ! $password) {
             $this->error('SUPER_ADMIN_EMAIL and SUPER_ADMIN_PASSWORD must be set in .env');
+
             return 1;
         }
 
         if (User::where('email', $email)->exists()) {
             $this->info("User with email {$email} already exists.");
+
             return 0;
         }
 
@@ -49,6 +51,7 @@ class CreateSuperAdmin extends Command
         ]);
 
         $this->info("Super Admin '{$name}' created successfully.");
+
         return 0;
     }
 }

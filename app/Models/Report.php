@@ -4,10 +4,12 @@ namespace App\Models;
 
 use App\Casts\AsGeometry;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Expression;
 use Illuminate\Support\Facades\Storage;
@@ -64,6 +66,38 @@ class Report extends Model
     }
 
     /**
+     * Scope a query to filter reports.
+     *
+     * @param  Builder  $query
+     * @param  array<string, mixed>  $filters
+     * @return Builder
+     */
+    public function scopeFilter($query, array $filters)
+    {
+        return $query->when($filters['q'] ?? null, function ($query, $search) {
+            $query->whereIn('id', Report::search($search)->keys());
+        });
+    }
+
+    /**
+     * Users who have seen this report.
+     */
+    public function seenBy(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'report_user_seen')->withPivot('seen_at');
+    }
+
+    /**
+     * Scope to filter only unseen reports for the current user.
+     */
+    public function scopeUnseenBy(Builder $query, int $userId): Builder
+    {
+        return $query->whereDoesntHave('seenBy', function ($q) use ($userId) {
+            $q->where('user_id', $userId);
+        });
+    }
+
+    /**
      * Get the user that created the report.
      */
     public function user(): BelongsTo
@@ -89,5 +123,17 @@ class Report extends Model
                 ? Storage::disk(config('filesystems.report_disk'))->url($this->image_path)
                 : null
         );
+    }
+
+    /**
+     * The "booted" method of the model.
+     */
+    protected static function booted(): void
+    {
+        static::deleted(function (Report $report) {
+            if ($report->image_path) {
+                Storage::disk(config('filesystems.report_disk'))->delete($report->image_path);
+            }
+        });
     }
 }

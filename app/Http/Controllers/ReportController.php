@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\ReportUpdated;
 use App\Http\Requests\StoreReportRequest;
 use App\Http\Requests\UpdateReportRequest;
 use App\Http\Resources\GeoJsonCollection;
 use App\Http\Resources\ReportResource;
 use App\Models\Report;
+use Dedoc\Scramble\Attributes\QueryParameter;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -18,11 +20,16 @@ class ReportController extends Controller
     /**
      * Display a listing of the resource.
      */
+    #[QueryParameter('q', description: 'The search query to filter reports by title or description', type: 'string')]
+    #[QueryParameter('status', description: 'The status filter (pending, in_progress, resolved, rejected)', type: 'string')]
+    #[QueryParameter('facility_id', description: 'Filter by facility ID', type: 'integer')]
+    #[QueryParameter('format', description: 'The response format (use \'geojson\' for GeoJSON)', type: 'string')]
     public function index(Request $request)
     {
         $this->authorize('viewAny', Report::class);
 
-        $query = Report::with(['user', 'facility.category']);
+        $query = Report::with(['user', 'facility.category'])
+            ->filter($request->only(['q']));
 
         // Role-based filtering
         if ($request->user()->role === 'student') {
@@ -38,22 +45,52 @@ class ReportController extends Controller
             $query->where('facility_id', $request->facility_id);
         }
 
+        if ($request->boolean('unseen_only')) {
+            $query->unseenBy($request->user()->id);
+        }
+
         if ($request->query('format') === 'geojson') {
             $reports = $query->latest()->get();
 
             return new GeoJsonCollection(ReportResource::collection($reports));
         }
 
-        $reports = $query->latest()->paginate(15);
+        $reports = $query->latest()->paginate(10);
+
+        // Status counts should be calculated based on the base query (excluding status filter)
+        $countsQuery = Report::with(['user', 'facility.category'])
+            ->filter($request->only(['q']));
+
+        if ($request->user()->role === 'student') {
+            $countsQuery->where('user_id', $request->user()->id);
+        }
+
+        if ($request->has('facility_id')) {
+            $countsQuery->where('facility_id', $request->facility_id);
+        }
+
+        if ($request->boolean('unseen_only')) {
+            $countsQuery->unseenBy($request->user()->id);
+        }
 
         return ReportResource::collection($reports)->additional([
             'status_counts' => [
-                'pending' => (clone $query)->where('status', 'pending')->count(),
-                'in_progress' => (clone $query)->where('status', 'in_progress')->count(),
-                'resolved' => (clone $query)->where('status', 'resolved')->count(),
-                'rejected' => (clone $query)->where('status', 'rejected')->count(),
+                'pending' => (clone $countsQuery)->where('status', 'pending')->count(),
+                'in_progress' => (clone $countsQuery)->where('status', 'in_progress')->count(),
+                'resolved' => (clone $countsQuery)->where('status', 'resolved')->count(),
+                'rejected' => (clone $countsQuery)->where('status', 'rejected')->count(),
             ],
         ]);
+    }
+
+    /**
+     * Mark a report as seen by the current user.
+     */
+    public function markAsSeen(Request $request, Report $report)
+    {
+        $report->seenBy()->syncWithoutDetaching([$request->user()->id]);
+
+        return response()->json(['message' => 'Report marked as seen']);
     }
 
     /**
@@ -68,15 +105,24 @@ class ReportController extends Controller
             $imagePath = $request->file('image')->store('reports', config('filesystems.report_disk'));
         }
 
-        $report = Report::create([
-            'user_id' => $request->user()->id,
-            'facility_id' => $validated['facility_id'] ?? null,
-            'title' => $validated['title'],
-            'description' => $validated['description'],
-            'image_path' => $imagePath,
-            'status' => 'pending',
-            'location' => DB::raw("ST_GeomFromText('POINT(".$validated['longitude'].' '.$validated['latitude'].")', 4326)"),
-        ]);
+        $report = Report::unguarded(function () use ($request, $validated, $imagePath) {
+            $coordinates = in_array(DB::connection()->getDriverName(), ['mysql', 'mariadb'], true)
+                ? $this->coordinateAttributes((float) $validated['longitude'], (float) $validated['latitude'])
+                : [
+                    'lat_report' => (float) $validated['latitude'],
+                    'long_report' => (float) $validated['longitude'],
+                ];
+
+            return Report::create([
+                'user_id' => $request->user()->id,
+                'facility_id' => $validated['facility_id'] ?? null,
+                'title' => $validated['title'],
+                'description' => $validated['description'],
+                'image_path' => $imagePath,
+                'status' => 'pending',
+                ...$coordinates,
+            ]);
+        });
 
         return (new ReportResource($report->refresh()->load(['user', 'facility.category'])))
             ->response()
@@ -104,31 +150,12 @@ class ReportController extends Controller
             'status' => $validated['status'],
         ]);
 
+        // Reset 'seen' status for the report owner (student) when status is updated
+        $report->seenBy()->detach($report->user_id);
+
+        event(new ReportUpdated($report));
+
         return new ReportResource($report->load(['user', 'facility.category']));
-    }
-
-    /**
-     * Search for reports.
-     */
-    public function search(Request $request)
-    {
-        $this->authorize('viewAny', Report::class);
-
-        $query = $request->query('q');
-
-        $search = Report::search($query);
-
-        if ($request->user()->role === 'student') {
-            $search->where('user_id', $request->user()->id);
-        }
-
-        $reports = $search->get();
-
-        if ($request->query('format') === 'geojson') {
-            return new GeoJsonCollection(ReportResource::collection($reports));
-        }
-
-        return ReportResource::collection($reports);
     }
 
     /**
@@ -138,6 +165,8 @@ class ReportController extends Controller
     {
         $this->authorize('delete', $report);
         $report->delete();
+
+        event(new ReportUpdated($report));
 
         return response()->json(['message' => 'Report deleted successfully']);
     }

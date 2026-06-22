@@ -53,5 +53,8 @@ extra_css:
 
 nav:
   - Home: index.md
-  - API: API.md
-  - README Plan: README-Plan.md
+  - LAPORAN KEMAJUAN KELOMPOK1: LAPORAN_KEMAJUAN_KELOMPOK1.md
+  - PRD: PRD.md
+  - Custom Artisan Command Guide: custom-artisan-command-guide.md
+  - ImageManagement: imageManagement.md
+  - Migration Guide: migration_guide.md

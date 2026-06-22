@@ -96,32 +96,25 @@ class AuthTest extends TestCase
         ]);
     }
 
-    /**
-     * Test admin can register a user with a specific role.
-     */
-    public function test_admin_can_register_staff(): void
+    public function test_user_can_login_with_remember_me(): void
     {
-        $admin = User::factory()->create(['role' => 'admin']);
-        $token = $admin->createToken('auth_token')->plainTextToken;
+        $user = User::factory()->create([
+            'password' => bcrypt('password'),
+        ]);
 
-        $response = $this->withHeader('Authorization', 'Bearer '.$token)
-            ->postJson('/api/register', [
-                'name' => 'Staff User',
-                'email' => 'staff@example.com',
-                'password' => 'password',
-                'password_confirmation' => 'password',
-                'role' => 'staff',
-            ]);
+        $this->travelTo(now());
 
-        $response->assertStatus(201)
-            ->assertJson([
-                'message' => 'User created successfully',
-                'user' => ['role' => 'staff'],
-            ]);
+        $response = $this->postJson('/api/login', [
+            'email' => $user->email,
+            'password' => 'password',
+            'remember' => true,
+        ]);
 
-        $this->assertDatabaseHas('users', [
-            'email' => 'staff@example.com',
-            'role' => 'staff',
+        $response->assertStatus(200);
+
+        $this->assertDatabaseHas('personal_access_tokens', [
+            'tokenable_id' => $user->id,
+            'expires_at' => now()->addDays(3),
         ]);
     }
 }

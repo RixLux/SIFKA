@@ -9,20 +9,42 @@ use Illuminate\Http\Resources\Json\JsonResource;
 class ReportResource extends JsonResource
 {
     /**
+     * Resolve coordinates from either spatial or legacy scalar columns.
+     *
+     * @return array{lat: float, lng: float}
+     */
+    private function coordinate(): array
+    {
+        $location = $this->location;
+
+        if ($location instanceof Expression) {
+            return ['lat' => 0, 'lng' => 0];
+        }
+
+        if (is_object($location)) {
+            return [
+                'lat' => (float) ($location->latitude ?? 0),
+                'lng' => (float) ($location->longitude ?? 0),
+            ];
+        }
+
+        return [
+            'lat' => (float) ($this->lat_report ?? $this->latitude ?? 0),
+            'lng' => (float) ($this->long_report ?? $this->longitude ?? 0),
+        ];
+    }
+
+    /**
      * Transform the resource into an array.
      *
      * @return array<string, mixed>
      */
     public function toArray(Request $request): array
     {
-        // Safe access to spatial data, handling raw DB expressions if model wasn't refreshed
-        $latitude = $this->location instanceof Expression
-            ? 0
-            : (float) ($this->location->latitude ?? 0);
+        $coordinate = $this->coordinate();
+        $longitude = $coordinate['lng'];
 
-        $longitude = $this->location instanceof Expression
-            ? 0
-            : (float) ($this->location->longitude ?? 0);
+        $isSeen = $request->user() ? $this->seenBy()->where('user_id', $request->user()->id)->exists() : true;
 
         if ($request->query('format') === 'geojson') {
             return [
@@ -44,6 +66,7 @@ class ReportResource extends JsonResource
                     'user_id' => $this->user_id,
                     'facility_id' => $this->facility_id,
                     'facility_name' => $this->facility?->name,
+                    'is_seen' => $isSeen,
                     'created_at' => $this->created_at,
                     'updated_at' => $this->updated_at,
                 ],
@@ -57,9 +80,10 @@ class ReportResource extends JsonResource
             'image_url' => $this->image_url,
             'status' => $this->status,
             'coordinate' => [
-                'lat' => $latitude,
-                'lng' => $longitude,
+                'lat' => $coordinate['lat'],
+                'lng' => $coordinate['lng'],
             ],
+            'is_seen' => $isSeen,
             'user' => [
                 'id' => $this->user->id,
                 'name' => $this->user->name,

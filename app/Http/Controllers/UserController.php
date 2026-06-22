@@ -6,6 +6,7 @@ use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use Dedoc\Scramble\Attributes\QueryParameter;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -18,15 +19,29 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
+    #[QueryParameter('q', description: 'The search query to filter users by name or email', type: 'string')]
+    #[QueryParameter('role', description: 'Filter by user role (admin, staff, student)', type: 'string')]
+    #[QueryParameter('sort_by', description: 'Sort by a specific field (default: created_at)', type: 'string')]
+    #[QueryParameter('sort_order', description: 'Sort order (asc or desc)', type: 'string')]
+    #[QueryParameter('per_page', description: 'Number of results per page', type: 'integer')]
     public function index(Request $request): AnonymousResourceCollection
     {
         $this->authorize('viewAny', User::class);
 
-        if ($query = $request->query('q')) {
-            $users = User::search($query)->paginate(20);
-        } else {
-            $users = User::query()->latest()->paginate(20);
+        $query = User::query()
+            ->filter($request->only(['q']));
+
+        // Filter by role
+        if ($role = $request->query('role')) {
+            $query->where('role', $role);
         }
+
+        // Sorting
+        $sortBy = $request->query('sort_by', 'created_at');
+        $sortOrder = $request->query('sort_order', 'desc');
+        $query->orderBy($sortBy, $sortOrder);
+
+        $users = $query->paginate($request->query('per_page', 10));
 
         return UserResource::collection($users);
     }
@@ -85,18 +100,5 @@ class UserController extends Controller
         $user->delete();
 
         return response()->noContent();
-    }
-
-    /**
-     * Search for users (Admin only).
-     */
-    public function search(Request $request)
-    {
-        $this->authorize('viewAny', User::class);
-
-        $query = $request->query('q');
-        $users = User::search($query)->get();
-
-        return UserResource::collection($users);
     }
 }

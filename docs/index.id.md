@@ -16,6 +16,7 @@ Pencarian fuzzy berkecepatan tinggi yang diimplementasikan di semua sumber daya 
 
 ### 2. Penyelarasan Payload & Validasi Ketat
 API mempertahankan kontrak permintaan/tanggapan yang dapat diprediksi. Semua input sumber daya distandarisasi melalui **FormRequests**, memastikan bahwa otorisasi dan validasi terjadi sebelum eksekusi database apa pun.
+
 - **Pemetaan Asimetris:** Secara otomatis mengonversi koordinat datar frontend menjadi geometri backend terstruktur.
 - **Keamanan:** Permintaan yang tidak sah ditolak (403) sebelum validasi (422) untuk mencegah kebocoran metadata.
 

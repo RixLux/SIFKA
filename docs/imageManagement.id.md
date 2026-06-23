@@ -115,15 +115,16 @@ php artisan storage:switch public
 
 ### 4. Bagaimana Kode Menanganinya
 Aplikasi dikonfigurasi untuk menggunakan variabel lingkungan `REPORT_DISK` untuk gambar laporan (sebagaimana didefinisikan dalam `config/filesystems.php`). Perintah `storage:switch` secara otomatis memperbarui variabel ini, memastikan bahwa:
+
 - `ReportController.php` menyimpan gambar baru pada disk yang aktif.
 - `Report.php` menghasilkan URL yang benar dan menangani penghapusan pada disk yang aktif.
 
 ### Ringkasan Perintah
-┌─────────────────────────┬─────────────────────────────────────────────┐
-│ Tugas                   │ Perintah                                    │
-├─────────────────────────┼─────────────────────────────────────────────┤
-│ Instalasi Driver        │ composer require league/flysystem-aws-s3-v3 │
-│ Migrasi File            │ php artisan storage:migrate public s3       │
-│ Beralih ke Cloudflare R2│ php artisan storage:switch s3               │
-│ Beralih ke Lokal        │ php artisan storage:switch public           │
-└─────────────────────────┴─────────────────────────────────────────────┘
+
+| Tugas                   |Perintah                                    |
+| --- | --- |
+| Instalasi Driver         | composer require league/flysystem-aws-s3-v3 
+| Migrasi File             |php artisan storage:migrate public s3       
+| Beralih ke Cloudflare R2 |php artisan storage:switch s3               
+| Beralih ke Lokal         |php artisan storage:switch public          
+

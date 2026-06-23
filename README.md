@@ -1,29 +1,22 @@
-# SIFKA - Sistem Informasi Fasilitas Kampus (Campus Facility Information System)
-
-Documentation could be found here: [https://rixlux.github.io/SIFKA/](https://rixlux.github.io/SIFKA/)
-
+# SIFKA
 
 SIFKA is a robust, high-performance API built with Laravel 13, designed to manage and report on campus facilities. It features deep architectural alignment, advanced security hardening, and global search capabilities.
 
-## 🚀 Technical Stack
-- **Framework:** Laravel 13 (PHP 8.5)
+## Technical Stack
+- **Framework:** Laravel 13 (PHP 8.3)
 - **Security:** Laravel Sanctum (Auth), Rate Limiting (Throttling), Policy-based Authorization.
 - **Search Engine:** Laravel Scout with Meilisearch.
 - **Documentation:** Scramble (OpenAPI) and MKDocs.
 - **Testing:** PHPUnit (hardened feature & unit tests).
 
-## 🛠 Key Architectural Features
+## Key Architectural Features
 
 ### 1. Global Search (Meilisearch)
-High-speed, fuzzy search implemented across all major resources:
-- `api/buildings/search`
-- `api/categories/search`
-- `api/facilities/search`
-- `api/reports/search` (Role-filtered)
-- `api/users/search` (Admin Only)
+High-speed, fuzzy search implemented across all major resources
 
 ### 2. Payload Alignment & Strict Validation
 The API maintains a predictable request/response contract. All resource inputs are standardized via **FormRequests**, ensuring that authorization and validation happen before any database execution.
+
 - **Asymmetric Mapping:** Automatically converts flat frontend coordinates into structured backend geometry.
 - **Security:** Unauthorized requests are rejected (403) prior to validation (422) to prevent metadata leaks.
 
@@ -31,16 +24,13 @@ The API maintains a predictable request/response contract. All resource inputs a
 - **Throttling:** All authentication routes (`login`, `register`, `logout`) are protected by a `5 requests / minute` rate limiter.
 - **Admin Controls:** Granular role management allowing Admins to register Staff accounts via the API.
 
-## 📂 Project Documentation
-For deep dives into the project's design and roadmap, refer to the `docs/` directory:
-- [PRD.md](docs/PRD.md): API Payload Alignment & Validation Strategy.
-- [masterPlan.md](docs/masterPlan.md): Current engineering roadmap and checklist.
-- [CHANGELOG.md](docs/CHANGELOG.md): History of architectural shifts (Version 1.1.0+).
+## Project Documentation
+For deep dives into the project's design and roadmap, refer to the `docs/` directory
 
-## 🏁 Getting Started
+## Getting Started
 
 ### Prerequisites
-- PHP 8.5+
+- PHP 8.3+
 - Composer
 - Meilisearch Server (Local or Cloud)
 
@@ -64,14 +54,44 @@ For deep dives into the project's design and roadmap, refer to the `docs/` direc
    php artisan scout:import "App\Models\Report"
    php artisan scout:import "App\Models\User"
    ```
+4. **Start Project**  
+    Example if u use Feesh and tmux.
+    ```
+    cat ~/.local/bin/SIFKA-dev 
+    #!/bin/bash
 
-## 🧪 Testing
+    SESSION="sifka"
+
+    # Meilisearch
+
+    tmux new-session -d -s $SESSION -c "/var/home/awchan/Project/SIFKA" "fish -c './meilisearch --master-key mkVHdcZOS7CcBGgUAc6shTNDM8KAi9aVxU3oNTsgWTs'"
+
+    # Reverb
+    tmux split-window -h -t $SESSION -c "/var/home/awchan/Project/SIFKA" "fish -c 'php artisan reverb:start'"
+
+
+    # Backend
+    tmux select-pane -t 0
+    tmux split-window -v -t $SESSION -c "/var/home/awchan/Project/SIFKA" "fish -c 'php artisan serve --host=0.0.0.0 --port=8000'"
+
+
+    # Frontend Vite
+    tmux select-pane -t 2
+    tmux split-window -v -t $SESSION -c "/var/home/awchan/Project/SIFKA/FE_SIFKA" "fish -c 'npm run dev -- --host'"
+
+
+    tmux attach-session -t $SESSION
+    ```
+
+    > Create script with that exact name or any name your choice and put it it into this location `~/.local/bin/` and set it as executable `chmod +x ~/.local/bin/SIFKA-dev`
+
+## Testing
 Run the comprehensive test suite to ensure stability:
 ```bash
 php artisan test --compact
 ```
 
-## 🧠 Laravel Brain
+## Laravel Brain
 This project uses **LaraMint Brain** for architectural analysis. To explore the codebase graph or export context snapshots:
 ```bash
 php artisan brain:scan

@@ -16,17 +16,79 @@ Currently, the facility reporting application stores spatial locations (Building
 
 ### 2. User Stories & Features
 
-#### 2.1 Facility Manager / Admin View (Map Dashboard)
+#### 2.1 Admin Epic: Facility & Asset Management
 
-* **As a** Facility Manager,
+##### 2.1.1 Dashboard & Map View
+
+* **As an** Admin,
 * **I want to** open a map view and instantly see clustered pins of all open maintenance reports,
 * **So that** I can visually track which buildings or areas have the highest concentration of issues.
 
-#### 2.2 Reporter View (Pinpoint Issue)
+##### 2.1.2 Building Management
 
-* **As a** field technician or reporter,
-* **I want to** click/tap directly on a map to drop a pin exactly where an asset or issue is located,
-* **So that** I don't have to guess or manually type coordinates.
+* **As an** Admin,
+* **I want to** create, read, update, and delete (CRUD) building profiles (including name, address, and GPS coordinates),
+* **So that** I can accurately map where facilities and maintenance issues are located.
+
+##### 2.1.3 Facility & Category Management
+
+* **As an** Admin,
+* **I want to** define facility categories (e.g., Listrik/Electricity, Water, Field/Sports Area) and assign specific facilities to them,
+* **So that** maintenance reports can be accurately categorized and routed to the right repair teams.
+
+#### 2.2 Admin Epic: User Management
+
+##### 2.2.1 User Administration
+
+* **As an** Admin,
+* **I want to** manage user accounts (create, view, edit status, or deactivate) and assign roles (e.g., Tenant, Staff, Maintenance Worker),
+* **So that** I can control system access and ensure accountability across the platform.
+
+#### 2.3 Student / Reporter Epic: Report & Issue Management
+
+##### 2.3.1 Report Location Selection
+
+* **As a** Student or Reporter,
+* **I want to** click/tap directly on a map to drop a pin, fetch my current GPS location, or select an existing facility marker,
+* **So that** I can accurately pinpoint exactly where an asset or maintenance issue is located without guessing coordinates.
+
+##### 2.3.2 Report Management (My Reports)
+
+* **As a** Student or Reporter,
+* **I want to** view a list of my submitted reports and have the ability to edit the details or delete them if they are no longer relevant,
+* **So that** I can keep my active submissions accurate and up to date.
+
+##### 2.3.3 Tracking & Notifications
+
+* **As a** Student or Reporter,
+* **I want to** track the real-time status of my reports and receive instant notifications whenever there is an update (e.g., status changed to "In Progress" or "Resolved"),
+* **So that** I know my concerns are being addressed without needing to manually check the app.
+
+#### 2.4 Admin & Staff Epic: Report Operations & Triage
+
+##### 2.4.1 Real-Time Monitoring & Alerts
+
+* **As an** Admin or Staff member,
+* **I want to** receive instant notifications and see a visual indicator whenever a new maintenance issue is submitted,
+* **So that** I can immediately triage urgent problems and maintain a fast response time.
+
+##### 2.4.2 Proximity & Radius Filtering
+
+* **As an** Admin or Staff member,
+* **I want to** place a pin on an interactive map and set a custom radius (e.g., within 50 meters) to filter and view all relevant reports in that specific zone,
+* **So that** I can group nearby issues together and assign them to a single maintenance team efficiently.
+
+##### 2.4.3 Advanced Report Filtering
+
+* **As an** Admin or Staff member,
+* **I want to** filter the list of reports by specific date ranges (e.g., all reports created in July) and current workflow status (Pending, In Progress, Resolved, Rejected),
+* **So that** I can isolate backlog items, track monthly trends, or focus only on active issues.
+
+##### 2.4.4 Global Search
+
+* **As an** Admin or Staff member,
+* **I want to** search for reports using keywords from the report title or the reporter's name,
+* **So that** I can instantly find a specific submission when looking up a user's inquiry or a known issue.
 
 ---
 
@@ -123,18 +185,6 @@ The Laravel API must return standard `FeatureCollection` formats directly to the
 
 | Criteria ID | Scenario | Given/When/Then | Status |
 | --- | --- | --- | --- |
-| **AC-01** | Successful Map Load | **Given** there are active facility reports,<br>
-
-<br>**When** the user opens the map dashboard,<br>
-
-<br>**Then** the system fetches the GeoJSON endpoint and `mapcn` correctly renders clustered pins. | ⬜ Pending |
-| **AC-02** | Accurate Pin Placement | **Given** a user is creating a report,<br>
-
-<br>**When** they click a specific spot on the map interface,<br>
-
-<br>**Then** the backend correctly persists the coordinates into the database `POINT` column. | ⬜ Pending |
-| **AC-03** | Database Integrity | **Given** a location entry is saved without coordinates,<br>
-
-<br>**When** validation executes,<br>
-
-<br>**Then** the database rejects the row with a `NOT NULL` constraint exception. | ⬜ Pending |
+| **AC-01** | Successful Map Load | - **Given** there are active facility reports,<br>  <br> - **When** the user opens the map dashboard,<br> <br>- **Then** the system fetches the GeoJSON endpoint and `mapcn` correctly renders clustered pins. |  Pending |
+| **AC-02** | Accurate Pin Placement | - **Given** a user is creating a report,<br>  <br>- **When** they click a specific spot on the map interface,<br> <br>- **Then** the backend correctly persists the coordinates into the database `POINT` column. |  Pending |
+| **AC-03** | Database Integrity |- **Given** a location entry is saved without coordinates,<br>  <br>- **When** validation executes,<br> <br>- **Then** the database rejects the row with a `NOT NULL` constraint exception. |  Pending |

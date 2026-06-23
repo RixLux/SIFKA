@@ -1,6 +1,6 @@
 # Laporan Kemajuan Kelompok 1
 
-**Deskripsi Project**
+## **Deskripsi Project**
 
 | No | Aspek | Uraian |
 | :--- | :--- | :--- |
@@ -10,19 +10,19 @@
 | 4 | Fitur Utama | - **Geo-Tagged Reporting**: Pelaporan dengan koordinat GPS otomatis.<br>- **Role-based Access Control**: Pemisahan hak akses antara Mahasiswa (Pelapor), Staff (Teknisi), dan Admin.<br>- **Category Management**: Admin dapat menambah, mengubah, atau menghapus kategori fasilitas.<br>- **Map Visualization**: Visualisasi sebaran fasilitas dan titik kerusakan di peta interaktif.<br>- **Image Upload**: Lampiran foto bukti kerusakan.<br>- **Status Tracking**: Pemantauan tahapan perbaikan dari *Pending* hingga *Resolved*. |
 | 5 | Teknologi yang Digunakan | - **Backend**: Laravel 13, Sanctum (Auth), MariaDB (POINT Spatial).<br>- **Frontend**: React, Vite, Tailwind CSS, Zustand (State Management).<br>- **Maps**: `mapcn` component wrapper.<br>- **Documentation**: MkDocs. |
 
-**Kemajuan Project**
+## **Kemajuan Project**
 
 | No | Bagian yang Dikerjakan | Status | Keterangan |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | 1 | **Inisialisasi & Authentication** | Selesai | Persiapan Projek dan Token API |
 | 2 | **Geo-Spatial Database Schema** | Selesai | Migrasi data latitude & longitude lama ke tipe spasial POINT |
 | 3 | **Core Logic & Security** | Selesai | Membangun API yang aman, FormRequests, dan pembatasan laju (rate limiting) |
 | 4 | **Perintah Artisan Kustom** | Selesai | Otomasi reset, switch storage, manajemen token, dan migrasi storage |
 
-**Dokumentasi**
+## **Dokumentasi**
 
 | No | Jenis Dokumentasi | Keterangan |
-|---|---|---|
+| --- | --- | --- |
 | 1 | Flowchart / Diagram | Tersedia di direktori dokumentasi |
 | 2 | Use Case / Wireframe | Tersedia di direktori dokumentasi |
 | 3 | Tampilan Aplikasi | Terintegrasi di frontend dashboard |
@@ -31,14 +31,14 @@
 **Kendala dan Solusi**
 
 | No | Kendala | Solusi |
-|---|---|---|
+| --- | --- | --- |
 | 1 | Keamanan Endpoint | Secara eksplisit membatasi akses pendaftaran dan menetapkan peran default user |
 | 2 | Kurangnya cara menambah fasilitas | Menambahkan endpoint gedung dan fasilitas baru untuk manajemen data |
 | 3 | Integrasi Cloud Storage | Membuat perintah `storage:switch` dan `storage:migrate` untuk Cloudflare R2 |
 
-**Progress Keseluruhan**
+## **Progress Keseluruhan**
 
 | Keterangan | Nilai |
-|---|---|
+| --- | --- |
 | Persentase Kemajuan | 100 % |
 | Status Project | On Track |

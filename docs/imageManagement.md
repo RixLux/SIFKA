@@ -62,22 +62,23 @@ If you change the directory structure on your storage disk, you may need to upda
 UPDATE reports SET image_path = REPLACE(image_path, 'old-dir/', 'new-dir/') WHERE image_path IS NOT NULL;
 ```
 
-## Best Practices
+### Best Practices
 - **Never save full URLs in the database.** This makes migrations extremely difficult.
 - **Use the `image_url` attribute.** Avoid calling `Storage::url()` manually in controllers or views.
 - **Check visibility.** If using a cloud provider, ensure the `visibility` is set to `public` in `config/filesystems.php` for that disk.
 
+## Migrate to R2
 
 To migrate to Cloudflare R2 and easily switch between local and cloud storage, follow these steps. I
 have also created two custom Artisan commands to automate the migration and switching process.
 
-1. Install the S3 Driver
+### 1. Install the S3 Driver
 Cloudflare R2 is S3-compatible, but Laravel requires the AWS S3 Flysystem driver to interact with it.
 ```
 composer require league/flysystem-aws-s3-v3
 ```
 
-2. Configure Cloudflare R2 in .env
+### 2. Configure Cloudflare R2 in .env
 Add the following variables to your .env file. Replace the placeholders with your actual Cloudflare
 R2 credentials.
 ```
@@ -90,34 +91,35 @@ AWS_ENDPOINT=https://<account_id>.r2.cloudflarestorage.com
 AWS_USE_PATH_STYLE_ENDPOINT=true
 ```
 
-> Note: AWS_USE_PATH_STYLE_ENDPOINT must be set to true for R2 compatibility.
+    > Note: AWS_USE_PATH_STYLE_ENDPOINT must be set to true for R2 compatibility.  
 
-3. Automated Migration & Switching
+### 3. Automated Migration & Switching
+
 I have created two new Artisan commands to handle the transition:
 
-A. Migrate Files (storage:migrate)
+- A. Migrate Files (storage:migrate)
 This command copies all files from your local storage to R2 (or vice versa).
 ```
 # Migrate from local 'public' disk to 's3' (R2)
 php artisan storage:migrate public s3
 ```
 
-B. Switch Storage (storage:switch)
+- B. Switch Storage (storage:switch)
 This command updates your .env file to toggle between storage disks.
 ```
 # Switch to Cloudflare R2
 php artisan storage:switch s3
 ```
-
 ```
 # Switch back to local storage
 php artisan storage:switch public
 ```
 
-4. How the Code Handles It
+### 4. How the Code Handles It  
 The application is already configured to use the REPORT_DISK environment variable for report images
 (as seen in config/filesystems.php). The storage:switch command automatically updates this variable,
 ensuring that:
+
 - ReportController.php stores new images on the active disk.
 - Report.php generates the correct URLs and handles deletions on the active disk.
 

@@ -16,6 +16,7 @@ High-speed, fuzzy search implemented across all major resources
 
 ### 2. Payload Alignment & Strict Validation
 The API maintains a predictable request/response contract. All resource inputs are standardized via **FormRequests**, ensuring that authorization and validation happen before any database execution.
+
 - **Asymmetric Mapping:** Automatically converts flat frontend coordinates into structured backend geometry.
 - **Security:** Unauthorized requests are rejected (403) prior to validation (422) to prevent metadata leaks.
 
@@ -53,7 +54,40 @@ For deep dives into the project's design and roadmap, refer to the `docs/` direc
    php artisan scout:import "App\Models\Report"
    php artisan scout:import "App\Models\User"
    ```
+4. **Start Project**  
+    Example if u use Feesh and tmux.
+    ```
+    cat ~/.local/bin/SIFKA-dev 
+    #!/bin/bash
 
+    SESSION="sifka"
+
+    # Meilisearch
+
+    tmux new-session -d -s $SESSION -c "/var/home/awchan/Project/SIFKA" "fish -c './meilisearch --master-key mkVHdcZOS7CcBGgUAc6shTNDM8KAi9aVxU3oNTsgWTs'"
+
+    # Reverb
+    tmux split-window -h -t $SESSION -c "/var/home/awchan/Project/SIFKA" "fish -c 'php artisan reverb:start'"
+
+
+    # Backend
+    tmux select-pane -t 0
+    tmux split-window -v -t $SESSION -c "/var/home/awchan/Project/SIFKA" "fish -c 'php artisan serve --host=0.0.0.0 --port=8000'"
+
+
+    # Frontend Vite
+    tmux select-pane -t 2
+    tmux split-window -v -t $SESSION -c "/var/home/awchan/Project/SIFKA/FE_SIFKA" "fish -c 'npm run dev -- --host'"
+
+
+    tmux attach-session -t $SESSION
+    ```
+
+    > Create script with that exact name or any name your choice and put it it into this location `~/.local/bin/` and set it as executable `chmod +x ~/.local/bin/SIFKA-dev`
+
+    Then you can just simply start it with `SIFKA-dev`
+   
+   
 ## Testing
 Run the comprehensive test suite to ensure stability:
 ```bash

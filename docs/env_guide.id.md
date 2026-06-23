@@ -6,6 +6,7 @@ Panduan ini menjelaskan setiap variabel konfigurasi yang ada di `.env.example` d
 
 ### 1. Pengaturan Aplikasi
 Konfigurasikan informasi dasar dari aplikasi Laravel.
+
 *   **`APP_NAME`**: Nama aplikasi (misalnya, `SIFKA`).
 *   **`APP_ENV`**: Lingkungan jalannya aplikasi. Gunakan `local` untuk pengembangan lokal, `testing` untuk menjalankan pengujian (test suite), dan `production` untuk deployment produksi.
 *   **`APP_KEY`**: Kunci aplikasi yang digunakan untuk enkripsi. Hasilkan kunci ini menggunakan perintah:
@@ -48,6 +49,7 @@ Konfigurasikan informasi dasar dari aplikasi Laravel.
 
 ### 7. Redis & Memcached (Opsional)
 Digunakan untuk performa tinggi pada sesi, cache, atau antrean.
+
 *   **`REDIS_CLIENT`**: Pustaka klien Redis (misalnya, `phpredis`).
 *   **`REDIS_HOST`**: Hostname server Redis (default: `127.0.0.1`).
 *   **`REDIS_PASSWORD`**: Password server Redis.
@@ -55,6 +57,7 @@ Digunakan untuk performa tinggi pada sesi, cache, atau antrean.
 
 ### 8. Pengaturan Email
 Konfigurasi untuk mengirim email sistem.
+
 *   **`MAIL_MAILER`**: Driver email. Setel ke `log` selama pengembangan lokal untuk menulis email ke file log lokal, atau `smtp` di lingkungan produksi.
 *   **`MAIL_HOST`**, **`MAIL_PORT`**, **`MAIL_USERNAME`**, **`MAIL_PASSWORD`**: Kredensial server SMTP Anda.
 *   **`MAIL_FROM_ADDRESS`**: Alamat email pengirim.
@@ -74,17 +77,20 @@ Konfigurasi untuk mengirim email sistem.
 
 ### 10. Kredensial Super Admin
 Kredensial ini digunakan oleh perintah kustom `php artisan app:create-super-admin` untuk membuat user admin awal secara otomatis.
+
 *   **`SUPER_ADMIN_NAME`**: Nama lengkap user admin awal.
 *   **`SUPER_ADMIN_EMAIL`**: Alamat email yang digunakan untuk masuk (login).
 *   **`SUPER_ADMIN_PASSWORD`**: Kata sandi yang kuat untuk autentikasi.
 
 ### 11. Laravel Scout & Meilisearch
 Mengonfigurasi kemampuan pencarian teks lengkap (full-text search).
+
 *   **`SCOUT_DRIVER`**: Driver pencarian. Setel ke `meilisearch` untuk mengaktifkan indeks teks lengkap, atau `database` sebagai cadangan.
 *   **`MEILISEARCH_KEY`**: Kunci API untuk autentikasi dengan server Meilisearch Anda.
 
 ### 12. WebSocket Broadcasting (Laravel Reverb)
 Memungkinkan pembaruan data secara real-time pada sisi klien.
+
 *   **`REVERB_APP_ID`**, **`REVERB_APP_KEY`**, **`REVERB_APP_SECRET`**: Kredensial aplikasi yang dihasilkan atau diatur untuk Reverb.
 *   **`REVERB_HOST`**, **`REVERB_PORT`**, **`REVERB_SCHEME`**: Detail koneksi server WebSocket.
 *   **`VITE_REVERB_APP_KEY`**, **`VITE_REVERB_HOST`**, **`VITE_REVERB_PORT`**, **`VITE_REVERB_SCHEME`**: Variabel cermin (mirror) yang digunakan oleh frontend Vite.

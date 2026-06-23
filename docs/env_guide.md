@@ -6,6 +6,7 @@ This guide describes each configuration variable in `.env.example` and provides 
 
 ### 1. Application Settings
 Configure basic details of the Laravel application.
+
 *   **`APP_NAME`**: The name of the application (e.g., `SIFKA`).
 *   **`APP_ENV`**: The application environment. Use `local` for local development, `testing` for running tests, and `production` for production deployments.
 *   **`APP_KEY`**: The application key used for encryption. Generate it using:
@@ -48,6 +49,7 @@ Configure basic details of the Laravel application.
 
 ### 7. Redis & Memcached (Optional)
 Used for high-performance session, cache, or queue storage.
+
 *   **`REDIS_CLIENT`**: Redis client library (e.g., `phpredis`).
 *   **`REDIS_HOST`**: Redis server hostname (default: `127.0.0.1`).
 *   **`REDIS_PASSWORD`**: Redis server password.
@@ -55,6 +57,7 @@ Used for high-performance session, cache, or queue storage.
 
 ### 8. Mail Setup
 Configuration to send system emails.
+
 *   **`MAIL_MAILER`**: Mail driver. Set to `log` during development to write emails to local log files, or `smtp` in production.
 *   **`MAIL_HOST`**, **`MAIL_PORT`**, **`MAIL_USERNAME`**, **`MAIL_PASSWORD`**: SMTP server credentials.
 *   **`MAIL_FROM_ADDRESS`**: Sender email address.
@@ -74,17 +77,20 @@ Configuration to send system emails.
 
 ### 10. Super Admin Credentials
 These are used by the custom command `php artisan app:create-super-admin` to seed a super admin user.
+
 *   **`SUPER_ADMIN_NAME`**: Full name of the initial admin user.
 *   **`SUPER_ADMIN_EMAIL`**: Email address used to log in.
 *   **`SUPER_ADMIN_PASSWORD`**: Strong password for authentication.
 
 ### 11. Laravel Scout & Meilisearch
 Configures full-text search capability.
+
 *   **`SCOUT_DRIVER`**: Search driver. Set to `meilisearch` to enable full-text indexing, or `database` for fallback.
 *   **`MEILISEARCH_KEY`**: API key to authenticate with the Meilisearch server.
 
 ### 12. WebSocket Broadcasting (Laravel Reverb)
 Enables real-time client updates.
+
 *   **`REVERB_APP_ID`**, **`REVERB_APP_KEY`**, **`REVERB_APP_SECRET`**: App credentials generated or set for Reverb.
 *   **`REVERB_HOST`**, **`REVERB_PORT`**, **`REVERB_SCHEME`**: WebSocket server connection details.
 *   **`VITE_REVERB_APP_KEY`**, **`VITE_REVERB_HOST`**, **`VITE_REVERB_PORT`**, **`VITE_REVERB_SCHEME`**: Mirror variables used by the Vite frontend.

@@ -1,15 +1,101 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
     <url>
-         <loc>https://rixlux.github.io/SIFKA/</loc>
-         <lastmod>2026-05-19</lastmod>
+        <loc>https://rixlux.github.io/SIFKA/</loc>
+        <lastmod>2026-06-23</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://rixlux.github.io/SIFKA/"/>
+        <xhtml:link rel="alternate" hreflang="id" href="https://rixlux.github.io/SIFKA/id/"/>
     </url>
     <url>
-         <loc>https://rixlux.github.io/SIFKA/API/</loc>
-         <lastmod>2026-05-19</lastmod>
+        <loc>https://rixlux.github.io/SIFKA/LAPORAN_KEMAJUAN_KELOMPOK1/</loc>
+        <lastmod>2026-06-23</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://rixlux.github.io/SIFKA/LAPORAN_KEMAJUAN_KELOMPOK1/"/>
+        <xhtml:link rel="alternate" hreflang="id" href="https://rixlux.github.io/SIFKA/id/LAPORAN_KEMAJUAN_KELOMPOK1/"/>
     </url>
     <url>
-         <loc>https://rixlux.github.io/SIFKA/README-Plan/</loc>
-         <lastmod>2026-05-19</lastmod>
+        <loc>https://rixlux.github.io/SIFKA/PRD/</loc>
+        <lastmod>2026-06-23</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://rixlux.github.io/SIFKA/PRD/"/>
+        <xhtml:link rel="alternate" hreflang="id" href="https://rixlux.github.io/SIFKA/id/PRD/"/>
+    </url>
+    <url>
+        <loc>https://rixlux.github.io/SIFKA/custom-artisan-command-guide/</loc>
+        <lastmod>2026-06-23</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://rixlux.github.io/SIFKA/custom-artisan-command-guide/"/>
+        <xhtml:link rel="alternate" hreflang="id" href="https://rixlux.github.io/SIFKA/id/custom-artisan-command-guide/"/>
+    </url>
+    <url>
+        <loc>https://rixlux.github.io/SIFKA/env_guide/</loc>
+        <lastmod>2026-06-23</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://rixlux.github.io/SIFKA/env_guide/"/>
+        <xhtml:link rel="alternate" hreflang="id" href="https://rixlux.github.io/SIFKA/id/env_guide/"/>
+    </url>
+    <url>
+        <loc>https://rixlux.github.io/SIFKA/imageManagement/</loc>
+        <lastmod>2026-06-23</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://rixlux.github.io/SIFKA/imageManagement/"/>
+        <xhtml:link rel="alternate" hreflang="id" href="https://rixlux.github.io/SIFKA/id/imageManagement/"/>
+    </url>
+    <url>
+        <loc>https://rixlux.github.io/SIFKA/migration_guide/</loc>
+        <lastmod>2026-06-23</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://rixlux.github.io/SIFKA/migration_guide/"/>
+        <xhtml:link rel="alternate" hreflang="id" href="https://rixlux.github.io/SIFKA/id/migration_guide/"/>
+    </url>
+    <url>
+        <loc>https://rixlux.github.io/SIFKA/id/</loc>
+        <lastmod>2026-06-23</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="id" href="https://rixlux.github.io/SIFKA/id/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://rixlux.github.io/SIFKA/"/>
+    </url>
+    <url>
+        <loc>https://rixlux.github.io/SIFKA/id/LAPORAN_KEMAJUAN_KELOMPOK1/</loc>
+        <lastmod>2026-06-23</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="id" href="https://rixlux.github.io/SIFKA/id/LAPORAN_KEMAJUAN_KELOMPOK1/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://rixlux.github.io/SIFKA/LAPORAN_KEMAJUAN_KELOMPOK1/"/>
+    </url>
+    <url>
+        <loc>https://rixlux.github.io/SIFKA/id/PRD/</loc>
+        <lastmod>2026-06-23</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="id" href="https://rixlux.github.io/SIFKA/id/PRD/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://rixlux.github.io/SIFKA/PRD/"/>
+    </url>
+    <url>
+        <loc>https://rixlux.github.io/SIFKA/id/custom-artisan-command-guide/</loc>
+        <lastmod>2026-06-23</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="id" href="https://rixlux.github.io/SIFKA/id/custom-artisan-command-guide/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://rixlux.github.io/SIFKA/custom-artisan-command-guide/"/>
+    </url>
+    <url>
+        <loc>https://rixlux.github.io/SIFKA/id/env_guide/</loc>
+        <lastmod>2026-06-23</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="id" href="https://rixlux.github.io/SIFKA/id/env_guide/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://rixlux.github.io/SIFKA/env_guide/"/>
+    </url>
+    <url>
+        <loc>https://rixlux.github.io/SIFKA/id/imageManagement/</loc>
+        <lastmod>2026-06-23</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="id" href="https://rixlux.github.io/SIFKA/id/imageManagement/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://rixlux.github.io/SIFKA/imageManagement/"/>
+    </url>
+    <url>
+        <loc>https://rixlux.github.io/SIFKA/id/migration_guide/</loc>
+        <lastmod>2026-06-23</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="id" href="https://rixlux.github.io/SIFKA/id/migration_guide/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://rixlux.github.io/SIFKA/migration_guide/"/>
     </url>
 </urlset>

@@ -281,6 +281,25 @@
   
   
     <li class="md-tabs__item">
+      <a href="../API/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  API
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
       <a href="../LAPORAN_KEMAJUAN_KELOMPOK1/" class="md-tabs__link">
         
   
@@ -451,6 +470,33 @@
     
   
     Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API
   
 
     
@@ -1177,6 +1223,8 @@
 <h1 id="panduan-manajemen-gambar">Panduan Manajemen Gambar</h1>
 <p>Dokumen ini menjelaskan bagaimana SIFKA mengelola gambar laporan dan cara mengonfigurasi atau memigrasikannya di berbagai lingkungan lingkungan.</p>
 <h2 id="gambaran-umum">Gambaran Umum</h2>
+<details>
+<summary>Click to see details</summary>
 <p>SIFKA menggunakan pendekatan terpisah (decoupled) untuk manajemen gambar. Alih-alih menuliskan path penyimpanan atau URL secara langsung (hardcoding), kami menggunakan kombinasi abstraksi Filesystem Laravel dan aksesor Model Eloquent.</p>
 <h3 id="komponen-utama">Komponen Utama</h3>
 <ol>
@@ -1184,16 +1232,24 @@
 <li><strong>Konfigurasi:</strong> Disk penyimpanan dikendalikan via <code>config/filesystems.php</code> menggunakan variabel lingkungan <code>REPORT_DISK</code>.</li>
 <li><strong>Model Accessor (Aksesor Model):</strong> Model <code>Report</code> menyediakan atribut dinamis <code>image_url</code> yang menghasilkan URL absolut lengkap berdasarkan konfigurasi saat ini.</li>
 </ol>
+</details>
 <h2 id="konfigurasi">Konfigurasi</h2>
+<details>
+<summary>Click to see details</summary>
 <p>Anda dapat mengontrol disk penyimpanan mana yang digunakan untuk gambar laporan di file <code>.env</code> Anda:</p>
-<div class="highlight"><pre><span></span><code># Pilihan: public, s3, dll.
-REPORT_DISK=public
+<div class="highlight"><pre><span></span><code>REPORT_DISK=public
 </code></pre></div>
+<blockquote>
+<p>Pilihan: public, s3, dll.</p>
+</blockquote>
 <ul>
 <li><strong><code>public</code> (Default):</strong> Penyimpanan lokal di <code>storage/app/public</code>. Memerlukan perintah <code>php artisan storage:link</code>.</li>
 <li><strong><code>s3</code>:</strong> Amazon S3 atau layanan yang kompatibel (seperti Cloudflare R2, DigitalOcean Spaces, MinIO).</li>
 </ul>
+</details>
 <h2 id="mengakses-gambar">Mengakses Gambar</h2>
+<details>
+<summary>Click to see details</summary>
 <h3 id="di-phplaravel">Di PHP/Laravel</h3>
 <p>Selalu gunakan properti <code>image_url</code> pada model <code>Report</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="x">$report = Report::find(1);</span>
@@ -1201,7 +1257,10 @@ REPORT_DISK=public
 </code></pre></div>
 <h3 id="di-api-responses">Di API Responses</h3>
 <p><code>ReportResource</code> secara otomatis menyertakan kolom <code>image_url</code>. Frontend harus selalu menggunakan kolom ini untuk merender gambar.</p>
+</details>
 <h2 id="panduan-migrasi">Panduan Migrasi</h2>
+<details>
+<summary>Click to see details</summary>
 <h3 id="1-berpindah-dari-penyimpanan-lokal-ke-cloud-misalnya-s3-cloudflare-r2">1. Berpindah dari Penyimpanan Lokal ke Cloud (misalnya S3 / Cloudflare R2)</h3>
 <p>Saat memindahkan sistem dari pengembangan lokal ke produksi dengan cloud storage:</p>
 <ol>
@@ -1220,14 +1279,20 @@ AWS_URL=https://bucket-anda.s3.amazonaws.com
 <p>Jika Anda mengubah struktur direktori pada disk penyimpanan, Anda mungkin perlu memperbarui <code>image_path</code> di database:</p>
 <div class="highlight"><pre><span></span><code><span class="k">UPDATE</span><span class="w"> </span><span class="n">reports</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">image_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">REPLACE</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;old-dir/&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;new-dir/&#39;</span><span class="p">)</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">image_path</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">;</span>
 </code></pre></div>
+</details>
 <h2 id="praktik-terbaik">Praktik Terbaik</h2>
+<details>
+<summary>Click to see details</summary>
 <ul>
 <li><strong>Jangan pernah menyimpan URL lengkap di database.</strong> Hal ini membuat migrasi lingkungan menjadi sangat sulit.</li>
 <li><strong>Gunakan atribut <code>image_url</code>.</strong> Hindari memanggil <code>Storage::url()</code> secara manual di controller atau view.</li>
 <li><strong>Periksa Visibilitas.</strong> Jika menggunakan penyedia cloud, pastikan visibilitas disetel ke <code>public</code> di <code>config/filesystems.php</code> untuk disk tersebut.</li>
 </ul>
 <hr />
+</details>
 <h2 id="migrasi-ke-cloudflare-r2">Migrasi ke Cloudflare R2</h2>
+<details>
+<summary>Click to see details</summary>
 <p>Untuk bermigrasi ke Cloudflare R2 dan beralih dengan mudah antara penyimpanan lokal dan cloud, ikuti langkah-langkah di bawah ini. Kami menyediakan perintah Artisan kustom untuk mengotomatiskan proses migrasi dan pengalihan disk ini.</p>
 <h3 id="1-instal-driver-s3">1. Instal Driver S3</h3>
 <p>Cloudflare R2 kompatibel dengan S3, tetapi Laravel memerlukan driver AWS S3 Flysystem untuk berinteraksi dengannya.
@@ -1235,7 +1300,9 @@ AWS_URL=https://bucket-anda.s3.amazonaws.com
 </code></pre></div></p>
 <h3 id="2-konfigurasi-cloudflare-r2-di-env">2. Konfigurasi Cloudflare R2 di .env</h3>
 <p>Tambahkan variabel berikut ke file <code>.env</code> Anda. Ganti nilai contoh dengan kredensial Cloudflare R2 Anda yang sebenarnya.
-<div class="highlight"><pre><span></span><code># Kredensial Cloudflare R2
+<div class="highlight"><pre><span></span><code>&lt;/details&gt;
+
+# Kredensial Cloudflare R2
 AWS_ACCESS_KEY_ID=id_akses_r2_anda
 AWS_SECRET_ACCESS_KEY=kunci_rahasia_r2_anda
 AWS_DEFAULT_REGION=auto
@@ -1294,6 +1361,7 @@ php<span class="w"> </span>artisan<span class="w"> </span>storage:switch<span cl
 </tr>
 </tbody>
 </table>
+</details>
 
 
 
@@ -1314,7 +1382,7 @@ php<span class="w"> </span>artisan<span class="w"> </span>storage:switch<span cl
     <span class="md-icon" title="Pembaruan terakhir">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="23 Juni 2026 09:55:27 UTC">23 Juni 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="23 Juni 2026 13:57:41 UTC">23 Juni 2026</span>
   </span>
 
     

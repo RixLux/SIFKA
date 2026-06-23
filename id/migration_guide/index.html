@@ -279,6 +279,25 @@
   
   
     <li class="md-tabs__item">
+      <a href="../API/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  API
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
       <a href="../LAPORAN_KEMAJUAN_KELOMPOK1/" class="md-tabs__link">
         
   
@@ -449,6 +468,33 @@
     
   
     Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API
   
 
     
@@ -953,6 +999,8 @@
 <h1 id="panduan-migrasi-deployment-perombakan-data-spasial">Panduan Migrasi &amp; Deployment: Perombakan Data Spasial</h1>
 <p>Dokumen ini memberikan instruksi untuk melakukan deployment fitur data spasial (integrasi mapcn) dan memastikan transisi berjalan lancar dari penyimpanan koordinat lama.</p>
 <h2 id="1-migrasi-database">1. Migrasi Database</h2>
+<details>
+<summary>Click to see details</summary>
 <p>Aplikasi telah bermigrasi dari kolom numerik <code>latitude</code> dan <code>longitude</code> terpisah ke tipe data spasial asli MariaDB/MySQL yaitu <code>POINT</code>.</p>
 <h3 id="menjalankan-migrasi">Menjalankan Migrasi</h3>
 <p>Untuk memperbarui database produksi/staging Anda, jalankan perintah:
@@ -965,7 +1013,10 @@
 <li>Indeks spasial (spatial indexes) dibuat untuk performa kueri kedekatan (proximity) dan kotak pembatas (bounding-box) yang tinggi.</li>
 <li>Kolom lama <code>latitude</code> dan <code>longitude</code> dihapus dari tabel.</li>
 </ol>
+</details>
 <h2 id="2-pengindeksan-meilisearch">2. Pengindeksan Meilisearch</h2>
+<details>
+<summary>Click to see details</summary>
 <p>Mesin pencari sekarang mendukung pengurutan dan penyaringan berdasarkan jarak menggunakan atribut <code>_geo</code>.</p>
 <h3 id="pengindeksan-ulang-data">Pengindeksan Ulang Data</h3>
 <p>Setelah menjalankan migrasi database, Anda <strong>wajib</strong> memperbarui indeks pencarian:
@@ -973,21 +1024,30 @@
 php<span class="w"> </span>artisan<span class="w"> </span>scout:import<span class="w"> </span><span class="s2">&quot;App\Models\Facility&quot;</span>
 php<span class="w"> </span>artisan<span class="w"> </span>scout:import<span class="w"> </span><span class="s2">&quot;App\Models\Report&quot;</span>
 </code></pre></div></p>
+</details>
 <h2 id="3-sinkronisasi-frontend-api">3. Sinkronisasi Frontend &amp; API</h2>
+<details>
+<summary>Click to see details</summary>
 <p>API sekarang mengembalikan data JSON standar secara default, tetapi juga mendukung GeoJSON yang dioptimalkan untuk perenderan peta.</p>
 <h3 id="endpoint-geojson">Endpoint GeoJSON</h3>
 <p>Semua indeks sumber daya dan endpoint pencarian mendukung parameter kueri <code>format=geojson</code>:
 *   <code>GET /api/buildings?format=geojson</code>
 *   <code>GET /api/facilities/search?q=Library&amp;format=geojson</code></p>
 <p>Klien API frontend (<code>FE_SIFKA/src/api/client.js</code>) telah diperbarui untuk menggunakan jalur relatif (<code>/api</code>) agar bekerja dengan mulus dengan proksi Vite dan tunnel seperti Tailscale Funnel.</p>
+</details>
 <h2 id="4-akses-eksternal-tailscale">4. Akses Eksternal &amp; Tailscale</h2>
+<details>
+<summary>Click to see details</summary>
 <p>Untuk mengakses lingkungan pengembangan melalui Tailscale Funnel (misalnya, dari perangkat seluler):</p>
 <ol>
 <li><strong>Frontend (Vite)</strong>: Pastikan <code>vite.config.js</code> memiliki opsi <code>host: '0.0.0.0'</code> dan domain tunnel Anda terdaftar di <code>allowedHosts</code>.</li>
 <li><strong>CORS</strong>: Konfigurasi <code>config/cors.php</code> harus memasukkan URL tunnel Anda (misalnya, <code>https://node-anda.tailscale.net:5173</code>) dalam <code>allowed_origins</code>.</li>
 <li><strong>GPS/Geolokasi</strong>: Fitur GPS browser <strong>memerlukan koneksi HTTPS</strong>. Gunakan Tailscale Funnel atau sertifikat SSL lokal untuk mengaktifkan fitur ini pada perangkat seluler.</li>
 </ol>
+</details>
 <h2 id="5-daftar-periksa-deployment-deployment-checklist">5. Daftar Periksa Deployment (Deployment Checklist)</h2>
+<details>
+<summary>Click to see details</summary>
 <ul>
 <li>[ ] Jalankan <code>php artisan migrate</code></li>
 <li>[ ] Indeks ulang model Scout (Meilisearch)</li>
@@ -995,6 +1055,7 @@ php<span class="w"> </span>artisan<span class="w"> </span>scout:import<span clas
 <li>[ ] Jalankan <code>npm install</code> dan <code>npm run build</code> untuk frontend
 Profile.</li>
 </ul>
+</details>
 
 
 
@@ -1015,7 +1076,7 @@ Profile.</li>
     <span class="md-icon" title="Pembaruan terakhir">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="22 Juni 2026 18:09:15 UTC">22 Juni 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="23 Juni 2026 13:57:41 UTC">23 Juni 2026</span>
   </span>
 
     

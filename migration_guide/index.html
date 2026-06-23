@@ -279,6 +279,25 @@
   
   
     <li class="md-tabs__item">
+      <a href="../API/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  API
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
       <a href="../LAPORAN_KEMAJUAN_KELOMPOK1/" class="md-tabs__link">
         
   
@@ -449,6 +468,33 @@
     
   
     Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API
   
 
     
@@ -953,6 +999,8 @@
 <h1 id="migration-deployment-guide-spatial-data-overhaul">Migration &amp; Deployment Guide: Spatial Data Overhaul</h1>
 <p>This document provides instructions for deploying the spatial data features (mapcn integration) and ensuring a smooth transition from legacy coordinate storage.</p>
 <h2 id="1-database-migration">1. Database Migration</h2>
+<details>
+<summary>Click to see details</summary>
 <p>The application has migrated from separate <code>latitude</code> and <code>longitude</code> numeric columns to the native MariaDB/MySQL <code>POINT</code> spatial type.</p>
 <h3 id="running-migrations">Running Migrations</h3>
 <p>To update your production/staging database, run:
@@ -965,7 +1013,10 @@
 <li>Spatial indexes are created for high-performance proximity and bounding-box queries.</li>
 <li>Legacy <code>latitude</code> and <code>longitude</code> columns are dropped.</li>
 </ol>
+</details>
 <h2 id="2-meilisearch-indexing">2. Meilisearch Indexing</h2>
+<details>
+<summary>Click to see details</summary>
 <p>The search engine now supports distance-based sorting and filtering using the <code>_geo</code> attribute.</p>
 <h3 id="re-indexing-data">Re-indexing Data</h3>
 <p>After running the database migration, you <strong>must</strong> update the search indexes:
@@ -973,27 +1024,37 @@
 php<span class="w"> </span>artisan<span class="w"> </span>scout:import<span class="w"> </span><span class="s2">&quot;App\Models\Facility&quot;</span>
 php<span class="w"> </span>artisan<span class="w"> </span>scout:import<span class="w"> </span><span class="s2">&quot;App\Models\Report&quot;</span>
 </code></pre></div></p>
+</details>
 <h2 id="3-frontend-api-synchronization">3. Frontend &amp; API Synchronization</h2>
+<details>
+<summary>Click to see details</summary>
 <p>The API now defaults to standard JSON, but supports optimized GeoJSON for map rendering.</p>
 <h3 id="geojson-endpoints">GeoJSON Endpoints</h3>
 <p>All resource index and search endpoints support the <code>format=geojson</code> query parameter:
 *   <code>GET /api/buildings?format=geojson</code>
 *   <code>GET /api/facilities/search?q=Library&amp;format=geojson</code></p>
 <p>The frontend API client (<code>FE_SIFKA/src/api/client.js</code>) has been updated to use relative paths (<code>/api</code>) to work seamlessly with Vite proxies and tunnels like Tailscale Funnel.</p>
+</details>
 <h2 id="4-tailscale-external-access">4. Tailscale &amp; External Access</h2>
+<details>
+<summary>Click to see details</summary>
 <p>To access the development environment via Tailscale Funnel (e.g., from a mobile device):</p>
 <ol>
 <li><strong>Frontend (Vite)</strong>: Ensure <code>vite.config.js</code> has <code>host: '0.0.0.0'</code> and the tunnel domain in <code>allowedHosts</code>.</li>
 <li><strong>CORS</strong>: <code>config/cors.php</code> must include the tunnel URL (e.g., <code>https://your-node.tailscale.net:5173</code>) in <code>allowed_origins</code>.</li>
 <li><strong>GPS/Geolocation</strong>: Browser GPS features <strong>require HTTPS</strong>. Use Tailscale Funnel or a local SSL certificate to enable this feature on mobile devices.</li>
 </ol>
+</details>
 <h2 id="5-deployment-checklist">5. Deployment Checklist</h2>
+<details>
+<summary>Click to see details</summary>
 <ul>
 <li>[ ] Run <code>php artisan migrate</code></li>
 <li>[ ] Re-import Scout models (Meilisearch)</li>
 <li>[ ] Update <code>cors.php</code> with production/tunnel domains</li>
 <li>[ ] Run <code>npm install</code> and <code>npm run build</code> for the frontend</li>
 </ul>
+</details>
 
 
 
@@ -1014,7 +1075,7 @@ php<span class="w"> </span>artisan<span class="w"> </span>scout:import<span clas
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 22, 2026 13:55:27 UTC">June 22, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 23, 2026 13:57:41 UTC">June 23, 2026</span>
   </span>
 
     

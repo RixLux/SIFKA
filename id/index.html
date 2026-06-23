@@ -14,7 +14,7 @@
       
       
       
-        <link rel="next" href="LAPORAN_KEMAJUAN_KELOMPOK1/">
+        <link rel="next" href="API/">
       
       
         
@@ -269,6 +269,25 @@
     
   
   Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="API/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  API
 
       </a>
     </li>
@@ -648,6 +667,33 @@
   
   
     <li class="md-nav__item">
+      <a href="API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="LAPORAN_KEMAJUAN_KELOMPOK1/" class="md-nav__link">
         
   
@@ -985,6 +1031,8 @@
 <h1 id="sifka">SIFKA</h1>
 <p>SIFKA adalah API berkinerja tinggi yang dibangun dengan Laravel 13, dirancang untuk mengelola dan melaporkan fasilitas kampus. Proyek ini menampilkan penyelarasan arsitektur yang mendalam, pengerasan keamanan tingkat lanjut, dan kemampuan pencarian global.</p>
 <h2 id="stack-teknis">Stack Teknis</h2>
+<details>
+<summary>Click to see details</summary>
 <ul>
 <li><strong>Framework:</strong> Laravel 13 (PHP 8.3)</li>
 <li><strong>Keamanan:</strong> Laravel Sanctum (Auth), Pembatasan Laju (Rate Limiting), Otorisasi berbasis Policy.</li>
@@ -992,7 +1040,10 @@
 <li><strong>Dokumentasi:</strong> Scramble (OpenAPI) dan MKDocs.</li>
 <li><strong>Pengujian:</strong> PHPUnit (pengujian fitur &amp; unit yang diperkeras).</li>
 </ul>
+</details>
 <h2 id="fitur-arsitektur-utama">Fitur Arsitektur Utama</h2>
+<details>
+<summary>Click to see details</summary>
 <h3 id="1-pencarian-global-meilisearch">1. Pencarian Global (Meilisearch)</h3>
 <p>Pencarian fuzzy berkecepatan tinggi yang diimplementasikan di semua sumber daya utama.</p>
 <h3 id="2-penyelarasan-payload-validasi-ketat">2. Penyelarasan Payload &amp; Validasi Ketat</h3>
@@ -1006,9 +1057,15 @@
 <li><strong>Throttling (Pembatasan Laju):</strong> Semua rute autentikasi (<code>login</code>, <code>register</code>, <code>logout</code>) dilindungi oleh pembatas laju <code>5 permintaan / menit</code>.</li>
 <li><strong>Kontrol Admin:</strong> Manajemen peran granular yang memungkinkan Admin untuk mendaftarkan akun Staff melalui API.</li>
 </ul>
+</details>
 <h2 id="dokumentasi-proyek">Dokumentasi Proyek</h2>
+<details>
+<summary>Click to see details</summary>
 <p>Untuk penjelasan mendalam tentang desain dan peta jalan proyek, silakan merujuk ke direktori <code>docs/</code>.</p>
+</details>
 <h2 id="memulai">Memulai</h2>
+<details>
+<summary>Click to see details</summary>
 <h3 id="prasyarat">Prasyarat</h3>
 <ul>
 <li>PHP 8.3+</li>
@@ -1034,14 +1091,21 @@ php<span class="w"> </span>artisan<span class="w"> </span>scout:import<span clas
 php<span class="w"> </span>artisan<span class="w"> </span>scout:import<span class="w"> </span><span class="s2">&quot;App\Models\User&quot;</span>
 </code></pre></div></li>
 </ol>
+</details>
 <h2 id="pengujian">Pengujian</h2>
+<details>
+<summary>Click to see details</summary>
 <p>Jalankan rangkaian pengujian komprehensif untuk memastikan stabilitas:
 <div class="highlight"><pre><span></span><code>php<span class="w"> </span>artisan<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--compact
 </code></pre></div></p>
+</details>
 <h2 id="laravel-brain">Laravel Brain</h2>
+<details>
+<summary>Click to see details</summary>
 <p>Proyek ini menggunakan <strong>LaraMint Brain</strong> untuk analisis arsitektur. Untuk menjelajahi grafik kode sumber atau mengekspor snapshot konteks:
 <div class="highlight"><pre><span></span><code>php<span class="w"> </span>artisan<span class="w"> </span>brain:scan
 </code></pre></div></p>
+</details>
 
 
 
@@ -1062,7 +1126,7 @@ php<span class="w"> </span>artisan<span class="w"> </span>scout:import<span clas
     <span class="md-icon" title="Pembaruan terakhir">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="23 Juni 2026 09:55:27 UTC">23 Juni 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="23 Juni 2026 13:57:41 UTC">23 Juni 2026</span>
   </span>
 
     

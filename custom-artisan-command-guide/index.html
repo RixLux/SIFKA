@@ -281,6 +281,25 @@
   
   
     <li class="md-tabs__item">
+      <a href="../API/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  API
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
       <a href="../LAPORAN_KEMAJUAN_KELOMPOK1/" class="md-tabs__link">
         
   
@@ -451,6 +470,33 @@
     
   
     Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API
   
 
     
@@ -953,82 +999,103 @@
 <h1 id="custom-artisan-commands-guide">Custom Artisan Commands Guide</h1>
 <p>This document lists the custom Artisan commands created for the SIFKA project to simplify development, testing, and environment maintenance.</p>
 <h2 id="available-commands">Available Commands</h2>
+<details>
+<summary>Click to see details</summary>
 <h3 id="1-appreset">1. <code>app:reset</code></h3>
-<p>Orchestrates a complete reset of the local development environment.
-- <strong>Purpose</strong>: Wipes the database, re-runs all migrations, re-seeds default data, and clears all uploaded report images from storage.
-- <strong>Usage</strong>:
+<p>Orchestrates a complete reset of the local development environment.</p>
+<ul>
+<li><strong>Purpose</strong>: Wipes the database, re-runs all migrations, re-seeds default data, and clears all uploaded report images from storage.</li>
+<li><strong>Usage</strong>:
   <div class="highlight"><pre><span></span><code>php<span class="w"> </span>artisan<span class="w"> </span>app:reset
-</code></pre></div>
-- <strong>Note</strong>: This runs the entire cleanup process automatically without prompting for confirmation.</p>
+</code></pre></div></li>
+<li><strong>Note</strong>: This runs the entire cleanup process automatically without prompting for confirmation.</li>
+</ul>
 <h3 id="2-appcreate-super-admin">2. <code>app:create-super-admin</code></h3>
-<p>Creates a new Super Admin account using values defined in the environment variables.
-- <strong>Purpose</strong>: Automatically provisions a Super Admin using credentials defined by <code>SUPER_ADMIN_NAME</code>, <code>SUPER_ADMIN_EMAIL</code>, and <code>SUPER_ADMIN_PASSWORD</code> in your <code>.env</code>.
-- <strong>Usage</strong>:
+<p>Creates a new Super Admin account using values defined in the environment variables.</p>
+<ul>
+<li><strong>Purpose</strong>: Automatically provisions a Super Admin using credentials defined by <code>SUPER_ADMIN_NAME</code>, <code>SUPER_ADMIN_EMAIL</code>, and <code>SUPER_ADMIN_PASSWORD</code> in your <code>.env</code>.</li>
+<li><strong>Usage</strong>:
   <div class="highlight"><pre><span></span><code>php<span class="w"> </span>artisan<span class="w"> </span>app:create-super-admin
-</code></pre></div></p>
+</code></pre></div></li>
+</ul>
 <h3 id="3-seeddata">3. <code>seed:data</code></h3>
-<p>Provides customized database seeding options.
-- <strong>Purpose</strong>: Allows seeding specific parts of the database.
-- <strong>Usage</strong>:
-  - Seed all data:
+<p>Provides customized database seeding options.</p>
+<ul>
+<li><strong>Purpose</strong>: Allows seeding specific parts of the database.</li>
+<li><strong>Usage</strong>:</li>
+<li>Seed all data:
     <div class="highlight"><pre><span></span><code>php<span class="w"> </span>artisan<span class="w"> </span>seed:data<span class="w"> </span>-a
-</code></pre></div>
-  - Seed only users:
+</code></pre></div></li>
+<li>Seed only users:
     <div class="highlight"><pre><span></span><code>php<span class="w"> </span>artisan<span class="w"> </span>seed:data<span class="w"> </span>--user
-</code></pre></div>
-  - Seed all data <em>except</em> users:
+</code></pre></div></li>
+<li>Seed all data <em>except</em> users:
     <div class="highlight"><pre><span></span><code>php<span class="w"> </span>artisan<span class="w"> </span>seed:data<span class="w"> </span>--no-user
-</code></pre></div></p>
+</code></pre></div></li>
+</ul>
 <h3 id="4-storageclear-reports">4. <code>storage:clear-reports</code></h3>
-<p>Provides a targeted way to clear report images from storage.
-- <strong>Purpose</strong>: Deletes all files within the <code>reports</code> directory on the configured <code>REPORT_DISK</code> (local <code>public</code> or cloud <code>s3</code>).
-- <strong>Usage</strong>:
+<p>Provides a targeted way to clear report images from storage.</p>
+<ul>
+<li><strong>Purpose</strong>: Deletes all files within the <code>reports</code> directory on the configured <code>REPORT_DISK</code> (local <code>public</code> or cloud <code>s3</code>).</li>
+<li><strong>Usage</strong>:
   <div class="highlight"><pre><span></span><code>php<span class="w"> </span>artisan<span class="w"> </span>storage:clear-reports
-</code></pre></div>
-- <strong>Note</strong>: This will prompt for confirmation before deleting. To skip the prompt (e.g., in CI or scripts), use:
+</code></pre></div></li>
+<li><strong>Note</strong>: This will prompt for confirmation before deleting. To skip the prompt (e.g., in CI or scripts), use:
   <div class="highlight"><pre><span></span><code>php<span class="w"> </span>artisan<span class="w"> </span>storage:clear-reports<span class="w"> </span>--no-interaction
-</code></pre></div></p>
+</code></pre></div></li>
+</ul>
 <h3 id="5-storagemigrate">5. <code>storage:migrate</code></h3>
-<p>Copies files between different storage disks.
-- <strong>Purpose</strong>: Transfers all files from one storage disk (e.g. <code>public</code>) to another (e.g. <code>s3</code> / Cloudflare R2).
-- <strong>Usage</strong>:
+<p>Copies files between different storage disks.</p>
+<ul>
+<li><strong>Purpose</strong>: Transfers all files from one storage disk (e.g. <code>public</code>) to another (e.g. <code>s3</code> / Cloudflare R2).</li>
+<li><strong>Usage</strong>:
   <div class="highlight"><pre><span></span><code>php<span class="w"> </span>artisan<span class="w"> </span>storage:migrate<span class="w"> </span>public<span class="w"> </span>s3
-</code></pre></div></p>
+</code></pre></div></li>
+</ul>
 <h3 id="6-storageswitch">6. <code>storage:switch</code></h3>
-<p>Changes the active storage disk for reports.
-- <strong>Purpose</strong>: Programmatically updates the <code>REPORT_DISK</code> key in your active <code>.env</code> file and clears the config cache.
-- <strong>Usage</strong>:
+<p>Changes the active storage disk for reports.</p>
+<ul>
+<li><strong>Purpose</strong>: Programmatically updates the <code>REPORT_DISK</code> key in your active <code>.env</code> file and clears the config cache.</li>
+<li><strong>Usage</strong>:
   <div class="highlight"><pre><span></span><code><span class="c1"># Switch to Cloudflare R2 / S3</span>
 php<span class="w"> </span>artisan<span class="w"> </span>storage:switch<span class="w"> </span>s3
 
 <span class="c1"># Switch to local public disk</span>
 php<span class="w"> </span>artisan<span class="w"> </span>storage:switch<span class="w"> </span>public
-</code></pre></div></p>
+</code></pre></div></li>
+</ul>
 <h3 id="7-tokenset-system-expiry">7. <code>token:set-system-expiry</code></h3>
-<p>Sets the system-wide API token expiration duration.
-- <strong>Purpose</strong>: Calculates total minutes and writes <code>SANCTUM_EXPIRATION</code> to your <code>.env</code> file.
-- <strong>Usage</strong>:
+<p>Sets the system-wide API token expiration duration.</p>
+<ul>
+<li><strong>Purpose</strong>: Calculates total minutes and writes <code>SANCTUM_EXPIRATION</code> to your <code>.env</code> file.</li>
+<li><strong>Usage</strong>:
   <div class="highlight"><pre><span></span><code><span class="c1"># Set token expiration to 1 day, 2 hours, and 30 seconds</span>
 php<span class="w"> </span>artisan<span class="w"> </span>token:set-system-expiry<span class="w"> </span>--day<span class="o">=</span><span class="m">1</span><span class="w"> </span>--minute<span class="o">=</span><span class="m">120</span><span class="w"> </span>--second<span class="o">=</span><span class="m">30</span>
-</code></pre></div>
-- <strong>Note</strong>: Run <code>php artisan config:clear</code> afterward to apply changes.</p>
+</code></pre></div></li>
+<li><strong>Note</strong>: Run <code>php artisan config:clear</code> afterward to apply changes.</li>
+</ul>
 <h3 id="8-tokenset-expiry">8. <code>token:set-expiry</code></h3>
-<p>Forces an expiration time on a specific user's latest token.
-- <strong>Purpose</strong>: Sets a direct expiration datetime on the latest PersonalAccessToken of a target user.
-- <strong>Usage</strong>:
+<p>Forces an expiration time on a specific user's latest token.</p>
+<ul>
+<li><strong>Purpose</strong>: Sets a direct expiration datetime on the latest PersonalAccessToken of a target user.</li>
+<li><strong>Usage</strong>:
   <div class="highlight"><pre><span></span><code><span class="c1"># Set user 1&#39;s latest token to expire in 3 hours</span>
 php<span class="w"> </span>artisan<span class="w"> </span>token:set-expiry<span class="w"> </span><span class="m">1</span><span class="w"> </span>--minute<span class="o">=</span><span class="m">180</span>
-</code></pre></div></p>
+</code></pre></div></li>
+</ul>
 <h3 id="9-tokenset-remember">9. <code>token:set-remember</code></h3>
-<p>Configures a user's latest token for "Remember Me" functionality.
-- <strong>Purpose</strong>: Extends the latest token's life to exactly 3 days (if true) or resets it to never expire (if false).
-- <strong>Usage</strong>:
+<p>Configures a user's latest token for "Remember Me" functionality.</p>
+<ul>
+<li><strong>Purpose</strong>: Extends the latest token's life to exactly 3 days (if true) or resets it to never expire (if false).</li>
+<li><strong>Usage</strong>:
   <div class="highlight"><pre><span></span><code><span class="c1"># Set token to expire in 3 days</span>
 php<span class="w"> </span>artisan<span class="w"> </span>token:set-remember<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="nb">true</span>
 
 <span class="c1"># Set token to never expire</span>
 php<span class="w"> </span>artisan<span class="w"> </span>token:set-remember<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="nb">false</span>
-</code></pre></div></p>
+</code></pre></div></li>
+</ul>
+</details>
 
 
 
@@ -1049,7 +1116,7 @@ php<span class="w"> </span>artisan<span class="w"> </span>token:set-remember<spa
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 22, 2026 18:09:15 UTC">June 22, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 23, 2026 13:57:41 UTC">June 23, 2026</span>
   </span>
 
     

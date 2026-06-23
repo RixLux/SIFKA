@@ -281,6 +281,25 @@
   
   
     <li class="md-tabs__item">
+      <a href="../API/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  API
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
       <a href="../LAPORAN_KEMAJUAN_KELOMPOK1/" class="md-tabs__link">
         
   
@@ -451,6 +470,33 @@
     
   
     Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API
   
 
     
@@ -1099,6 +1145,8 @@
 <h1 id="image-management-guide">Image Management Guide</h1>
 <p>This document explains how SIFKA manages report images and how to configure or migrate them across different environments.</p>
 <h2 id="overview">Overview</h2>
+<details>
+<summary>Click to see details</summary>
 <p>SIFKA uses a decoupled approach for image management. Instead of hardcoding storage paths or URLs, we use a combination of Laravel's Filesystem abstraction and Eloquent Model accessors.</p>
 <h3 id="key-components">Key Components</h3>
 <ol>
@@ -1106,16 +1154,24 @@
 <li><strong>Configuration:</strong> The storage disk is controlled via <code>config/filesystems.php</code> using the <code>REPORT_DISK</code> environment variable.</li>
 <li><strong>Model Accessor:</strong> The <code>Report</code> model provides a dynamic <code>image_url</code> attribute that generates the full absolute URL based on the current configuration.</li>
 </ol>
+</details>
 <h2 id="configuration">Configuration</h2>
+<details>
+<summary>Click to see details</summary>
 <p>You can control which storage disk is used for report images in your <code>.env</code> file:</p>
-<div class="highlight"><pre><span></span><code># Options: public, s3, etc.
-REPORT_DISK=public
+<div class="highlight"><pre><span></span><code>REPORT_DISK=public
 </code></pre></div>
+<blockquote>
+<p>Options: public, s3, etc.</p>
+</blockquote>
 <ul>
 <li><strong><code>public</code> (Default):</strong> Local storage in <code>storage/app/public</code>. Requires <code>php artisan storage:link</code>.</li>
 <li><strong><code>s3</code>:</strong> Amazon S3 or compatible services (DigitalOcean Spaces, MinIO).</li>
 </ul>
+</details>
 <h2 id="accessing-images">Accessing Images</h2>
+<details>
+<summary>Click to see details</summary>
 <h3 id="in-phplaravel">In PHP/Laravel</h3>
 <p>Always use the <code>image_url</code> property on the <code>Report</code> model:</p>
 <div class="highlight"><pre><span></span><code><span class="x">$report = Report::find(1);</span>
@@ -1123,7 +1179,10 @@ REPORT_DISK=public
 </code></pre></div>
 <h3 id="in-api-responses">In API Responses</h3>
 <p>The <code>ReportResource</code> automatically includes the <code>image_url</code>. The frontend should always use this field for rendering images.</p>
+</details>
 <h2 id="migration-guide">Migration Guide</h2>
+<details>
+<summary>Click to see details</summary>
 <h3 id="1-moving-from-local-to-cloud-eg-s3">1. Moving from Local to Cloud (e.g., S3)</h3>
 <p>When moving from local development to production with S3:</p>
 <ol>
@@ -1148,7 +1207,10 @@ AWS_URL=https://your-bucket.s3.amazonaws.com
 <li><strong>Use the <code>image_url</code> attribute.</strong> Avoid calling <code>Storage::url()</code> manually in controllers or views.</li>
 <li><strong>Check visibility.</strong> If using a cloud provider, ensure the <code>visibility</code> is set to <code>public</code> in <code>config/filesystems.php</code> for that disk.</li>
 </ul>
+</details>
 <h2 id="migrate-to-r2">Migrate to R2</h2>
+<details>
+<summary>Click to see details</summary>
 <p>To migrate to Cloudflare R2 and easily switch between local and cloud storage, follow these steps. I
 have also created two custom Artisan commands to automate the migration and switching process.</p>
 <h3 id="1-install-the-s3-driver">1. Install the S3 Driver</h3>
@@ -1158,7 +1220,9 @@ have also created two custom Artisan commands to automate the migration and swit
 <h3 id="2-configure-cloudflare-r2-in-env">2. Configure Cloudflare R2 in .env</h3>
 <p>Add the following variables to your .env file. Replace the placeholders with your actual Cloudflare
 R2 credentials.
-<div class="highlight"><pre><span></span><code># Cloudflare R2 Credentials
+<div class="highlight"><pre><span></span><code>&lt;/details&gt;
+
+# Cloudflare R2 Credentials
 AWS_ACCESS_KEY_ID=your_r2_access_key_id
 AWS_SECRET_ACCESS_KEY=your_r2_secret_access_key
 AWS_DEFAULT_REGION=auto
@@ -1224,6 +1288,7 @@ ensuring that:</p>
 </tr>
 </tbody>
 </table>
+</details>
 
 
 
@@ -1244,7 +1309,7 @@ ensuring that:</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 23, 2026 09:55:27 UTC">June 23, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 23, 2026 13:57:41 UTC">June 23, 2026</span>
   </span>
 
     

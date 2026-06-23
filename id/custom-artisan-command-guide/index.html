@@ -281,6 +281,25 @@
   
   
     <li class="md-tabs__item">
+      <a href="../API/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  API
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
       <a href="../LAPORAN_KEMAJUAN_KELOMPOK1/" class="md-tabs__link">
         
   
@@ -451,6 +470,33 @@
     
   
     Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API
   
 
     
@@ -953,82 +999,103 @@
 <h1 id="panduan-perintah-artisan-kustom">Panduan Perintah Artisan Kustom</h1>
 <p>Dokumen ini mencantumkan perintah Artisan kustom yang dibuat untuk proyek SIFKA untuk mempermudah pengembangan, pengujian, dan pemeliharaan lingkungan sistem.</p>
 <h2 id="perintah-yang-tersedia">Perintah yang Tersedia</h2>
+<details>
+<summary>Click to see details</summary>
 <h3 id="1-appreset">1. <code>app:reset</code></h3>
-<p>Mengatur ulang (reset) secara menyeluruh lingkungan pengembangan lokal.
-- <strong>Tujuan</strong>: Menghapus seluruh data database, menjalankan kembali semua migrasi, mengisi ulang data awal (seed), dan menghapus seluruh file gambar laporan yang diunggah dari penyimpanan.
-- <strong>Penggunaan</strong>:
+<p>Mengatur ulang (reset) secara menyeluruh lingkungan pengembangan lokal.</p>
+<ul>
+<li><strong>Tujuan</strong>: Menghapus seluruh data database, menjalankan kembali semua migrasi, mengisi ulang data awal (seed), dan menghapus seluruh file gambar laporan yang diunggah dari penyimpanan.</li>
+<li><strong>Penggunaan</strong>:
   <div class="highlight"><pre><span></span><code>php<span class="w"> </span>artisan<span class="w"> </span>app:reset
-</code></pre></div>
-- <strong>Catatan</strong>: Perintah ini menjalankan seluruh proses pembersihan secara otomatis tanpa meminta konfirmasi.</p>
+</code></pre></div></li>
+<li><strong>Catatan</strong>: Perintah ini menjalankan seluruh proses pembersihan secara otomatis tanpa meminta konfirmasi.</li>
+</ul>
 <h3 id="2-appcreate-super-admin">2. <code>app:create-super-admin</code></h3>
-<p>Membuat akun Super Admin baru menggunakan nilai yang didefinisikan dalam variabel lingkungan (.env).
-- <strong>Tujuan</strong>: Secara otomatis menyediakan Super Admin baru menggunakan kredensial yang didefinisikan oleh <code>SUPER_ADMIN_NAME</code>, <code>SUPER_ADMIN_EMAIL</code>, dan <code>SUPER_ADMIN_PASSWORD</code> pada file <code>.env</code> Anda.
-- <strong>Penggunaan</strong>:
+<p>Membuat akun Super Admin baru menggunakan nilai yang didefinisikan dalam variabel lingkungan (.env).</p>
+<ul>
+<li><strong>Tujuan</strong>: Secara otomatis menyediakan Super Admin baru menggunakan kredensial yang didefinisikan oleh <code>SUPER_ADMIN_NAME</code>, <code>SUPER_ADMIN_EMAIL</code>, dan <code>SUPER_ADMIN_PASSWORD</code> pada file <code>.env</code> Anda.</li>
+<li><strong>Penggunaan</strong>:
   <div class="highlight"><pre><span></span><code>php<span class="w"> </span>artisan<span class="w"> </span>app:create-super-admin
-</code></pre></div></p>
+</code></pre></div></li>
+</ul>
 <h3 id="3-seeddata">3. <code>seed:data</code></h3>
-<p>Menyediakan opsi pengisian data database (seeding) secara kustom.
-- <strong>Tujuan</strong>: Mengizinkan pengisian data pada bagian tertentu dari database.
-- <strong>Penggunaan</strong>:
-  - Mengisi seluruh data:
+<p>Menyediakan opsi pengisian data database (seeding) secara kustom.</p>
+<ul>
+<li><strong>Tujuan</strong>: Mengizinkan pengisian data pada bagian tertentu dari database.</li>
+<li><strong>Penggunaan</strong>:</li>
+<li>Mengisi seluruh data:
     <div class="highlight"><pre><span></span><code>php<span class="w"> </span>artisan<span class="w"> </span>seed:data<span class="w"> </span>-a
-</code></pre></div>
-  - Mengisi data user saja:
+</code></pre></div></li>
+<li>Mengisi data user saja:
     <div class="highlight"><pre><span></span><code>php<span class="w"> </span>artisan<span class="w"> </span>seed:data<span class="w"> </span>--user
-</code></pre></div>
-  - Mengisi seluruh data <em>kecuali</em> user:
+</code></pre></div></li>
+<li>Mengisi seluruh data <em>kecuali</em> user:
     <div class="highlight"><pre><span></span><code>php<span class="w"> </span>artisan<span class="w"> </span>seed:data<span class="w"> </span>--no-user
-</code></pre></div></p>
+</code></pre></div></li>
+</ul>
 <h3 id="4-storageclear-reports">4. <code>storage:clear-reports</code></h3>
-<p>Menyediakan cara terarah untuk menghapus gambar laporan dari penyimpanan.
-- <strong>Tujuan</strong>: Menghapus seluruh file di dalam direktori <code>reports</code> pada disk yang dikonfigurasi (<code>REPORT_DISK</code>, baik lokal <code>public</code> maupun cloud <code>s3</code>).
-- <strong>Penggunaan</strong>:
+<p>Menyediakan cara terarah untuk menghapus gambar laporan dari penyimpanan.</p>
+<ul>
+<li><strong>Tujuan</strong>: Menghapus seluruh file di dalam direktori <code>reports</code> pada disk yang dikonfigurasi (<code>REPORT_DISK</code>, baik lokal <code>public</code> maupun cloud <code>s3</code>).</li>
+<li><strong>Penggunaan</strong>:
   <div class="highlight"><pre><span></span><code>php<span class="w"> </span>artisan<span class="w"> </span>storage:clear-reports
-</code></pre></div>
-- <strong>Catatan</strong>: Perintah ini akan meminta konfirmasi sebelum menghapus. Untuk melewati konfirmasi (misalnya, dalam skrip CI), gunakan:
+</code></pre></div></li>
+<li><strong>Catatan</strong>: Perintah ini akan meminta konfirmasi sebelum menghapus. Untuk melewati konfirmasi (misalnya, dalam skrip CI), gunakan:
   <div class="highlight"><pre><span></span><code>php<span class="w"> </span>artisan<span class="w"> </span>storage:clear-reports<span class="w"> </span>--no-interaction
-</code></pre></div></p>
+</code></pre></div></li>
+</ul>
 <h3 id="5-storagemigrate">5. <code>storage:migrate</code></h3>
-<p>Menyalin file antar disk penyimpanan yang berbeda.
-- <strong>Tujuan</strong>: Mentransfer seluruh file dari satu disk penyimpanan (misalnya <code>public</code> lokal) ke disk lain (misalnya <code>s3</code> / Cloudflare R2).
-- <strong>Penggunaan</strong>:
+<p>Menyalin file antar disk penyimpanan yang berbeda.</p>
+<ul>
+<li><strong>Tujuan</strong>: Mentransfer seluruh file dari satu disk penyimpanan (misalnya <code>public</code> lokal) ke disk lain (misalnya <code>s3</code> / Cloudflare R2).</li>
+<li><strong>Penggunaan</strong>:
   <div class="highlight"><pre><span></span><code>php<span class="w"> </span>artisan<span class="w"> </span>storage:migrate<span class="w"> </span>public<span class="w"> </span>s3
-</code></pre></div></p>
+</code></pre></div></li>
+</ul>
 <h3 id="6-storageswitch">6. <code>storage:switch</code></h3>
-<p>Mengubah disk penyimpanan aktif untuk laporan.
-- <strong>Tujuan</strong>: Memperbarui kunci <code>REPORT_DISK</code> di file <code>.env</code> yang aktif secara programatik dan menghapus cache konfigurasi.
-- <strong>Penggunaan</strong>:
+<p>Mengubah disk penyimpanan aktif untuk laporan.</p>
+<ul>
+<li><strong>Tujuan</strong>: Memperbarui kunci <code>REPORT_DISK</code> di file <code>.env</code> yang aktif secara programatik dan menghapus cache konfigurasi.</li>
+<li><strong>Penggunaan</strong>:
   <div class="highlight"><pre><span></span><code><span class="c1"># Beralih ke Cloudflare R2 / S3</span>
 php<span class="w"> </span>artisan<span class="w"> </span>storage:switch<span class="w"> </span>s3
 
 <span class="c1"># Beralih ke penyimpanan lokal public</span>
 php<span class="w"> </span>artisan<span class="w"> </span>storage:switch<span class="w"> </span>public
-</code></pre></div></p>
+</code></pre></div></li>
+</ul>
 <h3 id="7-tokenset-system-expiry">7. <code>token:set-system-expiry</code></h3>
-<p>Mengatur durasi kedaluwarsa token API secara global/sistem.
-- <strong>Tujuan</strong>: Menghitung total menit dari opsi yang diberikan dan menuliskan <code>SANCTUM_EXPIRATION</code> pada file <code>.env</code> Anda.
-- <strong>Penggunaan</strong>:
+<p>Mengatur durasi kedaluwarsa token API secara global/sistem.</p>
+<ul>
+<li><strong>Tujuan</strong>: Menghitung total menit dari opsi yang diberikan dan menuliskan <code>SANCTUM_EXPIRATION</code> pada file <code>.env</code> Anda.</li>
+<li><strong>Penggunaan</strong>:
   <div class="highlight"><pre><span></span><code><span class="c1"># Mengatur kedaluwarsa token menjadi 1 hari, 2 jam, dan 30 detik</span>
 php<span class="w"> </span>artisan<span class="w"> </span>token:set-system-expiry<span class="w"> </span>--day<span class="o">=</span><span class="m">1</span><span class="w"> </span>--minute<span class="o">=</span><span class="m">120</span><span class="w"> </span>--second<span class="o">=</span><span class="m">30</span>
-</code></pre></div>
-- <strong>Catatan</strong>: Jalankan <code>php artisan config:clear</code> setelahnya untuk menerapkan perubahan.</p>
+</code></pre></div></li>
+<li><strong>Catatan</strong>: Jalankan <code>php artisan config:clear</code> setelahnya untuk menerapkan perubahan.</li>
+</ul>
 <h3 id="8-tokenset-expiry">8. <code>token:set-expiry</code></h3>
-<p>Memaksa waktu kedaluwarsa tertentu pada token terbaru dari pengguna tertentu.
-- <strong>Tujuan</strong>: Mengatur waktu kedaluwarsa langsung pada PersonalAccessToken terbaru milik pengguna target.
-- <strong>Penggunaan</strong>:
+<p>Memaksa waktu kedaluwarsa tertentu pada token terbaru dari pengguna tertentu.</p>
+<ul>
+<li><strong>Tujuan</strong>: Mengatur waktu kedaluwarsa langsung pada PersonalAccessToken terbaru milik pengguna target.</li>
+<li><strong>Penggunaan</strong>:
   <div class="highlight"><pre><span></span><code><span class="c1"># Mengatur token terbaru milik pengguna ID 1 kedaluwarsa dalam 3 jam</span>
 php<span class="w"> </span>artisan<span class="w"> </span>token:set-expiry<span class="w"> </span><span class="m">1</span><span class="w"> </span>--minute<span class="o">=</span><span class="m">180</span>
-</code></pre></div></p>
+</code></pre></div></li>
+</ul>
 <h3 id="9-tokenset-remember">9. <code>token:set-remember</code></h3>
-<p>Mengonfigurasi token terbaru pengguna untuk fungsi "Ingat Saya" (Remember Me).
-- <strong>Tujuan</strong>: Memperpanjang masa aktif token terbaru menjadi tepat 3 hari (jika true) atau menyetelnya agar tidak pernah kedaluwarsa (jika false).
-- <strong>Penggunaan</strong>:
+<p>Mengonfigurasi token terbaru pengguna untuk fungsi "Ingat Saya" (Remember Me).</p>
+<ul>
+<li><strong>Tujuan</strong>: Memperpanjang masa aktif token terbaru menjadi tepat 3 hari (jika true) atau menyetelnya agar tidak pernah kedaluwarsa (jika false).</li>
+<li><strong>Penggunaan</strong>:
   <div class="highlight"><pre><span></span><code><span class="c1"># Mengatur token kedaluwarsa dalam 3 hari</span>
 php<span class="w"> </span>artisan<span class="w"> </span>token:set-remember<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="nb">true</span>
 
 <span class="c1"># Mengatur token agar tidak pernah kedaluwarsa</span>
 php<span class="w"> </span>artisan<span class="w"> </span>token:set-remember<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="nb">false</span>
-</code></pre></div></p>
+</code></pre></div></li>
+</ul>
+</details>
 
 
 
@@ -1049,7 +1116,7 @@ php<span class="w"> </span>artisan<span class="w"> </span>token:set-remember<spa
     <span class="md-icon" title="Pembaruan terakhir">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="22 Juni 2026 18:09:15 UTC">22 Juni 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="23 Juni 2026 13:57:41 UTC">23 Juni 2026</span>
   </span>
 
     

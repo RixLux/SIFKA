@@ -71,6 +71,6 @@ nav:
   - LAPORAN KEMAJUAN KELOMPOK1: LAPORAN_KEMAJUAN_KELOMPOK1.md
   - PRD: PRD.md
   - Custom Artisan Command Guide: custom-artisan-command-guide.md
+  - Env Guide: env_guide.md
   - ImageManagement: imageManagement.md
   - Migration Guide: migration_guide.md
-  - Environment Guide: env_guide.md

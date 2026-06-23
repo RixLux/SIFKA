@@ -1,5 +1,8 @@
 # SIFKA
 
+Documentation could be found here: [https://rixlux.github.io/SIFKA/](https://rixlux.github.io/SIFKA/)
+
+
 SIFKA is a robust, high-performance API built with Laravel 13, designed to manage and report on campus facilities. It features deep architectural alignment, advanced security hardening, and global search capabilities.
 
 ## Technical Stack

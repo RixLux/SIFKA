@@ -2,6 +2,9 @@
 
 ## **Project Description**
 
+<details markdown="1">
+<summary>Click to see details</summary>
+
 | No | Aspect | Description |
 | --- | --- | --- |
 | 1 | Background | Campus facility maintenance is often hindered by slow reporting processes and difficulties in determining accurate damage locations. Students and staff are often confused about where to report, and maintenance teams struggle to find coordinate locations from descriptive-only reports. |
@@ -10,8 +13,12 @@
 | 4 | Key Features | - Geo-Tagged Reporting: Automated GPS coordinate attachment.<br>- Role-based Access Control: Separated access for Students, Staff (Technician), and Admins.<br>- Category Management: CRUD controls for facility categories.<br>- Map Visualization: Interactive map view of facilities and reports.<br>- Image Upload: Attaching photo proofs of damage.<br>- Status Tracking: Step-by-step repair progress tracking. |
 | 5 | Technologies Used | - Backend: Laravel 13, Sanctum (Auth), MariaDB (POINT Spatial).<br>- Frontend: React, Vite, Tailwind CSS, Zustand (State Management).<br>- Maps: mapcn component wrapper.<br>- Documentation: MkDocs. |
 
+</details>
 
 ## **Project Progress**
+
+<details markdown="1">
+<summary>Click to see details</summary>
 
 | No | Module / Task | Status | Notes |
 | --- | --- | --- | --- |
@@ -20,7 +27,12 @@
 | 3 | **Core Logic & Security** | Completed | Robust API, FormRequests validation, and Rate Limiting |
 | 4 | **Custom Artisan Commands** | Completed | Automation for app resetting, storage switches, token control, and migrations |
 
+</details>
+
 ## **Documentation**
+
+<details markdown="1">
+<summary>Click to see details</summary>
 
 | No | Documentation Type | Description |
 | --- | --- | --- |
@@ -29,7 +41,12 @@
 | 3 | App Screenshots | Integrated in the frontend dashboard |
 | 4 | Other | Static MkDocs website: <https://rixlux.github.io/SIFKA/> |
 
+</details>
+
 ## **Challenges & Solutions**
+
+<details markdown="1">
+<summary>Click to see details</summary>
 
 | No | Challenge | Solution |
 | --- | --- | --- |
@@ -37,9 +54,17 @@
 | 2 | Lack of facility addition endpoint | Created new building and facility endpoints for better master data control |
 | 3 | Cloud Storage Integration | Built custom `storage:switch` and `storage:migrate` commands for Cloudflare R2 |
 
+</details>
+
 ## **Overall Progress**
+
+<details markdown="1">
+<summary>Click to see details</summary>
 
 | Indicator | Value |
 | --- | --- |
 | Progress Percentage | 100 % |
 | Project Status | On Track |
+
+</details>
+

@@ -4,6 +4,9 @@ Dokumen ini menjelaskan bagaimana SIFKA mengelola gambar laporan dan cara mengon
 
 ## Gambaran Umum
 
+<details markdown="1">
+<summary>Click to see details</summary>
+
 SIFKA menggunakan pendekatan terpisah (decoupled) untuk manajemen gambar. Alih-alih menuliskan path penyimpanan atau URL secara langsung (hardcoding), kami menggunakan kombinasi abstraksi Filesystem Laravel dan aksesor Model Eloquent.
 
 ### Komponen Utama
@@ -12,19 +15,29 @@ SIFKA menggunakan pendekatan terpisah (decoupled) untuk manajemen gambar. Alih-a
 2.  **Konfigurasi:** Disk penyimpanan dikendalikan via `config/filesystems.php` menggunakan variabel lingkungan `REPORT_DISK`.
 3.  **Model Accessor (Aksesor Model):** Model `Report` menyediakan atribut dinamis `image_url` yang menghasilkan URL absolut lengkap berdasarkan konfigurasi saat ini.
 
+</details>
+
 ## Konfigurasi
+
+<details markdown="1">
+<summary>Click to see details</summary>
 
 Anda dapat mengontrol disk penyimpanan mana yang digunakan untuk gambar laporan di file `.env` Anda:
 
 ```env
-# Pilihan: public, s3, dll.
 REPORT_DISK=public
 ```
+> Pilihan: public, s3, dll.
 
 -   **`public` (Default):** Penyimpanan lokal di `storage/app/public`. Memerlukan perintah `php artisan storage:link`.
 -   **`s3`:** Amazon S3 atau layanan yang kompatibel (seperti Cloudflare R2, DigitalOcean Spaces, MinIO).
 
+</details>
+
 ## Mengakses Gambar
+
+<details markdown="1">
+<summary>Click to see details</summary>
 
 ### Di PHP/Laravel
 Selalu gunakan properti `image_url` pada model `Report`:
@@ -37,7 +50,12 @@ echo $report->image_url; // https://sifka.test/storage/reports/abc.jpg
 ### Di API Responses
 `ReportResource` secara otomatis menyertakan kolom `image_url`. Frontend harus selalu menggunakan kolom ini untuk merender gambar.
 
+</details>
+
 ## Panduan Migrasi
+
+<details markdown="1">
+<summary>Click to see details</summary>
 
 ### 1. Berpindah dari Penyimpanan Lokal ke Cloud (misalnya S3 / Cloudflare R2)
 
@@ -62,14 +80,25 @@ Jika Anda mengubah struktur direktori pada disk penyimpanan, Anda mungkin perlu 
 UPDATE reports SET image_path = REPLACE(image_path, 'old-dir/', 'new-dir/') WHERE image_path IS NOT NULL;
 ```
 
+</details>
+
 ## Praktik Terbaik
+
+<details markdown="1">
+<summary>Click to see details</summary>
+
 - **Jangan pernah menyimpan URL lengkap di database.** Hal ini membuat migrasi lingkungan menjadi sangat sulit.
 - **Gunakan atribut `image_url`.** Hindari memanggil `Storage::url()` secara manual di controller atau view.
 - **Periksa Visibilitas.** Jika menggunakan penyedia cloud, pastikan visibilitas disetel ke `public` di `config/filesystems.php` untuk disk tersebut.
 
 ---
 
+</details>
+
 ## Migrasi ke Cloudflare R2
+
+<details markdown="1">
+<summary>Click to see details</summary>
 
 Untuk bermigrasi ke Cloudflare R2 dan beralih dengan mudah antara penyimpanan lokal dan cloud, ikuti langkah-langkah di bawah ini. Kami menyediakan perintah Artisan kustom untuk mengotomatiskan proses migrasi dan pengalihan disk ini.
 
@@ -82,6 +111,9 @@ composer require league/flysystem-aws-s3-v3
 ### 2. Konfigurasi Cloudflare R2 di .env
 Tambahkan variabel berikut ke file `.env` Anda. Ganti nilai contoh dengan kredensial Cloudflare R2 Anda yang sebenarnya.
 ```env
+
+</details>
+
 # Kredensial Cloudflare R2
 AWS_ACCESS_KEY_ID=id_akses_r2_anda
 AWS_SECRET_ACCESS_KEY=kunci_rahasia_r2_anda

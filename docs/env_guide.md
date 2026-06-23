@@ -4,6 +4,9 @@ This guide describes each configuration variable in `.env.example` and provides 
 
 ## Configuration Categories
 
+<details markdown="1">
+<summary>Click to see details</summary>
+
 ### 1. Application Settings
 Configure basic details of the Laravel application.
 
@@ -98,3 +101,6 @@ Enables real-time client updates.
 ### 13. API Authentication (Laravel Sanctum)
 *   **`SANCTUM_EXPIRATION`**: Token expiration time in minutes. (e.g. `1440` for 24 hours, or `null` for never).
 *   **`SANCTUM_STATEFUL_DOMAINS`**: List of domains allowed to use stateful session authentication (comma-separated, e.g., `localhost:5173,127.0.0.1:5173`).
+
+</details>
+

@@ -2,6 +2,9 @@
 
 ## Optimisasi Lokasi Spasial & Integrasi Peta
 
+<details markdown="1">
+<summary>Click to see details</summary>
+
 ### 1. Deskripsi Umum & Tujuan
 
 Saat ini, aplikasi pelaporan fasilitas menyimpan lokasi spasial (Gedung, Fasilitas, dan Laporan) menggunakan kolom numerik `latitude` dan `longitude` yang terpisah. Untuk mendukung perenderan peta interaktif melalui `mapcn` dan memastikan kueri spasial yang berkinerja tinggi (misalnya, menentukan lokasi masalah secara presisi, penyaringan peta berdasarkan kotak pembatas/bounding-box, dan pencarian radius terdekat), kami memigrasikan arsitektur database untuk menggunakan tipe data spasial bawaan MariaDB (`POINT`).
@@ -185,3 +188,6 @@ Laravel API harus mengembalikan format `FeatureCollection` standar langsung ke f
 | **AC-01** | Pemuatan Peta Berhasil | **Given** terdapat laporan fasilitas yang aktif,<br><br>**When** pengguna membuka dashboard peta,<br><br>**Then** sistem mengambil data dari endpoint GeoJSON dan `mapcn` merender pin terklaster dengan benar. |  Tertunda |
 | **AC-02** | Penempatan Pin Akurat | **Given** pengguna sedang membuat laporan,<br><br>**When** mereka mengeklik titik tertentu pada antarmuka peta,<br><br>**Then** backend berhasil menyimpan koordinat ke kolom `POINT` di database. |  Tertunda |
 | **AC-03** | Integritas Database | **Given** entri lokasi disimpan tanpa koordinat,<br><br>**When** validasi dijalankan,<br><br>**Then** database menolak baris tersebut dengan pengecualian batasan `NOT NULL`. |  Tertunda |
+
+</details>
+

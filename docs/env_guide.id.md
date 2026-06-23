@@ -4,6 +4,9 @@ Panduan ini menjelaskan setiap variabel konfigurasi yang ada di `.env.example` d
 
 ## Kategori Konfigurasi
 
+<details markdown="1">
+<summary>Click to see details</summary>
+
 ### 1. Pengaturan Aplikasi
 Konfigurasikan informasi dasar dari aplikasi Laravel.
 
@@ -98,3 +101,6 @@ Memungkinkan pembaruan data secara real-time pada sisi klien.
 ### 13. Autentikasi API (Laravel Sanctum)
 *   **`SANCTUM_EXPIRATION`**: Waktu kedaluwarsa token dalam hitungan menit (misalnya, `1440` untuk 24 jam, atau `null` agar tidak pernah kedaluwarsa).
 *   **`SANCTUM_STATEFUL_DOMAINS`**: Daftar domain yang diizinkan untuk menggunakan autentikasi sesi stateful (dipisahkan koma, misalnya, `localhost:5173,127.0.0.1:5173`).
+
+</details>
+

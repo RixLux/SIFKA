@@ -45,9 +45,11 @@ GEMINI.md
 boost.json
 AGENTS.md
 
+#Personal file
 github.url
 github.desktop
 github.txt
+docs/.backup
 
 # --- MkDocs ---
 site/

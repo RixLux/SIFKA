@@ -4,8 +4,12 @@ This document lists the custom Artisan commands created for the SIFKA project to
 
 ## Available Commands
 
+<details markdown="1">
+<summary>Click to see details</summary>
+
 ### 1. `app:reset`
 Orchestrates a complete reset of the local development environment.
+
 - **Purpose**: Wipes the database, re-runs all migrations, re-seeds default data, and clears all uploaded report images from storage.
 - **Usage**:
   ```bash
@@ -15,6 +19,7 @@ Orchestrates a complete reset of the local development environment.
 
 ### 2. `app:create-super-admin`
 Creates a new Super Admin account using values defined in the environment variables.
+
 - **Purpose**: Automatically provisions a Super Admin using credentials defined by `SUPER_ADMIN_NAME`, `SUPER_ADMIN_EMAIL`, and `SUPER_ADMIN_PASSWORD` in your `.env`.
 - **Usage**:
   ```bash
@@ -23,6 +28,7 @@ Creates a new Super Admin account using values defined in the environment variab
 
 ### 3. `seed:data`
 Provides customized database seeding options.
+
 - **Purpose**: Allows seeding specific parts of the database.
 - **Usage**:
   - Seed all data:
@@ -40,6 +46,7 @@ Provides customized database seeding options.
 
 ### 4. `storage:clear-reports`
 Provides a targeted way to clear report images from storage.
+
 - **Purpose**: Deletes all files within the `reports` directory on the configured `REPORT_DISK` (local `public` or cloud `s3`).
 - **Usage**:
   ```bash
@@ -52,6 +59,7 @@ Provides a targeted way to clear report images from storage.
 
 ### 5. `storage:migrate`
 Copies files between different storage disks.
+
 - **Purpose**: Transfers all files from one storage disk (e.g. `public`) to another (e.g. `s3` / Cloudflare R2).
 - **Usage**:
   ```bash
@@ -60,6 +68,7 @@ Copies files between different storage disks.
 
 ### 6. `storage:switch`
 Changes the active storage disk for reports.
+
 - **Purpose**: Programmatically updates the `REPORT_DISK` key in your active `.env` file and clears the config cache.
 - **Usage**:
   ```bash
@@ -72,6 +81,7 @@ Changes the active storage disk for reports.
 
 ### 7. `token:set-system-expiry`
 Sets the system-wide API token expiration duration.
+
 - **Purpose**: Calculates total minutes and writes `SANCTUM_EXPIRATION` to your `.env` file.
 - **Usage**:
   ```bash
@@ -82,6 +92,7 @@ Sets the system-wide API token expiration duration.
 
 ### 8. `token:set-expiry`
 Forces an expiration time on a specific user's latest token.
+
 - **Purpose**: Sets a direct expiration datetime on the latest PersonalAccessToken of a target user.
 - **Usage**:
   ```bash
@@ -91,6 +102,7 @@ Forces an expiration time on a specific user's latest token.
 
 ### 9. `token:set-remember`
 Configures a user's latest token for "Remember Me" functionality.
+
 - **Purpose**: Extends the latest token's life to exactly 3 days (if true) or resets it to never expire (if false).
 - **Usage**:
   ```bash
@@ -100,3 +112,6 @@ Configures a user's latest token for "Remember Me" functionality.
   # Set token to never expire
   php artisan token:set-remember 1 false
   ```
+
+</details>
+

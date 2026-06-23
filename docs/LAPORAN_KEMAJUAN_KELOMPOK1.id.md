@@ -2,6 +2,9 @@
 
 ## **Deskripsi Project**
 
+<details markdown="1">
+<summary>Click to see details</summary>
+
 | No | Aspek | Uraian |
 | :--- | :--- | :--- |
 | 1 | Latar Belakang | Pemeliharaan fasilitas kampus seringkali terhambat oleh lambatnya proses pelaporan dan sulitnya menentukan lokasi kerusakan yang akurat. Mahasiswa dan staf seringkali bingung harus melapor ke mana, dan pihak pemeliharaan sulit menemukan titik koordinat kerusakan yang dilaporkan secara deskriptif saja. |
@@ -10,7 +13,12 @@
 | 4 | Fitur Utama | - **Geo-Tagged Reporting**: Pelaporan dengan koordinat GPS otomatis.<br>- **Role-based Access Control**: Pemisahan hak akses antara Mahasiswa (Pelapor), Staff (Teknisi), dan Admin.<br>- **Category Management**: Admin dapat menambah, mengubah, atau menghapus kategori fasilitas.<br>- **Map Visualization**: Visualisasi sebaran fasilitas dan titik kerusakan di peta interaktif.<br>- **Image Upload**: Lampiran foto bukti kerusakan.<br>- **Status Tracking**: Pemantauan tahapan perbaikan dari *Pending* hingga *Resolved*. |
 | 5 | Teknologi yang Digunakan | - **Backend**: Laravel 13, Sanctum (Auth), MariaDB (POINT Spatial).<br>- **Frontend**: React, Vite, Tailwind CSS, Zustand (State Management).<br>- **Maps**: `mapcn` component wrapper.<br>- **Documentation**: MkDocs. |
 
+</details>
+
 ## **Kemajuan Project**
+
+<details markdown="1">
+<summary>Click to see details</summary>
 
 | No | Bagian yang Dikerjakan | Status | Keterangan |
 | --- | --- | --- | --- |
@@ -19,7 +27,12 @@
 | 3 | **Core Logic & Security** | Selesai | Membangun API yang aman, FormRequests, dan pembatasan laju (rate limiting) |
 | 4 | **Perintah Artisan Kustom** | Selesai | Otomasi reset, switch storage, manajemen token, dan migrasi storage |
 
+</details>
+
 ## **Dokumentasi**
+
+<details markdown="1">
+<summary>Click to see details</summary>
 
 | No | Jenis Dokumentasi | Keterangan |
 | --- | --- | --- |
@@ -36,9 +49,17 @@
 | 2 | Kurangnya cara menambah fasilitas | Menambahkan endpoint gedung dan fasilitas baru untuk manajemen data |
 | 3 | Integrasi Cloud Storage | Membuat perintah `storage:switch` dan `storage:migrate` untuk Cloudflare R2 |
 
+</details>
+
 ## **Progress Keseluruhan**
+
+<details markdown="1">
+<summary>Click to see details</summary>
 
 | Keterangan | Nilai |
 | --- | --- |
 | Persentase Kemajuan | 100 % |
 | Status Project | On Track |
+
+</details>
+

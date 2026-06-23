@@ -3,13 +3,22 @@
 SIFKA is a robust, high-performance API built with Laravel 13, designed to manage and report on campus facilities. It features deep architectural alignment, advanced security hardening, and global search capabilities.
 
 ## Technical Stack
+
+<details markdown="1">
+<summary>Click to see details</summary>
+
 - **Framework:** Laravel 13 (PHP 8.3)
 - **Security:** Laravel Sanctum (Auth), Rate Limiting (Throttling), Policy-based Authorization.
 - **Search Engine:** Laravel Scout with Meilisearch.
 - **Documentation:** Scramble (OpenAPI) and MKDocs.
 - **Testing:** PHPUnit (hardened feature & unit tests).
 
+</details>
+
 ## Key Architectural Features
+
+<details markdown="1">
+<summary>Click to see details</summary>
 
 ### 1. Global Search (Meilisearch)
 High-speed, fuzzy search implemented across all major resources
@@ -24,10 +33,21 @@ The API maintains a predictable request/response contract. All resource inputs a
 - **Throttling:** All authentication routes (`login`, `register`, `logout`) are protected by a `5 requests / minute` rate limiter.
 - **Admin Controls:** Granular role management allowing Admins to register Staff accounts via the API.
 
+</details>
+
 ## Project Documentation
+
+<details markdown="1">
+<summary>Click to see details</summary>
+
 For deep dives into the project's design and roadmap, refer to the `docs/` directory
 
+</details>
+
 ## Getting Started
+
+<details markdown="1">
+<summary>Click to see details</summary>
 
 ### Prerequisites
 - PHP 8.3+
@@ -86,16 +106,30 @@ For deep dives into the project's design and roadmap, refer to the `docs/` direc
     > Create script with that exact name or any name your choice and put it it into this location `~/.local/bin/` and set it as executable `chmod +x ~/.local/bin/SIFKA-dev`
 
     Then you can just simply start it with `SIFKA-dev`
-   
-   
+
+</details>
+
 ## Testing
+
+<details markdown="1">
+<summary>Click to see details</summary>
+
 Run the comprehensive test suite to ensure stability:
 ```bash
 php artisan test --compact
 ```
 
+</details>
+
 ## Laravel Brain
+
+<details markdown="1">
+<summary>Click to see details</summary>
+
 This project uses **LaraMint Brain** for architectural analysis. To explore the codebase graph or export context snapshots:
 ```bash
 php artisan brain:scan
 ```
+
+</details>
+

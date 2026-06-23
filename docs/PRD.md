@@ -2,6 +2,9 @@
 
 ## Spatial Location Optimization & Map Integration
 
+<details markdown="1">
+<summary>Click to see details</summary>
+
 ### 1. Overview & Objectives
 
 Currently, the facility reporting application stores spatial locations (Buildings, Facilities, and Reports) using separate `latitude` and `longitude` numeric columns. To support interactive map rendering via `mapcn` and ensure performant spatial querying (e.g., pinpointing issues, bounding-box map filtering, and proximity searches), we are migrating the database architecture to use native MariaDB spatial data types (`POINT`).
@@ -188,3 +191,6 @@ The Laravel API must return standard `FeatureCollection` formats directly to the
 | **AC-01** | Successful Map Load | - **Given** there are active facility reports,<br>  <br> - **When** the user opens the map dashboard,<br> <br>- **Then** the system fetches the GeoJSON endpoint and `mapcn` correctly renders clustered pins. |  Pending |
 | **AC-02** | Accurate Pin Placement | - **Given** a user is creating a report,<br>  <br>- **When** they click a specific spot on the map interface,<br> <br>- **Then** the backend correctly persists the coordinates into the database `POINT` column. |  Pending |
 | **AC-03** | Database Integrity |- **Given** a location entry is saved without coordinates,<br>  <br>- **When** validation executes,<br> <br>- **Then** the database rejects the row with a `NOT NULL` constraint exception. |  Pending |
+
+</details>
+

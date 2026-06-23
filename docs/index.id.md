@@ -3,13 +3,22 @@
 SIFKA adalah API berkinerja tinggi yang dibangun dengan Laravel 13, dirancang untuk mengelola dan melaporkan fasilitas kampus. Proyek ini menampilkan penyelarasan arsitektur yang mendalam, pengerasan keamanan tingkat lanjut, dan kemampuan pencarian global.
 
 ## Stack Teknis
+
+<details markdown="1">
+<summary>Click to see details</summary>
+
 - **Framework:** Laravel 13 (PHP 8.3)
 - **Keamanan:** Laravel Sanctum (Auth), Pembatasan Laju (Rate Limiting), Otorisasi berbasis Policy.
 - **Mesin Pencari:** Laravel Scout dengan Meilisearch.
 - **Dokumentasi:** Scramble (OpenAPI) dan MKDocs.
 - **Pengujian:** PHPUnit (pengujian fitur & unit yang diperkeras).
 
+</details>
+
 ## Fitur Arsitektur Utama
+
+<details markdown="1">
+<summary>Click to see details</summary>
 
 ### 1. Pencarian Global (Meilisearch)
 Pencarian fuzzy berkecepatan tinggi yang diimplementasikan di semua sumber daya utama.
@@ -24,10 +33,21 @@ API mempertahankan kontrak permintaan/tanggapan yang dapat diprediksi. Semua inp
 - **Throttling (Pembatasan Laju):** Semua rute autentikasi (`login`, `register`, `logout`) dilindungi oleh pembatas laju `5 permintaan / menit`.
 - **Kontrol Admin:** Manajemen peran granular yang memungkinkan Admin untuk mendaftarkan akun Staff melalui API.
 
+</details>
+
 ## Dokumentasi Proyek
+
+<details markdown="1">
+<summary>Click to see details</summary>
+
 Untuk penjelasan mendalam tentang desain dan peta jalan proyek, silakan merujuk ke direktori `docs/`.
 
+</details>
+
 ## Memulai
+
+<details markdown="1">
+<summary>Click to see details</summary>
 
 ### Prasyarat
 - PHP 8.3+
@@ -55,14 +75,29 @@ Untuk penjelasan mendalam tentang desain dan peta jalan proyek, silakan merujuk 
    php artisan scout:import "App\Models\User"
    ```
 
+</details>
+
 ## Pengujian
+
+<details markdown="1">
+<summary>Click to see details</summary>
+
 Jalankan rangkaian pengujian komprehensif untuk memastikan stabilitas:
 ```bash
 php artisan test --compact
 ```
 
+</details>
+
 ## Laravel Brain
+
+<details markdown="1">
+<summary>Click to see details</summary>
+
 Proyek ini menggunakan **LaraMint Brain** untuk analisis arsitektur. Untuk menjelajahi grafik kode sumber atau mengekspor snapshot konteks:
 ```bash
 php artisan brain:scan
 ```
+
+</details>
+

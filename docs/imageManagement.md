@@ -4,6 +4,9 @@ This document explains how SIFKA manages report images and how to configure or m
 
 ## Overview
 
+<details markdown="1">
+<summary>Click to see details</summary>
+
 SIFKA uses a decoupled approach for image management. Instead of hardcoding storage paths or URLs, we use a combination of Laravel's Filesystem abstraction and Eloquent Model accessors.
 
 ### Key Components
@@ -12,19 +15,30 @@ SIFKA uses a decoupled approach for image management. Instead of hardcoding stor
 2.  **Configuration:** The storage disk is controlled via `config/filesystems.php` using the `REPORT_DISK` environment variable.
 3.  **Model Accessor:** The `Report` model provides a dynamic `image_url` attribute that generates the full absolute URL based on the current configuration.
 
+</details>
+
 ## Configuration
+
+<details markdown="1">
+<summary>Click to see details</summary>
 
 You can control which storage disk is used for report images in your `.env` file:
 
 ```env
-# Options: public, s3, etc.
 REPORT_DISK=public
 ```
+
+> Options: public, s3, etc.
 
 -   **`public` (Default):** Local storage in `storage/app/public`. Requires `php artisan storage:link`.
 -   **`s3`:** Amazon S3 or compatible services (DigitalOcean Spaces, MinIO).
 
+</details>
+
 ## Accessing Images
+
+<details markdown="1">
+<summary>Click to see details</summary>
 
 ### In PHP/Laravel
 Always use the `image_url` property on the `Report` model:
@@ -37,7 +51,12 @@ echo $report->image_url; // https://sifka.test/storage/reports/abc.jpg
 ### In API Responses
 The `ReportResource` automatically includes the `image_url`. The frontend should always use this field for rendering images.
 
+</details>
+
 ## Migration Guide
+
+<details markdown="1">
+<summary>Click to see details</summary>
 
 ### 1. Moving from Local to Cloud (e.g., S3)
 
@@ -67,7 +86,12 @@ UPDATE reports SET image_path = REPLACE(image_path, 'old-dir/', 'new-dir/') WHER
 - **Use the `image_url` attribute.** Avoid calling `Storage::url()` manually in controllers or views.
 - **Check visibility.** If using a cloud provider, ensure the `visibility` is set to `public` in `config/filesystems.php` for that disk.
 
+</details>
+
 ## Migrate to R2
+
+<details markdown="1">
+<summary>Click to see details</summary>
 
 To migrate to Cloudflare R2 and easily switch between local and cloud storage, follow these steps. I
 have also created two custom Artisan commands to automate the migration and switching process.
@@ -82,6 +106,9 @@ composer require league/flysystem-aws-s3-v3
 Add the following variables to your .env file. Replace the placeholders with your actual Cloudflare
 R2 credentials.
 ```
+
+</details>
+
 # Cloudflare R2 Credentials
 AWS_ACCESS_KEY_ID=your_r2_access_key_id
 AWS_SECRET_ACCESS_KEY=your_r2_secret_access_key

@@ -4,6 +4,9 @@ Dokumen ini memberikan instruksi untuk melakukan deployment fitur data spasial (
 
 ## 1. Migrasi Database
 
+<details markdown="1">
+<summary>Click to see details</summary>
+
 Aplikasi telah bermigrasi dari kolom numerik `latitude` dan `longitude` terpisah ke tipe data spasial asli MariaDB/MySQL yaitu `POINT`.
 
 ### Menjalankan Migrasi
@@ -18,7 +21,12 @@ php artisan migrate
 3.  Indeks spasial (spatial indexes) dibuat untuk performa kueri kedekatan (proximity) dan kotak pembatas (bounding-box) yang tinggi.
 4.  Kolom lama `latitude` dan `longitude` dihapus dari tabel.
 
+</details>
+
 ## 2. Pengindeksan Meilisearch
+
+<details markdown="1">
+<summary>Click to see details</summary>
 
 Mesin pencari sekarang mendukung pengurutan dan penyaringan berdasarkan jarak menggunakan atribut `_geo`.
 
@@ -30,7 +38,12 @@ php artisan scout:import "App\Models\Facility"
 php artisan scout:import "App\Models\Report"
 ```
 
+</details>
+
 ## 3. Sinkronisasi Frontend & API
+
+<details markdown="1">
+<summary>Click to see details</summary>
 
 API sekarang mengembalikan data JSON standar secara default, tetapi juga mendukung GeoJSON yang dioptimalkan untuk perenderan peta.
 
@@ -41,7 +54,12 @@ Semua indeks sumber daya dan endpoint pencarian mendukung parameter kueri `forma
 
 Klien API frontend (`FE_SIFKA/src/api/client.js`) telah diperbarui untuk menggunakan jalur relatif (`/api`) agar bekerja dengan mulus dengan proksi Vite dan tunnel seperti Tailscale Funnel.
 
+</details>
+
 ## 4. Akses Eksternal & Tailscale
+
+<details markdown="1">
+<summary>Click to see details</summary>
 
 Untuk mengakses lingkungan pengembangan melalui Tailscale Funnel (misalnya, dari perangkat seluler):
 
@@ -49,9 +67,18 @@ Untuk mengakses lingkungan pengembangan melalui Tailscale Funnel (misalnya, dari
 2.  **CORS**: Konfigurasi `config/cors.php` harus memasukkan URL tunnel Anda (misalnya, `https://node-anda.tailscale.net:5173`) dalam `allowed_origins`.
 3.  **GPS/Geolokasi**: Fitur GPS browser **memerlukan koneksi HTTPS**. Gunakan Tailscale Funnel atau sertifikat SSL lokal untuk mengaktifkan fitur ini pada perangkat seluler.
 
+</details>
+
 ## 5. Daftar Periksa Deployment (Deployment Checklist)
+
+<details markdown="1">
+<summary>Click to see details</summary>
+
 *   [ ] Jalankan `php artisan migrate`
 *   [ ] Indeks ulang model Scout (Meilisearch)
 *   [ ] Perbarui `cors.php` dengan domain produksi atau tunnel Anda
 *   [ ] Jalankan `npm install` dan `npm run build` untuk frontend
 Profile.
+
+</details>
+

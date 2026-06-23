@@ -68,9 +68,17 @@ extra_css:
 
 nav:
   - Home: index.md
+  - API: API.md
   - LAPORAN KEMAJUAN KELOMPOK1: LAPORAN_KEMAJUAN_KELOMPOK1.md
   - PRD: PRD.md
   - Custom Artisan Command Guide: custom-artisan-command-guide.md
   - Env Guide: env_guide.md
   - ImageManagement: imageManagement.md
   - Migration Guide: migration_guide.md
+  - API: .backup/20260623_204222/API.md
+  - LAPORAN KEMAJUAN KELOMPOK1: .backup/20260623_204222/LAPORAN_KEMAJUAN_KELOMPOK1.md
+  - PRD: .backup/20260623_204222/PRD.md
+  - Custom Artisan Command Guide: .backup/20260623_204222/custom-artisan-command-guide.md
+  - Env Guide: .backup/20260623_204222/env_guide.md
+  - ImageManagement: .backup/20260623_204222/imageManagement.md
+  - Migration Guide: .backup/20260623_204222/migration_guide.md

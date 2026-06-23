@@ -4,8 +4,12 @@ Dokumen ini mencantumkan perintah Artisan kustom yang dibuat untuk proyek SIFKA 
 
 ## Perintah yang Tersedia
 
+<details markdown="1">
+<summary>Click to see details</summary>
+
 ### 1. `app:reset`
 Mengatur ulang (reset) secara menyeluruh lingkungan pengembangan lokal.
+
 - **Tujuan**: Menghapus seluruh data database, menjalankan kembali semua migrasi, mengisi ulang data awal (seed), dan menghapus seluruh file gambar laporan yang diunggah dari penyimpanan.
 - **Penggunaan**:
   ```bash
@@ -15,6 +19,7 @@ Mengatur ulang (reset) secara menyeluruh lingkungan pengembangan lokal.
 
 ### 2. `app:create-super-admin`
 Membuat akun Super Admin baru menggunakan nilai yang didefinisikan dalam variabel lingkungan (.env).
+
 - **Tujuan**: Secara otomatis menyediakan Super Admin baru menggunakan kredensial yang didefinisikan oleh `SUPER_ADMIN_NAME`, `SUPER_ADMIN_EMAIL`, dan `SUPER_ADMIN_PASSWORD` pada file `.env` Anda.
 - **Penggunaan**:
   ```bash
@@ -23,6 +28,7 @@ Membuat akun Super Admin baru menggunakan nilai yang didefinisikan dalam variabe
 
 ### 3. `seed:data`
 Menyediakan opsi pengisian data database (seeding) secara kustom.
+
 - **Tujuan**: Mengizinkan pengisian data pada bagian tertentu dari database.
 - **Penggunaan**:
   - Mengisi seluruh data:
@@ -40,6 +46,7 @@ Menyediakan opsi pengisian data database (seeding) secara kustom.
 
 ### 4. `storage:clear-reports`
 Menyediakan cara terarah untuk menghapus gambar laporan dari penyimpanan.
+
 - **Tujuan**: Menghapus seluruh file di dalam direktori `reports` pada disk yang dikonfigurasi (`REPORT_DISK`, baik lokal `public` maupun cloud `s3`).
 - **Penggunaan**:
   ```bash
@@ -52,6 +59,7 @@ Menyediakan cara terarah untuk menghapus gambar laporan dari penyimpanan.
 
 ### 5. `storage:migrate`
 Menyalin file antar disk penyimpanan yang berbeda.
+
 - **Tujuan**: Mentransfer seluruh file dari satu disk penyimpanan (misalnya `public` lokal) ke disk lain (misalnya `s3` / Cloudflare R2).
 - **Penggunaan**:
   ```bash
@@ -60,6 +68,7 @@ Menyalin file antar disk penyimpanan yang berbeda.
 
 ### 6. `storage:switch`
 Mengubah disk penyimpanan aktif untuk laporan.
+
 - **Tujuan**: Memperbarui kunci `REPORT_DISK` di file `.env` yang aktif secara programatik dan menghapus cache konfigurasi.
 - **Penggunaan**:
   ```bash
@@ -72,6 +81,7 @@ Mengubah disk penyimpanan aktif untuk laporan.
 
 ### 7. `token:set-system-expiry`
 Mengatur durasi kedaluwarsa token API secara global/sistem.
+
 - **Tujuan**: Menghitung total menit dari opsi yang diberikan dan menuliskan `SANCTUM_EXPIRATION` pada file `.env` Anda.
 - **Penggunaan**:
   ```bash
@@ -82,6 +92,7 @@ Mengatur durasi kedaluwarsa token API secara global/sistem.
 
 ### 8. `token:set-expiry`
 Memaksa waktu kedaluwarsa tertentu pada token terbaru dari pengguna tertentu.
+
 - **Tujuan**: Mengatur waktu kedaluwarsa langsung pada PersonalAccessToken terbaru milik pengguna target.
 - **Penggunaan**:
   ```bash
@@ -91,6 +102,7 @@ Memaksa waktu kedaluwarsa tertentu pada token terbaru dari pengguna tertentu.
 
 ### 9. `token:set-remember`
 Mengonfigurasi token terbaru pengguna untuk fungsi "Ingat Saya" (Remember Me).
+
 - **Tujuan**: Memperpanjang masa aktif token terbaru menjadi tepat 3 hari (jika true) atau menyetelnya agar tidak pernah kedaluwarsa (jika false).
 - **Penggunaan**:
   ```bash
@@ -100,3 +112,6 @@ Mengonfigurasi token terbaru pengguna untuk fungsi "Ingat Saya" (Remember Me).
   # Mengatur token agar tidak pernah kedaluwarsa
   php artisan token:set-remember 1 false
   ```
+
+</details>
+

@@ -1,0 +1,38 @@
+name: Deploy MkDocs Documentation
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main # Sesuaikan jika nama branch utama Anda 'master'
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # WAJIB agar plugin git-revision-date-localized bisa membaca riwayat Git
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install mkdocs-material \
+                      mkdocs-static-i18n \
+                      mkdocs-swagger-ui-tag \
+                      mkdocs-git-revision-date-localized-plugin
+
+      - name: Deploy to GitHub Pages
+        env:
+          CI: true # Mengaktifkan 'enable_creation_date' pada plugin git-revision
+        run: |
+          mkdocs gh-deploy --force
